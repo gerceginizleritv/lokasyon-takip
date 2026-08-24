@@ -573,6 +573,49 @@ select{
   h1{font-size:21px;}
   .stats-row{gap:8px;}
   .stat{border-right:none;padding:0;min-width:80px;}
+
+  /* Modal: use nearly the full screen on phones, less wasted padding */
+  .overlay{padding:8px;align-items:flex-start;}
+  .modal, .modal-wide{
+    max-width:100%;
+    max-height:94vh;
+    padding:16px 14px;
+    margin-top:8px;
+  }
+
+  /* Field label + Kopyala button: stack instead of squeezing side-by-side,
+     and make the button a full-width, easy-to-tap row of its own. */
+  .field-header{
+    flex-direction:column;
+    align-items:stretch;
+    gap:6px;
+  }
+  .copy-btn{
+    width:100%;
+    padding:9px 9px;
+    font-size:12.5px;
+    text-align:center;
+  }
+
+  /* Stamps (Script/Çekim/Ses/Kurgu/Yayın/İzin): bigger touch targets,
+     3-per-row instead of cramming 6 into one line. */
+  .stamp{
+    flex:1 1 30%;
+    min-width:0;
+    padding:10px 2px;
+  }
+  .stamp .v{font-size:15px;}
+
+  /* Calendar platform picker checkboxes: full-width rows, easier to tap */
+  .cal-platform-checks{gap:6px;}
+  .cal-platform-check{
+    flex:1 1 100%;
+    padding:10px 12px;
+  }
+
+  /* Package section titles wrap cleanly, JSON-paste box stays usable */
+  .pkg-section-title{font-size:9.5px;}
+  #p_jsonPaste{min-height:70px;}
 }
 .backup-row{
   display:flex;
