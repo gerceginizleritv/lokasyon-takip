@@ -1521,6 +1521,35 @@ function applyCorrections(){
   let changed = false;
 
   {
+    const rh = locations.find(l => l.name === "Rumeli Hisarı");
+    if(rh && !calendarEvents.some(e => e.locationId === rh.id && e.date === '2026-08-27' && (e.platform === 'ig_car' || e.platform === 'fb_car'))){
+      ['ig_car','fb_car'].forEach((platform,i)=>{
+        calendarEvents.push({
+          id: 'cal_'+Date.now()+'_rh_car_'+i,
+          locationId: rh.id, platform,
+          title: 'Rumeli Hisarı — Öküz Derisi Rivayeti (Carousel)',
+          date: '2026-08-27', time: '20:00', uploaded: false
+        });
+      });
+      changed = true;
+    }
+  }
+  {
+    const kariye = locations.find(l => l.name === "Kariye (Chora)");
+    if(kariye && !calendarEvents.some(e => e.locationId === kariye.id && e.date === '2026-08-29' && (e.platform === 'ig_car' || e.platform === 'fb_car'))){
+      ['ig_car','fb_car'].forEach((platform,i)=>{
+        calendarEvents.push({
+          id: 'cal_'+Date.now()+'_kariye_car_'+i,
+          locationId: kariye.id, platform,
+          title: 'Kariye — Bu Haftanın Mozaik Gizemleri (Carousel)',
+          date: '2026-08-29', time: '20:00', uploaded: false
+        });
+      });
+      changed = true;
+    }
+  }
+
+  {
     const ev = calendarEvents.find(e => e.date === '2026-08-29' && e.title === 'Bu Sahne Tanıdık Geldi mi?');
     if(ev){
       ev.title = 'Bu Sahne Tanıdık Geldi Mi?';
