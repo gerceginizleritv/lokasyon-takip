@@ -47,7 +47,7 @@ body{
 
 .row-header{
   display:grid;
-  grid-template-columns:minmax(160px,1fr) 300px 232px 190px;
+  grid-template-columns:minmax(160px,1fr) 300px 280px 190px;
   align-items:center;
   gap:16px;
   padding:10px 16px 4px;
@@ -178,7 +178,7 @@ select{
 .list{display:flex;flex-direction:column;border:1px solid var(--line);}
 .row{
   display:grid;
-  grid-template-columns:minmax(160px,1fr) 300px 232px 190px;
+  grid-template-columns:minmax(160px,1fr) 300px 280px 190px;
   align-items:center;
   gap:16px;
   padding:12px 16px;
@@ -369,8 +369,8 @@ select{
 
 .stages{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:10px;}
 .stamp{
-  flex:1 1 18%;
-  min-width:54px;
+  flex:1 1 14%;
+  min-width:46px;
   text-align:center;
   padding:7px 2px;
   cursor:pointer;
@@ -773,7 +773,7 @@ select{
     <div data-i18n="col_location">Lokasyon</div>
     <div data-i18n="col_detail">Detay</div>
     <div class="row-header-stamps">
-      <span data-i18n="col_scr">Scr</span><span data-i18n="col_cek">Çek</span><span data-i18n="col_ses">Ses</span><span data-i18n="col_krg">Krg</span><span data-i18n="col_yay">Yay</span>
+      <span data-i18n="col_scr">Scr</span><span data-i18n="col_cek">Çek</span><span data-i18n="col_ses">Ses</span><span data-i18n="col_krg">Krg</span><span data-i18n="col_yay">Yay</span><span data-i18n="col_izin">İzn</span>
     </div>
     <div data-i18n="col_actions">İşlemler</div>
   </div>
@@ -1165,7 +1165,7 @@ const LANG = {
     sort_default: "Sıra: Varsayılan", sort_date: "Sıra: Planlanan Tarihe Göre",
     view_card: "🗂 Kart Görünümü", view_row: "☰ Liste Görünümü",
     add_new: "+ Yeni Lokasyon",
-    col_location: "Lokasyon", col_detail: "Detay", col_scr: "Scr", col_cek: "Çek", col_ses: "Ses", col_krg: "Krg", col_yay: "Yay", col_actions: "İşlemler",
+    col_location: "Lokasyon", col_detail: "Detay", col_scr: "Scr", col_cek: "Çek", col_ses: "Ses", col_krg: "Krg", col_yay: "Yay", col_izin: "İzn", col_actions: "İşlemler",
     empty_state: "Bu filtrelerle eşleşen bir dosya bulunamadı.",
     file_no: "DOSYA №",
     closed_badge: "KAPALI",
@@ -1212,7 +1212,7 @@ const LANG = {
     sort_default: "Sort: Default", sort_date: "Sort: Planned Date",
     view_card: "🗂 Card View", view_row: "☰ List View",
     add_new: "+ New Location",
-    col_location: "Location", col_detail: "Detail", col_scr: "Scr", col_cek: "Film", col_ses: "Aud", col_krg: "Edt", col_yay: "Pub", col_actions: "Actions",
+    col_location: "Location", col_detail: "Detail", col_scr: "Scr", col_cek: "Film", col_ses: "Aud", col_krg: "Edt", col_yay: "Pub", col_izin: "Prm", col_actions: "Actions",
     empty_state: "No file matches these filters.",
     file_no: "FILE №",
     closed_badge: "CLOSED",
@@ -1259,7 +1259,7 @@ const LANG = {
     sort_default: "Сортировка: по умолчанию", sort_date: "Сортировка: по дате съёмки",
     view_card: "🗂 Вид карточек", view_row: "☰ Вид списка",
     add_new: "+ Новая локация",
-    col_location: "Локация", col_detail: "Детали", col_scr: "Скр", col_cek: "Съём", col_ses: "Звук", col_krg: "Монт", col_yay: "Пуб", col_actions: "Действия",
+    col_location: "Локация", col_detail: "Детали", col_scr: "Скр", col_cek: "Съём", col_ses: "Звук", col_krg: "Монт", col_yay: "Пуб", col_izin: "Разр", col_actions: "Действия",
     empty_state: "По этим фильтрам файлов не найдено.",
     file_no: "ДОСЬЕ №",
     closed_badge: "ЗАКРЫТО",
