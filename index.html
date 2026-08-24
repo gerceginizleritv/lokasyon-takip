@@ -192,7 +192,10 @@ select{
 .row.row-done{border-left-color:var(--gold);opacity:0.75;}
 .row.row-cancelled{border-left-color:var(--red);opacity:0.5;}
 .row.row-needs-script{border-left-color:#E8912D;}
-.row-main{min-width:0;}
+.row-main{min-width:0;display:flex;gap:10px;align-items:flex-start;}
+.row-main-text{min-width:0;flex:1;}
+.row-image{width:44px;height:56px;flex-shrink:0;}
+.row-image img{width:100%;height:100%;object-fit:cover;border:1px solid var(--line);display:block;}
 .row-idx{font-family:'JetBrains Mono',monospace;font-size:9px;color:var(--gold-dim);letter-spacing:1px;}
 .row-name{font-weight:700;font-size:14.5px;display:flex;align-items:center;gap:6px;min-width:0;}
 .row-name .name-text{flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
@@ -276,7 +279,10 @@ select{
   padding:3px 7px;
   transform:rotate(3deg);
 }
-.card-top{display:flex;justify-content:space-between;align-items:flex-start;gap:10px;}
+.card-head-row{display:flex;gap:12px;}
+.card-image{width:84px;flex-shrink:0;aspect-ratio:3/4;}
+.card-image img{width:100%;height:100%;object-fit:cover;border:1px solid var(--line);display:block;}
+.card-top{display:flex;justify-content:space-between;align-items:flex-start;gap:10px;flex:1;min-width:0;}
 .card-top-main{flex:1;min-width:0;}
 .card-idx{font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--gold-dim);letter-spacing:1px;}
 .card-name{font-weight:700;font-size:16px;margin:3px 0 4px;line-height:1.25;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
@@ -1314,7 +1320,7 @@ async function setLanguage(lang){
 
 const seedData = [
   {name:"Yedikule Zindanları", district:"Fatih", city:"İstanbul", address:"Yedikule Hisarı", mapsLink:"https://www.google.com/maps/search/?api=1&query=Yedikule%20Zindanlar%C4%B1%2C%20Yedikule%20Hisar%C4%B1%2C%20Fatih%2C%20%C4%B0stanbul", format:"Saha", topic:"Yılanlı kuyu, Mısır mumyası efsaneleri, örülmüş altın kapı", filmed:"E", audio:"E", edited:"E", published:"E", permission:"H", notes:"Tamamlandı, Reels serisi yayınlandı."},
-  {name:"İmrahor İlyas Bey Camii (Stüdyos Manastırı)", district:"Fatih", city:"İstanbul", address:"Samatya/Yedikule, İmam Aşir Sokak", mapsLink:"https://www.google.com/maps/search/?api=1&query=%C4%B0mrahor%20%C4%B0lyas%20Bey%20Camii%20%28St%C3%BCdyos%20Manast%C4%B1r%C4%B1%29%2C%20Samatya/Yedikule%2C%20%C4%B0mam%20A%C5%9Fir%20Sokak%2C%20Fatih%2C%20%C4%B0stanbul", format:"Saha", topic:"İstanbul'un ayakta kalan en eski dini yapısı, 5. yüzyılda inşa edilmiş, Ayasofya'dan ~100 yıl önce. Bizans imparatorlarının şehre tören alayıyla giriş/çıkış yaptığı Altın Kapı'dan sonra uğradığı önemli durak noktalarından biriydi. 1204 Latin İşgali'nde büyük zarar gördü — kanalın işlediği Latin İşgali temasıyla doğrudan bağlantılı.", filmed:"H", audio:"H", edited:"H", published:"H", permission:"E", notes:"⚠️ 2023'ten beri aktif restorasyonda (geçici çelik/uzay kafes çatı sistemi kuruldu) — gitmeden önce güncel ziyaret/erişim durumu teyit edilmeli, şu an tamamen kapalı olabilir. YouTube yorumundan gelen öneri (22 Ağustos), ikinci bir yorumla Altın Kapı/tören güzergahı detayı doğrulandı.", script:"H", scriptLink:"", driveFolderLink:"", prepRequested:"H"},
+  {name:"İmrahor İlyas Bey Camii (Stüdyos Manastırı)", district:"Fatih", city:"İstanbul", address:"Samatya/Yedikule, İmam Aşir Sokak", mapsLink:"https://www.google.com/maps/search/?api=1&query=%C4%B0mrahor%20%C4%B0lyas%20Bey%20Camii%20%28St%C3%BCdyos%20Manast%C4%B1r%C4%B1%29%2C%20Samatya/Yedikule%2C%20%C4%B0mam%20A%C5%9Fir%20Sokak%2C%20Fatih%2C%20%C4%B0stanbul", imageUrl:"https://upload.wikimedia.org/wikipedia/commons/thumb/0/05/The_interior_of_the_St._John_Stoudios_%28Imrahor%29_Monastery.jpg/400px-The_interior_of_the_St._John_Stoudios_%28Imrahor%29_Monastery.jpg", format:"Saha", topic:"İstanbul'un ayakta kalan en eski dini yapısı, 5. yüzyılda inşa edilmiş, Ayasofya'dan ~100 yıl önce. Bizans imparatorlarının şehre tören alayıyla giriş/çıkış yaptığı Altın Kapı'dan sonra uğradığı önemli durak noktalarından biriydi. 1204 Latin İşgali'nde büyük zarar gördü — kanalın işlediği Latin İşgali temasıyla doğrudan bağlantılı.", filmed:"H", audio:"H", edited:"H", published:"H", permission:"E", notes:"⚠️ 2023'ten beri aktif restorasyonda (geçici çelik/uzay kafes çatı sistemi kuruldu) — gitmeden önce güncel ziyaret/erişim durumu teyit edilmeli, şu an tamamen kapalı olabilir. YouTube yorumundan gelen öneri (22 Ağustos), ikinci bir yorumla Altın Kapı/tören güzergahı detayı doğrulandı.", script:"H", scriptLink:"", driveFolderLink:"", prepRequested:"H"},
   {name:"Yerebatan Sarnıcı", district:"Fatih", city:"İstanbul", address:"Sultanahmet", mapsLink:"https://www.google.com/maps/search/?api=1&query=Yerebatan%20Sarn%C4%B1c%C4%B1%2C%20Sultanahmet%2C%20Fatih%2C%20%C4%B0stanbul", format:"Saha", topic:"Medusa başları, unutulmuş Bizans sarnıcı", filmed:"E", audio:"E", edited:"E", published:"E", permission:"H", notes:""},
   {name:"Kariye (Chora)", district:"Fatih", city:"İstanbul", address:"Edirnekapı", mapsLink:"https://www.google.com/maps/search/?api=1&query=Kariye%20%28Chora%29%2C%20Edirnekap%C4%B1%2C%20Fatih%2C%20%C4%B0stanbul", format:"Saha", topic:"Bizans mozaikleri, kara kanatlı melek", filmed:"E", audio:"E", edited:"E", published:"E", permission:"H", notes:""},
   {name:"Süleymaniye Camii", district:"Fatih", city:"İstanbul", address:"Süleymaniye", mapsLink:"https://www.google.com/maps/search/?api=1&query=S%C3%BCleymaniye%20Camii%2C%20Fatih%2C%20%C4%B0stanbul", format:"Saha", topic:"Mimar Sinan gizemleri, gizli tünel rivayeti", filmed:"E", audio:"E", edited:"E", published:"E", permission:"H", notes:""},
@@ -1467,6 +1473,12 @@ function normalizeLocation(l){
 // get fixed even for people who already have this stored from before.
 function applyCorrections(){
   let changed = false;
+
+  const imrahor = locations.find(l => l.name === "İmrahor İlyas Bey Camii (Stüdyos Manastırı)");
+  if(imrahor && !imrahor.imageUrl){
+    imrahor.imageUrl = "https://upload.wikimedia.org/wikipedia/commons/thumb/0/05/The_interior_of_the_St._John_Stoudios_%28Imrahor%29_Monastery.jpg/400px-The_interior_of_the_St._John_Stoudios_%28Imrahor%29_Monastery.jpg";
+    changed = true;
+  }
 
   const rumeliHisariLoc = locations.find(l => l.name === "Rumeli Hisarı");
   if(rumeliHisariLoc){
@@ -2284,14 +2296,17 @@ function renderCards(filtered){
     <div class="card ${allDone?'done':''} ${l.permission==='E'?'hybrid-flag':''} ${l.cancelled==='E'?'cancelled':''} ${needsScript?'needs-script':''}">
       ${allDone?`<div class="completed-badge">${t('closed_badge')}</div>`:''}
       ${l.cancelled==='E'?`<div class="cancelled-badge">${t('cancelled_badge')}</div>`:''}
-      <div class="card-top">
-        <div class="card-top-main">
-          <div class="card-idx">${t('file_no')}${String(locations.indexOf(l)+1).padStart(3,'0')}</div>
-          <div class="card-name" title="${escapeHtml(l.name)}">${escapeHtml(l.name)}</div>
-          <div class="card-loc" title="${escapeHtml(l.district)} / ${escapeHtml(l.city)}${l.address?' — '+escapeHtml(l.address):''}">${escapeHtml(l.district)} / ${escapeHtml(l.city)}${l.address?' — '+escapeHtml(l.address):''}</div>
-          <a class="maps-link" href="${mapsUrl(l)}" target="_blank" rel="noopener">${t('maps_open')}</a>
+      <div class="card-head-row">
+        ${l.imageUrl ? `<div class="card-image"><img src="${escapeHtml(l.imageUrl)}" alt="${escapeHtml(l.name)}" loading="lazy"></div>` : ''}
+        <div class="card-top">
+          <div class="card-top-main">
+            <div class="card-idx">${t('file_no')}${String(locations.indexOf(l)+1).padStart(3,'0')}</div>
+            <div class="card-name" title="${escapeHtml(l.name)}">${escapeHtml(l.name)}</div>
+            <div class="card-loc" title="${escapeHtml(l.district)} / ${escapeHtml(l.city)}${l.address?' — '+escapeHtml(l.address):''}">${escapeHtml(l.district)} / ${escapeHtml(l.city)}${l.address?' — '+escapeHtml(l.address):''}</div>
+            <a class="maps-link" href="${mapsUrl(l)}" target="_blank" rel="noopener">${t('maps_open')}</a>
+          </div>
+          <div class="fmt-tag fmt-${l.format}">${formatLabel(l.format)}</div>
         </div>
-        <div class="fmt-tag fmt-${l.format}">${formatLabel(l.format)}</div>
       </div>
       <div class="needs-script-badge ${needsScript?'':'slot-empty'}">${t('needs_script_badge')}</div>
       <div class="perm-flag ${l.permission==='E'?'':'slot-empty'}">${t('permission_pending')}</div>
@@ -2338,9 +2353,12 @@ function renderRows(filtered){
     return `
     <div class="row ${allDone?'row-done':''} ${l.cancelled==='E'?'row-cancelled':''} ${needsScript?'row-needs-script':''}">
       <div class="row-main">
-        <div class="row-idx">${t('file_no')}${String(locations.indexOf(l)+1).padStart(3,'0')}</div>
-        <div class="row-name"><span class="name-text">${escapeHtml(l.name)}</span>${allDone?`<span class="mini-badge">${t('closed_badge')}</span>`:''}${l.cancelled==='E'?`<span class="mini-badge" style="background:var(--red);">${t('cancelled_badge')}</span>`:''}${needsScript?`<span class="mini-badge" style="background:#E8912D;color:#000;">${t('needs_script_badge')}</span>`:''}<input type="date" class="inline-date" data-id="${l.id}" value="${l.plannedDate||''}" title="${t('planned_date_title')}"></div>
-        <div class="row-loc">${escapeHtml(l.district)} / ${escapeHtml(l.city)}</div>
+        ${l.imageUrl ? `<div class="row-image"><img src="${escapeHtml(l.imageUrl)}" alt="${escapeHtml(l.name)}" loading="lazy"></div>` : ''}
+        <div class="row-main-text">
+          <div class="row-idx">${t('file_no')}${String(locations.indexOf(l)+1).padStart(3,'0')}</div>
+          <div class="row-name"><span class="name-text">${escapeHtml(l.name)}</span>${allDone?`<span class="mini-badge">${t('closed_badge')}</span>`:''}${l.cancelled==='E'?`<span class="mini-badge" style="background:var(--red);">${t('cancelled_badge')}</span>`:''}${needsScript?`<span class="mini-badge" style="background:#E8912D;color:#000;">${t('needs_script_badge')}</span>`:''}<input type="date" class="inline-date" data-id="${l.id}" value="${l.plannedDate||''}" title="${t('planned_date_title')}"></div>
+          <div class="row-loc">${escapeHtml(l.district)} / ${escapeHtml(l.city)}</div>
+        </div>
       </div>
       <div class="row-meta">
         <div class="fmt-tag fmt-${l.format}">${formatLabel(l.format)}</div>
