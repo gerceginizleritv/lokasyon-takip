@@ -1751,6 +1751,29 @@ function applyCorrections(){
     }
   }
 
+    // Batch 7 (final): last 3 locations
+  {
+    const loc = locations.find(l => l.name === "Şerefiye Sarnıcı (Theodosius Sarnıcı)");
+    if(loc && !loc.imageUrl){
+      loc.imageUrl = "https://commons.wikimedia.org/wiki/Special:FilePath/Theodosius cistern 08.jpg?width=400";
+      changed = true;
+    }
+  }
+  {
+    const loc = locations.find(l => l.name === "Panagia Muhliotissa (Kanlı Kilise)");
+    if(loc && !loc.imageUrl){
+      loc.imageUrl = "https://commons.wikimedia.org/wiki/Special:FilePath/DM02 - Grcka Crkva.jpg?width=400";
+      changed = true;
+    }
+  }
+  {
+    const loc = locations.find(l => l.name === "Ayios Dimitrios Kilisesi");
+    if(loc && !loc.imageUrl){
+      loc.imageUrl = "https://commons.wikimedia.org/wiki/Special:FilePath/Kuruçeşme Ayios Dimitrios Rum Ortodoks Kilisesi.jpg?width=400";
+      changed = true;
+    }
+  }
+
   const rumeliHisariLoc = locations.find(l => l.name === "Rumeli Hisarı");
   if(rumeliHisariLoc){
     if(rumeliHisariLoc.plannedDate){
