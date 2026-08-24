@@ -1638,6 +1638,119 @@ function applyCorrections(){
     }
   }
 
+    // Batch 3: more real Wikimedia Commons images
+  {
+    const loc = locations.find(l => l.name === "Kapalıçarşı Cevahir Bedesteni");
+    if(loc && !loc.imageUrl){
+      loc.imageUrl = "https://commons.wikimedia.org/wiki/Special:FilePath/Grand Bazaar 02.JPG?width=400";
+      changed = true;
+    }
+  }
+  {
+    const loc = locations.find(l => l.name === "Küçük Ayasofya");
+    if(loc && !loc.imageUrl){
+      loc.imageUrl = "https://commons.wikimedia.org/wiki/Special:FilePath/Küçük Ayasofya Camii Detaylar-3.jpg?width=400";
+      changed = true;
+    }
+  }
+  {
+    const loc = locations.find(l => l.name === "Anadolu Hisarı");
+    if(loc && !loc.imageUrl){
+      loc.imageUrl = "https://commons.wikimedia.org/wiki/Special:FilePath/Anadoluhisarı.JPG?width=400";
+      changed = true;
+    }
+  }
+  {
+    const loc = locations.find(l => l.name === "Ahrida Sinagogu");
+    if(loc && !loc.imageUrl){
+      loc.imageUrl = "https://commons.wikimedia.org/wiki/Special:FilePath/Ahrida Synagogue.jpg?width=400";
+      changed = true;
+    }
+  }
+
+    // Batch 4: more real Wikimedia Commons images
+  {
+    const loc = locations.find(l => l.name === "Galata Mevlevihanesi");
+    if(loc && !loc.imageUrl){
+      loc.imageUrl = "https://commons.wikimedia.org/wiki/Special:FilePath/Galata Mevlevihanesi Müzesi 2.JPG?width=400";
+      changed = true;
+    }
+  }
+  {
+    const loc = locations.find(l => l.name === "Çırağan Sarayı");
+    if(loc && !loc.imageUrl){
+      loc.imageUrl = "https://commons.wikimedia.org/wiki/Special:FilePath/Çırağan Palace from the Bosphorus Strait.jpg?width=400";
+      changed = true;
+    }
+  }
+  {
+    const loc = locations.find(l => l.name === "Aynalıkavak Kasrı");
+    if(loc && !loc.imageUrl){
+      loc.imageUrl = "https://commons.wikimedia.org/wiki/Special:FilePath/İstanbul - Aynalıkavak Kasrı - Mart 2013 - r4.JPG?width=400";
+      changed = true;
+    }
+  }
+  {
+    const loc = locations.find(l => l.name === "Haydarpaşa Garı / Khalkedon efsanesi");
+    if(loc && !loc.imageUrl){
+      loc.imageUrl = "https://commons.wikimedia.org/wiki/Special:FilePath/Haydarpasa train station.jpg?width=400";
+      changed = true;
+    }
+  }
+  {
+    const loc = locations.find(l => l.name === "Pierre Loti Tepesi");
+    if(loc && !loc.imageUrl){
+      loc.imageUrl = "https://commons.wikimedia.org/wiki/Special:FilePath/İstanbul Pierre Loti Tepesi.jpg?width=400";
+      changed = true;
+    }
+  }
+  {
+    const loc = locations.find(l => l.name === "Pera Palas / Agatha Christie");
+    if(loc && !loc.imageUrl){
+      loc.imageUrl = "https://commons.wikimedia.org/wiki/Special:FilePath/Hotel Pera Palace - Istanbul.jpg?width=400";
+      changed = true;
+    }
+  }
+  {
+    const loc = locations.find(l => l.name === "Büyük Saray Mozaik Müzesi");
+    if(loc && !loc.imageUrl){
+      loc.imageUrl = "https://commons.wikimedia.org/wiki/Special:FilePath/Great Palace Mosaics Museum, Istanbul (52131482106).jpg?width=400";
+      changed = true;
+    }
+  }
+
+    // Batch 5: more real Wikimedia Commons images
+  {
+    const loc = locations.find(l => l.name === "Sveti Stefan Kilisesi (Demir Kilise)");
+    if(loc && !loc.imageUrl){
+      loc.imageUrl = "https://commons.wikimedia.org/wiki/Special:FilePath/DEMİR KİLİSE (Sveti Stefan Kilisesi).jpg?width=400";
+      changed = true;
+    }
+  }
+  {
+    const loc = locations.find(l => l.name === "Bukoleon Sarayı");
+    if(loc && !loc.imageUrl){
+      loc.imageUrl = "https://commons.wikimedia.org/wiki/Special:FilePath/Boukoleon Palace Restoration October 2022.jpg?width=400";
+      changed = true;
+    }
+  }
+  {
+    const loc = locations.find(l => l.name === "Çatladıkapı");
+    if(loc && !loc.imageUrl){
+      loc.imageUrl = "https://commons.wikimedia.org/wiki/Special:FilePath/Boukoleon Palace Restoration October 2022.jpg?width=400";
+      changed = true;
+    }
+  }
+
+    // Batch 6: Kuştul Manastırı
+  {
+    const loc = locations.find(l => l.name === "Kuştul (Peristera) Manastırı");
+    if(loc && !loc.imageUrl){
+      loc.imageUrl = "https://commons.wikimedia.org/wiki/Special:FilePath/Kustul Monastery Trabzon.jpg?width=400";
+      changed = true;
+    }
+  }
+
   const rumeliHisariLoc = locations.find(l => l.name === "Rumeli Hisarı");
   if(rumeliHisariLoc){
     if(rumeliHisariLoc.plannedDate){
