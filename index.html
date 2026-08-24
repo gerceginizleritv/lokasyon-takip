@@ -37,8 +37,8 @@ body{
   top:0;
   z-index:30;
   background:var(--ink);
-  padding-top:28px;
-  padding-bottom:14px;
+  padding-top:12px;
+  padding-bottom:6px;
   margin:0 -20px;
   padding-left:20px;
   padding-right:20px;
@@ -74,54 +74,61 @@ body{
 .masthead{
   border:1px solid var(--line);
   border-bottom:3px solid var(--gold);
-  padding:22px 26px;
-  margin-bottom:22px;
+  padding:10px 16px;
+  margin-bottom:8px;
   position:relative;
   background:linear-gradient(180deg, var(--ink-2), var(--ink));
 }
+.masthead-top{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:16px;
+  flex-wrap:wrap;
+}
+.masthead-left{flex-shrink:0;}
 .eyebrow{
   font-family:'JetBrains Mono',monospace;
-  font-size:11px;
-  letter-spacing:3px;
+  font-size:9px;
+  letter-spacing:2px;
   color:var(--gold);
   text-transform:uppercase;
 }
 h1{
   font-family:'Poppins',sans-serif;
   font-weight:800;
-  font-size:28px;
-  letter-spacing:0.5px;
-  margin:6px 0 2px;
+  font-size:17px;
+  letter-spacing:0.3px;
+  margin:2px 0 1px;
   text-transform:uppercase;
 }
 .slogan{
-  font-size:13px;
+  font-size:10px;
   color:var(--parchment-dim);
   font-style:italic;
 }
 .stats-row{
   display:flex;
   gap:0;
-  margin-top:18px;
-  border-top:1px solid var(--line);
-  padding-top:14px;
   flex-wrap:wrap;
+  flex:1;
+  justify-content:flex-end;
 }
 .stat{
-  flex:1;
-  min-width:110px;
-  padding:0 18px;
+  flex:0 0 auto;
+  min-width:66px;
+  padding:0 10px;
   border-right:1px solid var(--line);
 }
 .stat:last-child{border-right:none;}
-.stat .num{font-family:'JetBrains Mono',monospace;font-size:22px;font-weight:700;color:var(--gold);}
-.stat .lbl{font-size:10px;letter-spacing:1.5px;text-transform:uppercase;color:var(--parchment-dim);}
+.stat .num{font-family:'JetBrains Mono',monospace;font-size:14px;font-weight:700;color:var(--gold);}
+.stat .lbl{font-size:7px;letter-spacing:0.5px;text-transform:uppercase;color:var(--parchment-dim);white-space:nowrap;}
 
 /* CONTROLS */
 .controls{
   display:flex;
-  gap:10px;
-  margin-bottom:18px;
+  gap:5px;
+  margin-bottom:6px;
   flex-wrap:wrap;
   align-items:center;
 }
@@ -130,11 +137,16 @@ input[type="text"], select{
   border:1px solid var(--line);
   color:var(--parchment);
   font-family:'Poppins',sans-serif;
-  font-size:13px;
-  padding:9px 12px;
+  font-size:10.5px;
+  padding:5px 7px;
 }
-input[type="text"]{flex:1;min-width:200px;}
-select{cursor:pointer;}
+input[type="text"]{flex:1 1 130px;min-width:110px;}
+select{
+  cursor:pointer;
+  flex:0 0 auto;
+  max-width:118px;
+  text-overflow:ellipsis;
+}
 .btn{
   background:var(--gold);
   color:var(--ink);
@@ -565,20 +577,21 @@ select{cursor:pointer;}
 }
 .backup-row{
   display:flex;
-  gap:8px;
-  margin-top:12px;
+  gap:6px;
+  margin-top:6px;
   flex-wrap:wrap;
+  align-items:center;
 }
 .btn-small{
-  font-size:11px;
-  padding:6px 12px;
+  font-size:9.5px;
+  padding:4px 9px;
 }
 
 /* ===== Main tabs ===== */
 .main-tabs{
   display:flex;
   gap:0;
-  margin-top:14px;
+  margin-top:0;
   border:1px solid var(--line);
   width:fit-content;
 }
@@ -586,10 +599,10 @@ select{cursor:pointer;}
   background:var(--ink-2);
   border:none;
   color:var(--parchment-dim);
-  padding:9px 18px;
+  padding:5px 12px;
   font-family:'JetBrains Mono',monospace;
-  font-size:11.5px;
-  letter-spacing:1px;
+  font-size:9.5px;
+  letter-spacing:0.5px;
   cursor:pointer;
   border-right:1px solid var(--line);
 }
@@ -685,6 +698,14 @@ select{cursor:pointer;}
 .cal-modal-status.planned{color:var(--parchment-dim);border:1px solid var(--line);}
 .cal-modal-status.ready{color:var(--parchment);border:1px solid var(--gold-dim);background:rgba(200,162,74,0.08);}
 .cal-modal-status.live{color:var(--gold);border:1px solid var(--gold);background:rgba(200,162,74,0.14);}
+
+.log-item{
+  display:flex;gap:14px;padding:10px 14px;border-bottom:1px solid var(--line);
+  font-size:12.5px;align-items:baseline;
+}
+.log-item:hover{background:var(--ink-2);}
+.log-time{font-family:'JetBrains Mono',monospace;font-size:10.5px;color:var(--gold-dim);flex-shrink:0;white-space:nowrap;}
+.log-msg{color:var(--parchment-dim);}
 </style>
 </head>
 <body>
@@ -692,18 +713,23 @@ select{cursor:pointer;}
 
 <div class="sticky-head">
   <div class="masthead">
-    <div class="eyebrow" data-i18n="eyebrow">Saha Dosyası · Dahili Kayıt Sistemi</div>
-    <h1 data-i18n="title">Lokasyon Takip Sistemi</h1>
-    <div class="slogan">Gerçeğin İzleri · Tarihi Dedektif — "Rivayet değil, kayıt."</div>
-    <div class="stats-row" id="statsRow"></div>
+    <div class="masthead-top">
+      <div class="masthead-left">
+        <div class="eyebrow" data-i18n="eyebrow">Saha Dosyası · Dahili Kayıt Sistemi</div>
+        <h1 data-i18n="title">Lokasyon Takip Sistemi</h1>
+        <div class="slogan">Gerçeğin İzleri · Tarihi Dedektif — "Rivayet değil, kayıt."</div>
+      </div>
+      <div class="stats-row" id="statsRow"></div>
+    </div>
     <div class="backup-row">
       <button class="btn btn-ghost btn-small" id="exportBtn">💾 Yedek İndir</button>
       <button class="btn btn-ghost btn-small" id="importBtn">📤 Yedekten Geri Yükle</button>
       <input type="file" id="importFile" accept="application/json" style="display:none;">
-    </div>
-    <div class="main-tabs">
-      <button class="main-tab active" id="tabLocations">📋 Lokasyonlar</button>
-      <button class="main-tab" id="tabCalendar">📅 Yayın Takvimi</button>
+      <div class="main-tabs">
+        <button class="main-tab active" id="tabLocations">📋 Lokasyonlar</button>
+        <button class="main-tab" id="tabCalendar">📅 Yayın Takvimi</button>
+        <button class="main-tab" id="tabLog">📝 Değişiklik Kaydı</button>
+      </div>
     </div>
   </div>
 
@@ -740,7 +766,7 @@ select{cursor:pointer;}
       <option value="en">🇬🇧 EN</option>
       <option value="ru">🇷🇺 RU</option>
     </select>
-    <button class="btn" id="addBtn" data-i18n="add_new">+ Yeni Lokasyon</button>
+    <button class="btn" id="addBtn" data-i18n="add_new" style="flex-shrink:0;white-space:nowrap;">+ Yeni Lokasyon</button>
   </div>
 
   <div class="row-header" id="rowHeader" style="display:none;">
@@ -795,6 +821,20 @@ select{cursor:pointer;}
       <tbody id="calTbody"></tbody>
     </table>
   </div>
+</div>
+
+<div id="logView" style="display:none;">
+  <div class="cal-toolbar">
+    <div style="font-size:12.5px;color:var(--parchment-dim);">
+      Buradaki kaydı kopyalayıp Claude'a yapıştırdığında, ne değiştirdiğini bilir ve ona göre kod/veri güncellemesi yapar.
+    </div>
+    <div style="display:flex;gap:8px;">
+      <button class="btn btn-ghost btn-small" id="logCopyBtn">📋 Tümünü Kopyala</button>
+      <button class="btn btn-ghost btn-small" id="logClearBtn">🗑 Kaydı Temizle</button>
+    </div>
+  </div>
+  <div id="logList"></div>
+  <div class="empty" id="logEmpty" style="display:none;">Henüz bir değişiklik kaydı yok.</div>
 </div>
 
 <div class="overlay" id="calOverlay">
@@ -948,6 +988,15 @@ select{cursor:pointer;}
   <div class="modal modal-wide">
     <h2 id="pkgTitle">Yayın Paketi</h2>
     <input type="hidden" id="pkgId">
+
+    <div class="pkg-section" style="border-top:none;margin-top:0;padding-top:0;">
+      <div class="pkg-section-title" style="color:var(--gold);">📥 Claude'dan Yapıştır (tek seferde tüm alanları doldurur)</div>
+      <div class="pkg-hint">Claude'un sohbette verdiği JSON bloğunu kopyala, aşağıya yapıştır, "Alanları Doldur"a bas. Hiçbir alana tek tek yapıştırma yapmana gerek kalmaz — sonra normal "Kaydet"e basman yeterli.</div>
+      <div class="field">
+        <textarea id="p_jsonPaste" placeholder='{"captionYouTube": "...", "captionInstagram": "...", ...}' style="min-height:80px;font-family:'JetBrains Mono',monospace;font-size:11px;"></textarea>
+      </div>
+      <button type="button" class="btn btn-ghost btn-small" id="pkgFillFromJsonBtn">⬇ Alanları Doldur</button>
+    </div>
 
     <div class="pkg-section" style="border-top:none;margin-top:0;padding-top:0;">
       <div class="pkg-section-title" style="color:#E8912D;" data-i18n="pkg_section_shotlist">🎥 Sahada Çekilmesi Gerekenler</div>
@@ -1383,6 +1432,7 @@ const seedData = [
 
 let locations = [];
 let calendarEvents = [];
+let activityLog = [];
 let saveTimer = null;
 let saveInFlight = false;
 let pendingResave = false;
@@ -1624,6 +1674,7 @@ async function loadData(){
     const record = json && json.record ? json.record : {};
     locations = Array.isArray(record.locations) ? record.locations : [];
     calendarEvents = Array.isArray(record.calendarEvents) ? record.calendarEvents : [];
+    activityLog = Array.isArray(record.activityLog) ? record.activityLog : [];
     if(locations.length === 0){
       locations = seedData.map((l,i)=>({...l, id: 'loc_'+Date.now()+'_'+i}));
       await persistNow();
@@ -1637,6 +1688,7 @@ async function loadData(){
   if(applyCorrections()) await persistNow();
   render();
   renderCal();
+  renderLog();
 }
 
 // Debounced entry point: rapid clicks (e.g. toggling several stamps fast)
@@ -1657,7 +1709,7 @@ async function persistNow(retriesLeft){
         'Content-Type': 'application/json',
         'X-Master-Key': JSONBIN_MASTER_KEY
       },
-      body: JSON.stringify({ locations: locations, calendarEvents: calendarEvents })
+      body: JSON.stringify({ locations: locations, calendarEvents: calendarEvents, activityLog: activityLog })
     });
     if(!res.ok) throw new Error('HTTP ' + res.status);
     hideToast();
@@ -1943,6 +1995,8 @@ document.getElementById('calUploadToggle').addEventListener('click', ()=>{
   if(!calCurrentEvent) return; // nothing to toggle on a not-yet-saved new entry
   if(calEventStatus(calCurrentEvent) === 'live') return;
   calCurrentEvent.uploaded = !calCurrentEvent.uploaded;
+  const loc = locations.find(l=>l.id===calCurrentEvent.locationId);
+  logActivity(`Takvim — "${loc?loc.name:'?'}" (${CAL_PLATFORM_NAMES[calCurrentEvent.platform]}, ${calCurrentEvent.date} ${calCurrentEvent.time}): ${calCurrentEvent.uploaded ? 'yüklendi olarak işaretlendi' : 'işaret kaldırıldı'}.`);
   refreshCalModalStatus();
   renderCal();
 });
@@ -1962,12 +2016,14 @@ document.getElementById('calSaveBtn').addEventListener('click', async ()=>{
     calCurrentEvent.title = title;
     calCurrentEvent.date = date;
     calCurrentEvent.time = time;
+    logActivity(`Takvim girişi güncellendi: "${title}" (${CAL_PLATFORM_NAMES[platform]}, ${date} ${time}).`);
   } else {
     calendarEvents.push({
       id: 'cal_'+Date.now(),
       locationId, platform, title, date, time,
       uploaded: false
     });
+    logActivity(`Yeni takvim girişi: "${title}" (${CAL_PLATFORM_NAMES[platform]}, ${date} ${time}).`);
   }
   await persist();
   closeCalModal();
@@ -1977,6 +2033,7 @@ document.getElementById('calSaveBtn').addEventListener('click', async ()=>{
 document.getElementById('calDeleteBtn').addEventListener('click', async ()=>{
   if(!calCurrentEvent) return;
   if(!confirm('Bu takvim girişini silmek istediğine emin misin?')) return;
+  logActivity(`Takvim girişi silindi: "${calCurrentEvent.title}" (${CAL_PLATFORM_NAMES[calCurrentEvent.platform]}, ${calCurrentEvent.date}).`);
   calendarEvents = calendarEvents.filter(e=>e.id !== calCurrentEvent.id);
   await persist();
   closeCalModal();
@@ -2011,23 +2068,65 @@ document.getElementById('calBtnTable').addEventListener('click', ()=>{
   document.getElementById('calBtnGrid').classList.remove('active');
 });
 
-// Main Lokasyonlar / Takvim tab switch
-document.getElementById('tabLocations').addEventListener('click', ()=>{
-  document.getElementById('locationsView').style.display = '';
-  document.getElementById('calendarView').style.display = 'none';
-  document.getElementById('controls').style.display = '';
-  document.getElementById('rowHeader').style.display = document.getElementById('viewMode').value === 'row' ? '' : 'none';
-  document.getElementById('tabLocations').classList.add('active');
-  document.getElementById('tabCalendar').classList.remove('active');
+// Main Lokasyonlar / Takvim / Kayıt tab switch
+function showMainTab(tab){
+  document.getElementById('locationsView').style.display = tab==='locations' ? '' : 'none';
+  document.getElementById('calendarView').style.display = tab==='calendar' ? '' : 'none';
+  document.getElementById('logView').style.display = tab==='log' ? '' : 'none';
+  document.getElementById('controls').style.display = tab==='locations' ? '' : 'none';
+  document.getElementById('rowHeader').style.display = (tab==='locations' && document.getElementById('viewMode').value === 'row') ? '' : 'none';
+  document.getElementById('tabLocations').classList.toggle('active', tab==='locations');
+  document.getElementById('tabCalendar').classList.toggle('active', tab==='calendar');
+  document.getElementById('tabLog').classList.toggle('active', tab==='log');
+  if(tab==='calendar') renderCal();
+  if(tab==='log') renderLog();
+}
+document.getElementById('tabLocations').addEventListener('click', ()=> showMainTab('locations'));
+document.getElementById('tabCalendar').addEventListener('click', ()=> showMainTab('calendar'));
+document.getElementById('tabLog').addEventListener('click', ()=> showMainTab('log'));
+
+// ============================================================
+// DEĞİŞİKLİK KAYDI (Activity Log)
+// ============================================================
+function logActivity(message){
+  const now = new Date();
+  const stamp = `${calPad(now.getDate())}.${calPad(now.getMonth()+1)} ${calPad(now.getHours())}:${calPad(now.getMinutes())}`;
+  activityLog.unshift({ time: stamp, message: message });
+  if(activityLog.length > 200) activityLog.length = 200;
+}
+
+function renderLog(){
+  const list = document.getElementById('logList');
+  const empty = document.getElementById('logEmpty');
+  if(!list) return;
+  if(activityLog.length === 0){
+    list.innerHTML = '';
+    empty.style.display = '';
+    return;
+  }
+  empty.style.display = 'none';
+  list.innerHTML = activityLog.map(e=>`
+    <div class="log-item">
+      <span class="log-time">${e.time}</span>
+      <span class="log-msg">${escapeHtml(e.message)}</span>
+    </div>
+  `).join('');
+}
+
+document.getElementById('logCopyBtn').addEventListener('click', ()=>{
+  const text = activityLog.map(e=>`[${e.time}] ${e.message}`).join('\n');
+  navigator.clipboard.writeText(text || '(kayıt yok)').then(()=>{
+    showToast('Kayıt kopyalandı ✓');
+  }).catch(()=>{
+    alert(text);
+  });
 });
-document.getElementById('tabCalendar').addEventListener('click', ()=>{
-  document.getElementById('locationsView').style.display = 'none';
-  document.getElementById('calendarView').style.display = '';
-  document.getElementById('controls').style.display = 'none';
-  document.getElementById('rowHeader').style.display = 'none';
-  document.getElementById('tabCalendar').classList.add('active');
-  document.getElementById('tabLocations').classList.remove('active');
-  renderCal();
+
+document.getElementById('logClearBtn').addEventListener('click', async ()=>{
+  if(!confirm('Tüm değişiklik kaydını temizlemek istediğine emin misin? (Bunu genelde Claude\'a gönderdikten sonra yaparsın.)')) return;
+  activityLog = [];
+  await persist();
+  renderLog();
 });
 
 function showToast(msg){
@@ -2249,6 +2348,8 @@ function wireCardEvents(container){
       const loc = locations.find(x=>x.id===id);
       loc[field] = loc[field] === 'E' ? 'H' : 'E';
       if(field==='script' && loc[field]==='E') loc.prepRequested = 'H';
+      const fieldNames = {script:'Script',filmed:'Çekim',audio:'Ses',edited:'Kurgu',published:'Yayın',permission:'İzin'};
+      logActivity(`"${loc.name}" — ${fieldNames[field]||field}: ${loc[field]==='E' ? 'işaretlendi ✓' : 'işaret kaldırıldı'}.`);
       await persist();
       render();
     });
@@ -2423,8 +2524,10 @@ document.getElementById('saveBtn').addEventListener('click', async ()=>{
   if(id){
     const idx = locations.findIndex(x=>x.id===id);
     locations[idx] = {...locations[idx], ...data};
+    logActivity(`"${data.name}" lokasyonu güncellendi.`);
   }else{
     locations.push(normalizeLocation({...data, id:'loc_'+Date.now()}));
+    logActivity(`Yeni lokasyon eklendi: "${data.name}".`);
   }
   await persist();
   closeModal();
@@ -2434,7 +2537,10 @@ document.getElementById('saveBtn').addEventListener('click', async ()=>{
 document.getElementById('deleteBtn').addEventListener('click', async ()=>{
   const id = document.getElementById('editId').value;
   if(!confirm(t('delete_confirm'))) return;
+  const loc = locations.find(x=>x.id===id);
+  const name = loc ? loc.name : id;
   locations = locations.filter(x=>x.id!==id);
+  logActivity(`Lokasyon silindi: "${name}".`);
   await persist();
   closeModal();
   render();
@@ -2471,6 +2577,35 @@ document.getElementById('pkgCancelBtn').addEventListener('click', closePkgModal)
 document.getElementById('pkgOverlay').addEventListener('click', (e)=>{
   if(e.target.id==='pkgOverlay') closePkgModal();
 });
+document.getElementById('pkgFillFromJsonBtn').addEventListener('click', ()=>{
+  const raw = document.getElementById('p_jsonPaste').value.trim();
+  if(!raw){ alert('Önce JSON metnini yapıştır.'); return; }
+  let obj;
+  try{
+    obj = JSON.parse(raw);
+  }catch(e){
+    alert('JSON okunamadı — Claude\'un verdiği bloğu eksiksiz kopyaladığından emin ol.\n\n' + e.message);
+    return;
+  }
+  const fieldMap = {
+    shotList:'p_shotList', youtubeTitles:'p_youtubeTitles', youtubeThumbPrompt:'p_youtubeThumbPrompt',
+    reelsCount:'p_reelsCount', reelsTitles:'p_reelsTitles', reelsThumbPrompts:'p_reelsThumbPrompts',
+    hashtags:'p_hashtags', tags:'p_tags', shortsTags:'p_shortsTags', keywordNotes:'p_keywordNotes',
+    captionShorts:'p_captionShorts', captionYouTube:'p_captionYouTube',
+    captionInstagram:'p_captionInstagram', captionFacebook:'p_captionFacebook',
+    fbTags:'p_fbTags', fbCoverPrompt:'p_fbCoverPrompt'
+  };
+  let filled = 0;
+  Object.keys(fieldMap).forEach(key=>{
+    if(obj[key] !== undefined){
+      const el = document.getElementById(fieldMap[key]);
+      if(el){ el.value = obj[key]; filled++; }
+    }
+  });
+  document.getElementById('p_jsonPaste').value = '';
+  showToast(`${filled} alan dolduruldu ✓ — kontrol edip "Kaydet"e bas`);
+});
+
 document.getElementById('pkgSaveBtn').addEventListener('click', async ()=>{
   const id = document.getElementById('pkgId').value;
   const l = locations.find(x=>x.id===id);
@@ -2493,6 +2628,7 @@ document.getElementById('pkgSaveBtn').addEventListener('click', async ()=>{
     fbTags: document.getElementById('p_fbTags').value,
     fbCoverPrompt: document.getElementById('p_fbCoverPrompt').value
   };
+  logActivity(`"${l.name}" — Yayın Paketi güncellendi.`);
   await persist();
   closePkgModal();
   render();
