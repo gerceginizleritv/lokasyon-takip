@@ -2118,6 +2118,7 @@ const CAL_DOW_SHORT = ["Pzt","Sal","Çar","Per","Cum","Cmt","Paz"];
 
 let calCurrentEvent = null; // event object being viewed/edited in the modal (null = creating new)
 let calViewMode = 'grid'; // 'grid' | 'table'
+let calNewUploadedState = false; // "Yükledim" toggle state while creating a brand-new entry (not yet saved)
 
 function calPad(n){ return n<10 ? '0'+n : ''+n; }
 
@@ -2315,6 +2316,7 @@ function openCalDetail(ev){
     document.getElementById('cal_title').value = '';
     document.getElementById('cal_date').value = `${today.getFullYear()}-${calPad(today.getMonth()+1)}-${calPad(today.getDate())}`;
     document.getElementById('cal_time').value = '20:00';
+    calNewUploadedState = false;
   }
 
   refreshCalModalStatus();
@@ -2330,13 +2332,15 @@ function refreshCalModalStatus(){
   const statusEl = document.getElementById('calDStatus');
 
   if(!ev){
-    // New entry — nothing to mark as uploaded yet
-    toggle.classList.remove('checked');
+    // New entry — not saved yet, but the toggle IS usable: it sets the
+    // starting "uploaded" state that will be applied to every platform
+    // created on save, so it doesn't need fixing one-by-one afterward.
+    toggle.classList.toggle('checked', calNewUploadedState);
     toggle.classList.remove('disabled');
-    box.textContent = '';
-    sub.textContent = 'Yeni giriş';
-    statusEl.className = 'cal-modal-status planned';
-    statusEl.textContent = '🕒 PLANLANACAK';
+    box.textContent = calNewUploadedState ? '✓' : '';
+    sub.textContent = calNewUploadedState ? 'İşaretli (kayıtta tüm platformlara uygulanır)' : 'İşaretsiz';
+    statusEl.className = 'cal-modal-status ' + (calNewUploadedState ? 'ready' : 'planned');
+    statusEl.textContent = calNewUploadedState ? '✓ YÜKLENDİ OLARAK KAYDEDİLECEK' : '🕒 PLANLANACAK';
     return;
   }
   const status = calEventStatus(ev);
@@ -2381,11 +2385,14 @@ document.querySelectorAll('#calPlatformMultiWrap input[type="checkbox"]').forEac
 });
 
 document.getElementById('calUploadToggle').addEventListener('click', ()=>{
-  if(!calCurrentEvent) return; // nothing to toggle on a not-yet-saved new entry
-  if(calEventStatus(calCurrentEvent) === 'live') return;
-  calCurrentEvent.uploaded = !calCurrentEvent.uploaded;
-  const loc = locations.find(l=>l.id===calCurrentEvent.locationId);
-  logActivity(`Takvim — "${loc?loc.name:'?'}" (${CAL_PLATFORM_NAMES[calCurrentEvent.platform]}, ${calCurrentEvent.date} ${calCurrentEvent.time}): ${calCurrentEvent.uploaded ? 'yüklendi olarak işaretlendi' : 'işaret kaldırıldı'}.`);
+  if(calCurrentEvent){
+    if(calEventStatus(calCurrentEvent) === 'live') return;
+    calCurrentEvent.uploaded = !calCurrentEvent.uploaded;
+    const loc = locations.find(l=>l.id===calCurrentEvent.locationId);
+    logActivity(`Takvim — "${loc?loc.name:'?'}" (${CAL_PLATFORM_NAMES[calCurrentEvent.platform]}, ${calCurrentEvent.date} ${calCurrentEvent.time}): ${calCurrentEvent.uploaded ? 'yüklendi olarak işaretlendi' : 'işaret kaldırıldı'}.`);
+  } else {
+    calNewUploadedState = !calNewUploadedState;
+  }
   refreshCalModalStatus();
   renderCal();
 });
@@ -2413,7 +2420,7 @@ document.getElementById('calSaveBtn').addEventListener('click', async ()=>{
       calendarEvents.push({
         id: 'cal_'+Date.now()+'_'+i,
         locationId, platform, title, date, time,
-        uploaded: false
+        uploaded: calNewUploadedState
       });
     });
     const platformNames = platforms.map(p=>CAL_PLATFORM_NAMES[p]).join(', ');
