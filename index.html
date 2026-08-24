@@ -1478,6 +1478,23 @@ function normalizeLocation(l){
 function applyCorrections(){
   let changed = false;
 
+  if(!locations.find(l => l.name === "Kin Kapısı (Fener Rum Patrikhanesi)")){
+    locations.push({
+      id: 'loc_'+Date.now()+'_kinkapisi',
+      name: "Kin Kapısı (Fener Rum Patrikhanesi)",
+      district: "Fatih", city: "İstanbul", address: "Fener, Dr. Sadık Ahmet Caddesi",
+      mapsLink: "https://www.google.com/maps/search/?api=1&query=Fener%20Rum%20Patrikhanesi%2C%20Dr.%20Sad%C4%B1k%20Ahmet%20Caddesi%2C%20Fener%2C%20Fatih%2C%20%C4%B0stanbul",
+      imageUrl: "https://commons.wikimedia.org/wiki/Special:FilePath/St._George%27s_Cathedral_2022_(6).jpg?width=400",
+      format: "Saha",
+      topic: "Fener Rum Patrikhanesi'nin orta kapısı — 1821'de Patrik V. Gregorios'un Paskalya ayininden hemen sonra bu kapıda idam edilmesinin ardından kaynak kaynatılıp kapatıldı, 200 yıla yakındır hiç açılmadı. Halk arasında 'Kin Kapısı' olarak biliniyor.",
+      filmed: "E", audio: "E", edited: "E", published: "E", permission: "H", script: "E",
+      scriptLink: "", driveFolderLink: "",
+      notes: "Tamamlandı, yayınlandı.",
+      shootingCautions: "Patrikhane güvenlik kontrolünden geçiliyor (metal detektör) — kapı sadece dışarıdan, güvenlik alanının hemen girişinden çekilebilir, avlu içi çekim için ayrıca izin gerekebilir."
+    });
+    changed = true;
+  }
+
     // Batch: real Wikimedia Commons images for well-known locations
   {
     const loc = locations.find(l => l.name === "Yedikule Zindanları");
