@@ -1472,6 +1472,30 @@ function normalizeLocation(l){
 function applyCorrections(){
   let changed = false;
 
+  const rumeliHisariLoc = locations.find(l => l.name === "Rumeli Hisarı");
+  if(rumeliHisariLoc){
+    const hasYtEntry = calendarEvents.some(e => e.locationId === rumeliHisariLoc.id && e.platform === 'yt' && e.date === '2026-08-28');
+    if(!hasYtEntry){
+      calendarEvents.push({
+        id: 'cal_'+Date.now()+'_rh_yt',
+        locationId: rumeliHisariLoc.id, platform: 'yt',
+        title: 'Rumeli Hisarı (Uzun Video)',
+        date: '2026-08-28', time: '20:00', uploaded: false
+      });
+      changed = true;
+    }
+    const hasFbEntry = calendarEvents.some(e => e.locationId === rumeliHisariLoc.id && e.platform === 'fb' && e.date === '2026-08-28');
+    if(!hasFbEntry){
+      calendarEvents.push({
+        id: 'cal_'+Date.now()+'_rh_fb',
+        locationId: rumeliHisariLoc.id, platform: 'fb',
+        title: 'Rumeli Hisarı (Native)',
+        date: '2026-08-28', time: '21:00', uploaded: false
+      });
+      changed = true;
+    }
+  }
+
   const catladikapi = locations.find(l => l.name === "Çatladıkapı");
   if(catladikapi && catladikapi.notes && catladikapi.notes.includes("Script hazır")){
     catladikapi.topic = "Henüz araştırma/script aşamasında değil.";
