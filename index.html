@@ -674,6 +674,15 @@ select{
 .cal-empty-dash{color:var(--line);text-align:center;padding-top:12px;font-size:11px;}
 
 .cal-edit-row{display:flex;gap:10px;margin-bottom:16px;}
+.cal-platform-checks{display:flex;gap:8px;flex-wrap:wrap;}
+.cal-platform-check{
+  display:flex;align-items:center;gap:6px;
+  background:var(--ink);border:1px solid var(--line);
+  padding:7px 11px;cursor:pointer;font-size:12px;color:var(--parchment-dim);
+  transition:all .12s;
+}
+.cal-platform-check:has(input:checked){border-color:var(--gold);background:rgba(200,162,74,0.1);color:var(--parchment);}
+.cal-platform-check input{accent-color:var(--gold);cursor:pointer;}
 .cal-edit-field{flex:1;}
 .cal-edit-field label{display:block;font-family:'JetBrains Mono',monospace;font-size:9.5px;letter-spacing:1px;color:var(--gold-dim);text-transform:uppercase;margin-bottom:5px;}
 .cal-edit-field input, .cal-edit-field select{
@@ -849,7 +858,17 @@ select{
       <label>Lokasyon</label>
       <select id="cal_locationId"></select>
     </div>
-    <div class="field">
+    <div class="field" id="calPlatformMultiWrap">
+      <label>Platform(lar) — aynı video birden fazla platforma birden yayınlanacaksa hepsini seç</label>
+      <div class="cal-platform-checks">
+        <label class="cal-platform-check" data-platform="yt"><input type="checkbox" value="yt" checked><span class="cal-p-badge" style="background:#D64545;">YT</span>YouTube</label>
+        <label class="cal-platform-check" data-platform="yts"><input type="checkbox" value="yts"><span class="cal-p-badge" style="background:#E8632B;">YTS</span>Shorts</label>
+        <label class="cal-platform-check" data-platform="ig"><input type="checkbox" value="ig"><span class="cal-p-badge" style="background:#C1447E;">IG</span>Instagram</label>
+        <label class="cal-platform-check" data-platform="fb"><input type="checkbox" value="fb"><span class="cal-p-badge" style="background:#4B7BD1;">FB</span>Facebook</label>
+        <label class="cal-platform-check" data-platform="tt"><input type="checkbox" value="tt"><span class="cal-p-badge" style="background:#3FC9D1;color:#0a0a0a;">TT</span>TikTok</label>
+      </div>
+    </div>
+    <div class="field" id="calPlatformSingleWrap" style="display:none;">
       <label>Platform</label>
       <select id="cal_platform">
         <option value="yt">YouTube (Uzun Video)</option>
@@ -2262,6 +2281,16 @@ function populateCalLocationSelect(){
     .join('');
 }
 
+function getSelectedNewPlatforms(){
+  return Array.from(document.querySelectorAll('#calPlatformMultiWrap input[type="checkbox"]:checked')).map(el=>el.value);
+}
+
+function currentPreviewPlatform(){
+  if(calCurrentEvent) return document.getElementById('cal_platform').value;
+  const checked = getSelectedNewPlatforms();
+  return checked[0] || 'yt';
+}
+
 function openCalDetail(ev){
   calCurrentEvent = ev || null;
   populateCalLocationSelect();
@@ -2271,6 +2300,8 @@ function openCalDetail(ev){
   document.getElementById('calDBadge').style.background = ev ? CAL_PLATFORM_COLORS[ev.platform] : '#8C7538';
   document.getElementById('calDBadge').textContent = ev ? CAL_LABELS[ev.platform] : '+';
   document.getElementById('calDeleteBtn').style.display = isNew ? 'none' : '';
+  document.getElementById('calPlatformMultiWrap').style.display = isNew ? '' : 'none';
+  document.getElementById('calPlatformSingleWrap').style.display = isNew ? 'none' : '';
 
   if(ev){
     document.getElementById('cal_locationId').value = ev.locationId;
@@ -2280,7 +2311,7 @@ function openCalDetail(ev){
     document.getElementById('cal_time').value = ev.time || '';
   } else {
     const today = new Date();
-    document.getElementById('cal_platform').value = 'yt';
+    document.querySelectorAll('#calPlatformMultiWrap input[type="checkbox"]').forEach(el=>{ el.checked = el.value === 'yt'; });
     document.getElementById('cal_title').value = '';
     document.getElementById('cal_date').value = `${today.getFullYear()}-${calPad(today.getMonth()+1)}-${calPad(today.getDate())}`;
     document.getElementById('cal_time').value = '20:00';
@@ -2321,7 +2352,7 @@ function refreshCalModalStatus(){
 function refreshCalPkgFields(){
   const fields = document.getElementById('calPkgFields');
   const locId = document.getElementById('cal_locationId').value;
-  const platform = document.getElementById('cal_platform').value;
+  const platform = currentPreviewPlatform();
   const loc = locations.find(l=>l.id===locId);
   if(!loc || !loc.package){ fields.innerHTML = ''; return; }
   const pkg = loc.package;
@@ -2345,6 +2376,9 @@ document.getElementById('cal_platform').addEventListener('change', ()=>{
   refreshCalPkgFields();
   if(calCurrentEvent) document.getElementById('calDBadge').style.background = CAL_PLATFORM_COLORS[document.getElementById('cal_platform').value];
 });
+document.querySelectorAll('#calPlatformMultiWrap input[type="checkbox"]').forEach(el=>{
+  el.addEventListener('change', refreshCalPkgFields);
+});
 
 document.getElementById('calUploadToggle').addEventListener('click', ()=>{
   if(!calCurrentEvent) return; // nothing to toggle on a not-yet-saved new entry
@@ -2358,7 +2392,6 @@ document.getElementById('calUploadToggle').addEventListener('click', ()=>{
 
 document.getElementById('calSaveBtn').addEventListener('click', async ()=>{
   const locationId = document.getElementById('cal_locationId').value;
-  const platform = document.getElementById('cal_platform').value;
   const title = document.getElementById('cal_title').value.trim();
   const date = document.getElementById('cal_date').value;
   const time = document.getElementById('cal_time').value;
@@ -2366,6 +2399,7 @@ document.getElementById('calSaveBtn').addEventListener('click', async ()=>{
   if(!title){ alert('Başlık/not gerekli.'); return; }
 
   if(calCurrentEvent){
+    const platform = document.getElementById('cal_platform').value;
     calCurrentEvent.locationId = locationId;
     calCurrentEvent.platform = platform;
     calCurrentEvent.title = title;
@@ -2373,12 +2407,17 @@ document.getElementById('calSaveBtn').addEventListener('click', async ()=>{
     calCurrentEvent.time = time;
     logActivity(`Takvim girişi güncellendi: "${title}" (${CAL_PLATFORM_NAMES[platform]}, ${date} ${time}).`);
   } else {
-    calendarEvents.push({
-      id: 'cal_'+Date.now(),
-      locationId, platform, title, date, time,
-      uploaded: false
+    const platforms = getSelectedNewPlatforms();
+    if(platforms.length === 0){ alert('En az bir platform seç.'); return; }
+    platforms.forEach((platform, i)=>{
+      calendarEvents.push({
+        id: 'cal_'+Date.now()+'_'+i,
+        locationId, platform, title, date, time,
+        uploaded: false
+      });
     });
-    logActivity(`Yeni takvim girişi: "${title}" (${CAL_PLATFORM_NAMES[platform]}, ${date} ${time}).`);
+    const platformNames = platforms.map(p=>CAL_PLATFORM_NAMES[p]).join(', ');
+    logActivity(`Yeni takvim girişi: "${title}" (${platformNames} — ${date} ${time}, ${platforms.length} platform${platforms.length>1?'a birden':''}).`);
   }
   await persist();
   closeCalModal();
