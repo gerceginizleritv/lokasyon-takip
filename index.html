@@ -1,0 +1,2028 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Saha Dosyası — Gerçeğin İzleri</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap');
+
+:root{
+  --ink:#0D0D0F;
+  --ink-2:#17171A;
+  --ink-3:#212124;
+  --parchment:#EFE6D4;
+  --parchment-dim:#C9BFA9;
+  --gold:#C8A24A;
+  --gold-dim:#8C7538;
+  --red:#B4302B;
+  --red-dim:#7A211D;
+  --line:rgba(200,162,74,0.25);
+}
+*{box-sizing:border-box;}
+body{
+  margin:0;
+  background:var(--ink);
+  color:var(--parchment);
+  font-family:'Poppins',sans-serif;
+  padding:0 20px 80px;
+  min-height:100vh;
+}
+.wrap{max-width:1180px;margin:0 auto;}
+
+/* Freeze-panes style sticky header: masthead + controls + (optional)
+   row-view column labels stay pinned while the list below scrolls. */
+.sticky-head{
+  position:sticky;
+  top:0;
+  z-index:30;
+  background:var(--ink);
+  padding-top:28px;
+  padding-bottom:14px;
+  margin:0 -20px;
+  padding-left:20px;
+  padding-right:20px;
+  border-bottom:1px solid var(--line);
+}
+
+.row-header{
+  display:grid;
+  grid-template-columns:minmax(160px,1fr) 300px 232px 190px;
+  align-items:center;
+  gap:16px;
+  padding:10px 16px 4px;
+  font-family:'JetBrains Mono',monospace;
+  font-size:10px;
+  letter-spacing:1px;
+  text-transform:uppercase;
+  color:var(--gold-dim);
+}
+.row-header-stamps{display:flex;gap:8px;}
+.row-header-stamps span{
+  width:40px;
+  text-align:center;
+  font-size:9.5px;
+  letter-spacing:0;
+  white-space:nowrap;
+  overflow:hidden;
+}
+@media(max-width:820px){
+  .row-header{display:none !important;}
+}
+
+/* HEADER */
+.masthead{
+  border:1px solid var(--line);
+  border-bottom:3px solid var(--gold);
+  padding:22px 26px;
+  margin-bottom:22px;
+  position:relative;
+  background:linear-gradient(180deg, var(--ink-2), var(--ink));
+}
+.eyebrow{
+  font-family:'JetBrains Mono',monospace;
+  font-size:11px;
+  letter-spacing:3px;
+  color:var(--gold);
+  text-transform:uppercase;
+}
+h1{
+  font-family:'Poppins',sans-serif;
+  font-weight:800;
+  font-size:28px;
+  letter-spacing:0.5px;
+  margin:6px 0 2px;
+  text-transform:uppercase;
+}
+.slogan{
+  font-size:13px;
+  color:var(--parchment-dim);
+  font-style:italic;
+}
+.stats-row{
+  display:flex;
+  gap:0;
+  margin-top:18px;
+  border-top:1px solid var(--line);
+  padding-top:14px;
+  flex-wrap:wrap;
+}
+.stat{
+  flex:1;
+  min-width:110px;
+  padding:0 18px;
+  border-right:1px solid var(--line);
+}
+.stat:last-child{border-right:none;}
+.stat .num{font-family:'JetBrains Mono',monospace;font-size:22px;font-weight:700;color:var(--gold);}
+.stat .lbl{font-size:10px;letter-spacing:1.5px;text-transform:uppercase;color:var(--parchment-dim);}
+
+/* CONTROLS */
+.controls{
+  display:flex;
+  gap:10px;
+  margin-bottom:18px;
+  flex-wrap:wrap;
+  align-items:center;
+}
+input[type="text"], select{
+  background:var(--ink-2);
+  border:1px solid var(--line);
+  color:var(--parchment);
+  font-family:'Poppins',sans-serif;
+  font-size:13px;
+  padding:9px 12px;
+}
+input[type="text"]{flex:1;min-width:200px;}
+select{cursor:pointer;}
+.btn{
+  background:var(--gold);
+  color:var(--ink);
+  border:none;
+  font-family:'Poppins',sans-serif;
+  font-weight:700;
+  font-size:13px;
+  padding:10px 18px;
+  cursor:pointer;
+  letter-spacing:0.3px;
+  transition:opacity .15s;
+}
+.btn:hover{opacity:0.85;}
+.btn-ghost{
+  background:transparent;
+  border:1px solid var(--gold-dim);
+  color:var(--gold);
+}
+.btn-danger{background:var(--red);color:var(--parchment);}
+
+/* GRID */
+.grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fill, minmax(340px,1fr));
+  gap:14px;
+}
+
+/* ROW / LIST VIEW */
+.list{display:flex;flex-direction:column;border:1px solid var(--line);}
+.row{
+  display:grid;
+  grid-template-columns:minmax(160px,1fr) 300px 232px 190px;
+  align-items:center;
+  gap:16px;
+  padding:12px 16px;
+  border-bottom:1px solid var(--line);
+  border-left:3px solid var(--gold-dim);
+  background:var(--ink-2);
+  transition:background .15s;
+}
+.row:last-child{border-bottom:none;}
+.row:hover{background:var(--ink-3);}
+.row.row-done{border-left-color:var(--gold);opacity:0.75;}
+.row.row-cancelled{border-left-color:var(--red);opacity:0.5;}
+.row.row-needs-script{border-left-color:#E8912D;}
+.row-main{min-width:0;}
+.row-idx{font-family:'JetBrains Mono',monospace;font-size:9px;color:var(--gold-dim);letter-spacing:1px;}
+.row-name{font-weight:700;font-size:14.5px;display:flex;align-items:center;gap:6px;min-width:0;}
+.row-name .name-text{flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.row-name .mini-badge{
+  font-family:'JetBrains Mono',monospace;
+  font-size:8.5px;
+  background:var(--gold);
+  color:var(--ink);
+  padding:1px 5px;
+  margin-left:6px;
+  letter-spacing:1px;
+}
+.row-loc{
+  font-family:'JetBrains Mono',monospace;
+  font-size:10.5px;
+  color:var(--parchment-dim);
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
+}
+.row-meta{display:flex;align-items:center;gap:8px;flex-wrap:wrap;}
+.row-stamps{display:flex;gap:8px;}
+.row-stamp{
+  width:40px;
+  text-align:center;
+  padding:6px 0;
+  cursor:pointer;
+  border:1px solid var(--line);
+  background:var(--ink);
+  font-family:'JetBrains Mono',monospace;
+  font-size:11px;
+  font-weight:700;
+  color:var(--parchment-dim);
+}
+.row-stamp.E{background:rgba(200,162,74,0.15);border-color:var(--gold);color:var(--gold);}
+.row-stamp:hover{border-color:var(--gold);}
+.row-actions{display:flex;gap:6px;white-space:nowrap;}
+.row-actions .icon-btn{padding:5px 9px;font-size:10.5px;}
+@media(max-width:820px){
+  .row{grid-template-columns:1fr;gap:8px;}
+  .row-actions{justify-content:flex-start;}
+}
+.card{
+  background:var(--ink-2);
+  border:1px solid var(--line);
+  border-left:4px solid var(--gold-dim);
+  padding:16px 18px;
+  position:relative;
+  transition:border-color .2s;
+  display:flex;
+  flex-direction:column;
+}
+.card.done{border-left-color:var(--gold);}
+.card.hybrid-flag{border-left-color:var(--red-dim);}
+.card.cancelled{border-left-color:var(--red);opacity:0.55;}
+.card.needs-script{border-left-color:#E8912D;}
+.needs-script-badge{
+  display:inline-block;
+  font-family:'JetBrains Mono',monospace;
+  font-size:9.5px;
+  letter-spacing:1px;
+  color:#E8912D;
+  background:rgba(232,145,45,0.12);
+  border:1px solid #E8912D;
+  padding:3px 8px;
+  margin-bottom:10px;
+  animation:pulse-border 2s infinite;
+}
+@keyframes pulse-border{
+  0%,100%{border-color:#E8912D;}
+  50%{border-color:rgba(232,145,45,0.4);}
+}
+.prep-badge{
+  display:inline-block;
+  font-family:'JetBrains Mono',monospace;
+  font-size:9.5px;
+  letter-spacing:1px;
+  color:#7FA3B8;
+  background:rgba(127,163,184,0.12);
+  border:1px solid #7FA3B8;
+  padding:3px 8px;
+  margin-bottom:10px;
+}
+.icon-btn.trigger-active{border-color:#7FA3B8;color:#7FA3B8;}
+.cancelled-badge{
+  position:absolute;
+  top:14px;right:16px;
+  font-family:'JetBrains Mono',monospace;
+  font-size:9px;
+  letter-spacing:2px;
+  color:#fff;
+  background:var(--red);
+  padding:3px 7px;
+  transform:rotate(3deg);
+}
+.card-top{display:flex;justify-content:space-between;align-items:flex-start;gap:10px;}
+.card-top-main{flex:1;min-width:0;}
+.card-idx{font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--gold-dim);letter-spacing:1px;}
+.card-name{font-weight:700;font-size:16px;margin:3px 0 4px;line-height:1.25;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.card-loc{font-size:11px;color:var(--parchment-dim);font-family:'JetBrains Mono',monospace;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.maps-link{
+  display:inline-block;
+  font-size:10.5px;
+  color:#7FA3B8;
+  text-decoration:none;
+  border-bottom:1px dotted #7FA3B8;
+  margin-top:3px;
+}
+.maps-link:hover{color:var(--parchment);}
+.fmt-tag{
+  font-size:10px;
+  letter-spacing:1px;
+  text-transform:uppercase;
+  padding:3px 8px;
+  border:1px solid currentColor;
+  white-space:nowrap;
+  font-family:'JetBrains Mono',monospace;
+  flex-shrink:0;
+}
+.fmt-Saha{color:var(--gold);}
+.fmt-Masabaşı{color:#7FA3B8;}
+.fmt-Hibrit{color:var(--red);}
+
+.card-date-row{
+  display:flex;
+  align-items:center;
+  gap:6px;
+}
+.card-date-row .date-label{
+  font-family:'JetBrains Mono',monospace;
+  font-size:9.5px;
+  letter-spacing:1px;
+  text-transform:uppercase;
+  color:var(--gold-dim);
+}
+
+.topic{
+  font-size:12.5px;
+  color:var(--parchment-dim);
+  margin:10px 0 4px;
+  line-height:1.4;
+  min-height:calc(1.4em * 2);
+  display:-webkit-box;
+  -webkit-line-clamp:2;
+  -webkit-box-orient:vertical;
+  overflow:hidden;
+}
+.read-more{
+  display:block;
+  font-size:11px;
+  color:var(--gold);
+  cursor:pointer;
+  border:none;
+  background:none;
+  padding:0;
+  margin-bottom:10px;
+  font-family:'Poppins',sans-serif;
+  text-decoration:underline;
+  text-decoration-style:dotted;
+}
+.read-more:hover{color:var(--parchment);}
+.slot-empty{visibility:hidden;pointer-events:none;}
+
+.perm-flag{
+  font-size:10.5px;
+  color:var(--red);
+  background:rgba(180,48,43,0.12);
+  border:1px solid var(--red-dim);
+  padding:3px 8px;
+  display:inline-block;
+  margin-bottom:10px;
+  font-family:'JetBrains Mono',monospace;
+}
+
+.stages{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:10px;}
+.stamp{
+  flex:1 1 18%;
+  min-width:54px;
+  text-align:center;
+  padding:7px 2px;
+  cursor:pointer;
+  border:1px solid var(--line);
+  background:var(--ink);
+  font-family:'JetBrains Mono',monospace;
+  font-size:9.5px;
+  letter-spacing:0.5px;
+  user-select:none;
+  transition:all .15s;
+}
+.stamp .v{display:block;font-weight:700;font-size:13px;margin-bottom:2px;}
+.stamp.E{background:rgba(200,162,74,0.15);border-color:var(--gold);color:var(--gold);}
+.stamp.H{color:var(--parchment-dim);}
+.stamp:hover{border-color:var(--gold);}
+
+.script-link{
+  display:inline-block;
+  font-size:11px;
+  color:var(--gold);
+  text-decoration:none;
+  border-bottom:1px dotted var(--gold-dim);
+  margin-bottom:10px;
+}
+.script-link:hover{color:var(--parchment);}
+
+.date-badge{
+  display:inline-block;
+  font-family:'JetBrains Mono',monospace;
+  font-size:10.5px;
+  color:var(--parchment);
+  background:rgba(200,162,74,0.1);
+  border:1px solid var(--line);
+  padding:3px 8px;
+  margin-bottom:10px;
+  margin-left:8px;
+}
+
+.inline-date{
+  background:rgba(200,162,74,0.1);
+  border:1px solid var(--line);
+  color:var(--gold);
+  font-family:'JetBrains Mono',monospace;
+  font-size:11px;
+  padding:2px 5px;
+  margin-left:8px;
+  cursor:pointer;
+  vertical-align:middle;
+  color-scheme:dark;
+  flex-shrink:0;
+}
+.inline-date:hover{border-color:var(--gold);}
+.card-actions .inline-date{font-size:10px;padding:5px 6px;}
+
+.notes{
+  font-size:11.5px;
+  color:var(--parchment-dim);
+  border-top:1px dashed var(--line);
+  padding-top:8px;
+  margin-top:8px;
+  min-height:calc(1.4em * 2 + 8px);
+  line-height:1.4;
+  display:-webkit-box;
+  -webkit-line-clamp:2;
+  -webkit-box-orient:vertical;
+  overflow:hidden;
+}
+.card-actions{
+  display:flex;
+  align-items:center;
+  gap:8px;
+  margin-top:auto;
+  padding-top:12px;
+  justify-content:space-between;
+}
+.card-actions-buttons{display:flex;gap:8px;}
+.icon-btn{
+  background:none;
+  border:1px solid var(--line);
+  color:var(--parchment-dim);
+  font-size:11px;
+  padding:5px 10px;
+  cursor:pointer;
+  font-family:'Poppins',sans-serif;
+}
+.icon-btn:hover{border-color:var(--gold);color:var(--gold);}
+
+.completed-badge{
+  position:absolute;
+  top:14px;right:16px;
+  font-family:'JetBrains Mono',monospace;
+  font-size:9px;
+  letter-spacing:2px;
+  color:var(--ink);
+  background:var(--gold);
+  padding:3px 7px;
+  transform:rotate(3deg);
+}
+
+/* MODAL */
+.overlay{
+  display:none;
+  position:fixed;inset:0;
+  background:rgba(0,0,0,0.7);
+  z-index:50;
+  align-items:center;justify-content:center;
+  padding:20px;
+}
+.overlay.open{display:flex;}
+.modal{
+  background:var(--ink-2);
+  border:1px solid var(--gold-dim);
+  border-top:4px solid var(--gold);
+  padding:24px;
+  width:100%;
+  max-width:520px;
+  max-height:88vh;
+  overflow-y:auto;
+}
+.modal h2{font-size:16px;text-transform:uppercase;letter-spacing:1px;margin:0 0 16px;}
+.field{margin-bottom:12px;}
+.field label{
+  display:block;
+  font-size:10.5px;
+  letter-spacing:1px;
+  text-transform:uppercase;
+  color:var(--parchment-dim);
+  margin-bottom:5px;
+  font-family:'JetBrains Mono',monospace;
+}
+.field input, .field select, .field textarea{
+  width:100%;
+  background:var(--ink);
+  border:1px solid var(--line);
+  color:var(--parchment);
+  padding:9px 10px;
+  font-family:'Poppins',sans-serif;
+  font-size:13px;
+}
+.field textarea{resize:vertical;min-height:50px;}
+.field-row{display:flex;gap:10px;flex-wrap:wrap;}
+.field-row .field{flex:1 1 110px;min-width:110px;}
+.field-row-5{display:grid;grid-template-columns:repeat(5,1fr);gap:8px;}
+.field-row-5 .field{min-width:0;}
+.field-row-5 .field label{font-size:8.5px;letter-spacing:0.5px;}
+.field-row-5 .field select{padding:9px 4px;font-size:12px;}
+.modal-actions{display:flex;justify-content:flex-end;gap:10px;margin-top:18px;}
+.modal-wide{max-width:760px;}
+.pkg-section{
+  border-top:1px solid var(--line);
+  padding-top:14px;
+  margin-top:14px;
+}
+.pkg-section-title{
+  font-family:'JetBrains Mono',monospace;
+  font-size:10.5px;
+  letter-spacing:1.5px;
+  text-transform:uppercase;
+  color:var(--gold);
+  margin-bottom:10px;
+}
+.pkg-hint{font-size:10.5px;color:var(--parchment-dim);margin-top:-6px;margin-bottom:10px;font-style:italic;}
+.field-header{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:8px;
+}
+.copy-btn{
+  background:none;
+  border:1px solid var(--gold-dim);
+  color:var(--gold);
+  font-size:11px;
+  padding:3px 9px;
+  cursor:pointer;
+  white-space:nowrap;
+  flex-shrink:0;
+}
+.copy-btn:hover{ background:rgba(200,162,74,0.12); }
+.copy-btn.copied{ color:var(--parchment); border-color:var(--parchment); }
+.detail-text{
+  font-size:13px;
+  line-height:1.6;
+  color:var(--parchment);
+  white-space:pre-wrap;
+  background:var(--ink);
+  border:1px solid var(--line);
+  padding:10px 12px;
+}
+
+.empty{
+  text-align:center;
+  padding:60px 20px;
+  color:var(--parchment-dim);
+  border:1px dashed var(--line);
+}
+
+@media(max-width:600px){
+  h1{font-size:21px;}
+  .stats-row{gap:8px;}
+  .stat{border-right:none;padding:0;min-width:80px;}
+}
+.backup-row{
+  display:flex;
+  gap:8px;
+  margin-top:12px;
+  flex-wrap:wrap;
+}
+.btn-small{
+  font-size:11px;
+  padding:6px 12px;
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<div class="sticky-head">
+  <div class="masthead">
+    <div class="eyebrow" data-i18n="eyebrow">Saha Dosyası · Dahili Kayıt Sistemi</div>
+    <h1 data-i18n="title">Lokasyon Takip Sistemi</h1>
+    <div class="slogan">Gerçeğin İzleri · Tarihi Dedektif — "Rivayet değil, kayıt."</div>
+    <div class="stats-row" id="statsRow"></div>
+    <div class="backup-row">
+      <button class="btn btn-ghost btn-small" id="exportBtn">💾 Yedek İndir</button>
+      <button class="btn btn-ghost btn-small" id="importBtn">📤 Yedekten Geri Yükle</button>
+      <input type="file" id="importFile" accept="application/json" style="display:none;">
+    </div>
+  </div>
+
+  <div class="controls">
+    <input type="text" id="search" data-i18n-placeholder="search_ph" placeholder="Lokasyon, ilçe veya konu ara...">
+    <select id="filterFormat">
+      <option value="" data-i18n="fmt_all">Tüm Formatlar</option>
+      <option value="Saha" data-i18n="fmt_saha">Saha</option>
+      <option value="Masabaşı" data-i18n="fmt_masabasi">Masabaşı</option>
+      <option value="Hibrit" data-i18n="fmt_hibrit">Hibrit</option>
+    </select>
+    <select id="filterDistrict"></select>
+    <select id="filterCity"></select>
+    <select id="filterStatus">
+      <option value="" data-i18n="status_all">Tüm Durumlar</option>
+      <option value="pending" data-i18n="status_pending">Devam Eden</option>
+      <option value="done" data-i18n="status_done">Tamamlanan (Yayında)</option>
+      <option value="unfilmed" data-i18n="status_unfilmed">Henüz Çekilmedi</option>
+      <option value="permission" data-i18n="status_permission">İzin Bekliyor</option>
+      <option value="needsscript" data-i18n="status_needsscript">🎬 Script Yazılması Gereken</option>
+      <option value="prepqueue" data-i18n="status_prepqueue">⏳ Hazırlık Bekleyenler</option>
+      <option value="cancelled" data-i18n="status_cancelled">İptal Edilenler</option>
+    </select>
+    <select id="sortMode">
+      <option value="default" data-i18n="sort_default">Sıra: Varsayılan</option>
+      <option value="date" data-i18n="sort_date">Sıra: Planlanan Tarihe Göre</option>
+    </select>
+    <select id="viewMode">
+      <option value="card" data-i18n="view_card">🗂 Kart Görünümü</option>
+      <option value="row" data-i18n="view_row">☰ Liste Görünümü</option>
+    </select>
+    <select id="langSelect">
+      <option value="tr">🇹🇷 TR</option>
+      <option value="en">🇬🇧 EN</option>
+      <option value="ru">🇷🇺 RU</option>
+    </select>
+    <button class="btn" id="addBtn" data-i18n="add_new">+ Yeni Lokasyon</button>
+  </div>
+
+  <div class="row-header" id="rowHeader" style="display:none;">
+    <div data-i18n="col_location">Lokasyon</div>
+    <div data-i18n="col_detail">Detay</div>
+    <div class="row-header-stamps">
+      <span data-i18n="col_scr">Scr</span><span data-i18n="col_cek">Çek</span><span data-i18n="col_ses">Ses</span><span data-i18n="col_krg">Krg</span><span data-i18n="col_yay">Yay</span>
+    </div>
+    <div data-i18n="col_actions">İşlemler</div>
+  </div>
+</div>
+
+  <div class="grid" id="grid"></div>
+  <div class="empty" id="emptyState" style="display:none;" data-i18n="empty_state">Bu filtrelerle eşleşen bir dosya bulunamadı.</div>
+</div>
+
+<div class="overlay" id="overlay">
+  <div class="modal">
+    <h2 id="modalTitle">Yeni Lokasyon Dosyası</h2>
+    <input type="hidden" id="editId">
+    <div class="field">
+      <label data-i18n="f_name_label">Yer Adı</label>
+      <input type="text" id="f_name" data-i18n-placeholder="f_name_ph" placeholder="Örn: Gül Camii">
+    </div>
+    <div class="field-row">
+      <div class="field">
+        <label data-i18n="f_district_label">İlçe</label>
+        <input type="text" id="f_district" list="districtOptions" placeholder="Fatih">
+        <datalist id="districtOptions"></datalist>
+      </div>
+      <div class="field">
+        <label data-i18n="f_city_label">İl</label>
+        <input type="text" id="f_city" list="cityOptions" value="İstanbul">
+        <datalist id="cityOptions"></datalist>
+      </div>
+    </div>
+    <div class="field">
+      <label data-i18n="f_address_label">Adres / Semt Notu</label>
+      <input type="text" id="f_address" placeholder="Ayakapı, Haliç kıyısı">
+    </div>
+    <div class="field">
+      <label data-i18n="f_mapslink_label">Google Maps Linki (opsiyonel)</label>
+      <input type="text" id="f_mapsLink" placeholder="Boş bırakırsan isim+adresten otomatik oluşturulur">
+    </div>
+    <div class="field-row">
+      <div class="field">
+        <label data-i18n="f_format_label">Format</label>
+        <select id="f_format">
+          <option value="Saha" data-i18n="fmt_saha">Saha</option>
+          <option value="Masabaşı" data-i18n="fmt_masabasi">Masabaşı</option>
+          <option value="Hibrit" data-i18n="fmt_hibrit">Hibrit</option>
+        </select>
+      </div>
+      <div class="field">
+        <label data-i18n="f_permission_label">İzin Gerekiyor mu?</label>
+        <select id="f_permission">
+          <option value="H" data-i18n="opt_no">Hayır</option>
+          <option value="E" data-i18n="opt_yes_pending">Evet — bekliyor</option>
+        </select>
+      </div>
+    </div>
+    <div class="field">
+      <label data-i18n="f_topic_label">Çekim Konusu / Hook</label>
+      <textarea id="f_topic" data-i18n-placeholder="f_topic_ph" placeholder="Kısa gizem/hook özeti"></textarea>
+    </div>
+    <div class="field">
+      <label data-i18n="f_fieldnotes_label">Saha Notu (Neler Anlattım)</label>
+      <textarea id="f_fieldNotes" data-i18n-placeholder="f_fieldnotes_ph" placeholder="Kamerada söylediklerinin kısa özeti — script bunun üzerinden yazılacak"></textarea>
+    </div>
+    <div class="field-row field-row-5">
+      <div class="field">
+        <label data-i18n="f_script_label">Script Hazır mı?</label>
+        <select id="f_script"><option value="H">H</option><option value="E">E</option></select>
+      </div>
+      <div class="field">
+        <label data-i18n="f_filmed_label">Çekildi mi?</label>
+        <select id="f_filmed"><option value="H">H</option><option value="E">E</option></select>
+      </div>
+      <div class="field">
+        <label data-i18n="f_audio_label">Ses Kaydı</label>
+        <select id="f_audio"><option value="H">H</option><option value="E">E</option></select>
+      </div>
+      <div class="field">
+        <label data-i18n="f_edited_label">Kurgu</label>
+        <select id="f_edited"><option value="H">H</option><option value="E">E</option></select>
+      </div>
+      <div class="field">
+        <label data-i18n="f_published_label">Yayınlandı</label>
+        <select id="f_published"><option value="H">H</option><option value="E">E</option></select>
+      </div>
+    </div>
+    <div class="field">
+      <label data-i18n="f_scriptlink_label">Script Drive Linki</label>
+      <input type="text" id="f_scriptLink" placeholder="https://docs.google.com/document/d/...">
+    </div>
+    <div class="field">
+      <label data-i18n="f_drivefolder_label">Drive Klasörü Linki</label>
+      <input type="text" id="f_driveFolderLink" placeholder="https://drive.google.com/drive/folders/...">
+    </div>
+    <div class="field">
+      <label data-i18n="f_notes_label">Notlar</label>
+      <textarea id="f_notes" data-i18n-placeholder="f_notes_ph" placeholder="Ek notlar, script durumu vs."></textarea>
+    </div>
+    <div class="modal-actions">
+      <button class="icon-btn" id="deleteBtn" style="display:none;border-color:var(--red-dim);color:var(--red);" data-i18n="btn_delete">Sil</button>
+      <button class="btn btn-ghost" id="cancelBtn" data-i18n="btn_cancel">Vazgeç</button>
+      <button class="btn" id="saveBtn" data-i18n="btn_save">Kaydet</button>
+    </div>
+  </div>
+</div>
+
+<div class="overlay" id="pkgOverlay">
+  <div class="modal modal-wide">
+    <h2 id="pkgTitle">Yayın Paketi</h2>
+    <input type="hidden" id="pkgId">
+
+    <div class="pkg-section" style="border-top:none;margin-top:0;padding-top:0;">
+      <div class="pkg-section-title" style="color:#E8912D;" data-i18n="pkg_section_shotlist">🎥 Sahada Çekilmesi Gerekenler</div>
+      <div class="field">
+        <textarea id="p_shotList" data-i18n-placeholder="p_shotlist_ph" placeholder="Giriş çekimi, çıkış çekimi, kapanış planı, özellikle vurgulanacak detay çekimleri vs. — maddeler halinde"></textarea>
+      </div>
+    </div>
+
+    <div class="pkg-section">
+      <div class="pkg-section-title" data-i18n="pkg_section_youtube">YouTube (Uzun Video)</div>
+      <div class="field">
+        <label data-i18n="p_ytitles_label">Başlık Seçenekleri (satır satır)</label>
+        <textarea id="p_youtubeTitles" placeholder="2-3 SEO uyumlu başlık önerisi"></textarea>
+      </div>
+      <div class="field">
+        <label data-i18n="p_ytthumb_label">Thumbnail Görsel Prompt'u</label>
+        <textarea id="p_youtubeThumbPrompt" placeholder="Nano Banana / Google Flow'da kullanılacak prompt metni"></textarea>
+        <div class="pkg-hint" data-i18n="p_thumb_hint">Görseli ben üretemiyorum (Gemini'ye doğrudan bağlantım yok) — bu metni Flow'a yapıştırman yeterli.</div>
+      </div>
+    </div>
+
+    <div class="pkg-section">
+      <div class="pkg-section-title" data-i18n="pkg_section_reels">Reels / Shorts</div>
+      <div class="field">
+        <label data-i18n="p_reelscount_label">Kaç Adet Reels Hazırlanacak</label>
+        <input type="number" id="p_reelsCount" min="0" placeholder="4">
+      </div>
+      <div class="field">
+        <label data-i18n="p_reelstitles_label">Reels Kısa Başlıkları (satır satır)</label>
+        <textarea id="p_reelsTitles" placeholder="Reel1 — ...&#10;Reel2 — ..."></textarea>
+      </div>
+      <div class="field">
+        <label data-i18n="p_reelsprompts_label">Reels Thumbnail Prompt'ları (satır satır)</label>
+        <textarea id="p_reelsThumbPrompts" placeholder="Her reel için ayrı görsel prompt'u"></textarea>
+      </div>
+    </div>
+
+    <div class="pkg-section">
+      <div class="pkg-section-title" data-i18n="pkg_section_seo">SEO — Hashtag / Tag / Arama Hacmi</div>
+      <div class="field">
+        <div class="field-header">
+          <label data-i18n="p_hashtags_label">5 Yüksek Arama Hacimli Hashtag</label>
+          <button type="button" class="copy-btn" data-copy-target="p_hashtags">📋 Kopyala</button>
+        </div>
+        <textarea id="p_hashtags" placeholder="#tarihidedektif #bizanstarihi ..."></textarea>
+      </div>
+      <div class="field">
+        <div class="field-header">
+          <label data-i18n="p_tags_label">Tag Listesi (YouTube — Uzun Video)</label>
+          <button type="button" class="copy-btn" data-copy-target="p_tags">📋 Kopyala</button>
+        </div>
+        <textarea id="p_tags" placeholder="zeyrek camii, bizans tarihi, ..."></textarea>
+      </div>
+      <div class="field">
+        <div class="field-header">
+          <label data-i18n="p_shortstags_label">Tag Listesi (YouTube Shorts — ayrı)</label>
+          <button type="button" class="copy-btn" data-copy-target="p_shortsTags">📋 Kopyala</button>
+        </div>
+        <textarea id="p_shortsTags" placeholder="Shorts'a özel etiketler, uzun videodan farklı olabilir"></textarea>
+      </div>
+      <div class="field">
+        <label data-i18n="p_keywordnotes_label">vidIQ Arama Hacmi Notu</label>
+        <textarea id="p_keywordNotes" placeholder="'terim' (fırsat skoru/100), hacim..."></textarea>
+      </div>
+    </div>
+
+    <div class="pkg-section">
+      <div class="pkg-section-title" data-i18n="pkg_section_captions">Platform Bazlı Caption'lar</div>
+      <div class="field">
+        <div class="field-header">
+          <label data-i18n="p_shorts_label">YouTube Shorts</label>
+          <button type="button" class="copy-btn" data-copy-target="p_captionShorts">📋 Kopyala</button>
+        </div>
+        <textarea id="p_captionShorts"></textarea>
+      </div>
+      <div class="field">
+        <div class="field-header">
+          <label data-i18n="p_ytdesc_label">YouTube (Uzun Video Açıklaması)</label>
+          <button type="button" class="copy-btn" data-copy-target="p_captionYouTube">📋 Kopyala</button>
+        </div>
+        <textarea id="p_captionYouTube"></textarea>
+      </div>
+      <div class="field">
+        <div class="field-header">
+          <label>Instagram</label>
+          <button type="button" class="copy-btn" data-copy-target="p_captionInstagram">📋 Kopyala</button>
+        </div>
+        <textarea id="p_captionInstagram"></textarea>
+      </div>
+      <div class="field">
+        <div class="field-header">
+          <label>Facebook</label>
+          <button type="button" class="copy-btn" data-copy-target="p_captionFacebook">📋 Kopyala</button>
+        </div>
+        <textarea id="p_captionFacebook"></textarea>
+      </div>
+    </div>
+
+    <div class="pkg-section">
+      <div class="pkg-section-title">📘 Facebook Native Yükleme</div>
+      <div class="field">
+        <div class="field-header">
+          <label>Etiketler (Facebook yükleme ekranı için, 10-15 terim)</label>
+          <button type="button" class="copy-btn" data-copy-target="p_fbTags">📋 Kopyala</button>
+        </div>
+        <textarea id="p_fbTags" placeholder="konum, kişi, dönem, tema odaklı terimler"></textarea>
+      </div>
+      <div class="field">
+        <div class="field-header">
+          <label>Kapak Fotoğrafı Prompt'u (YT thumbnail'inden farklı — sakin/onurlu ton)</label>
+          <button type="button" class="copy-btn" data-copy-target="p_fbCoverPrompt">📋 Kopyala</button>
+        </div>
+        <textarea id="p_fbCoverPrompt" placeholder="16:9, sinematik, miras/büyüklük vurgusu"></textarea>
+      </div>
+    </div>
+
+    <div class="modal-actions">
+      <button class="btn btn-ghost" id="pkgCancelBtn" data-i18n="btn_cancel">Vazgeç</button>
+      <button class="btn" id="pkgSaveBtn" data-i18n="btn_save">Kaydet</button>
+    </div>
+  </div>
+</div>
+
+<div class="overlay" id="detailOverlay">
+  <div class="modal">
+    <h2 id="detailTitle"></h2>
+    <div class="field">
+      <label data-i18n="f_topic_label">Çekim Konusu / Hook</label>
+      <div id="detailTopic" class="detail-text"></div>
+    </div>
+    <div class="field" id="detailNotesWrap">
+      <label data-i18n="f_notes_label">Notlar</label>
+      <div id="detailNotes" class="detail-text"></div>
+    </div>
+    <div class="field" id="detailFieldNotesWrap">
+      <label data-i18n="f_fieldnotes_label">Saha Notu (Neler Anlattım)</label>
+      <div id="detailFieldNotes" class="detail-text"></div>
+    </div>
+    <div class="modal-actions">
+      <button class="btn" id="detailCloseBtn" data-i18n="btn_close">Kapat</button>
+    </div>
+  </div>
+</div>
+
+<script>
+const STORAGE_KEY = 'gerceginizleri_lokasyon_listesi';
+const LANG_KEY = 'gerceginizleri_ui_language';
+const JSONBIN_ID = '6a8c1f81f5f4af5e293ba6d2';
+const JSONBIN_MASTER_KEY = '$2a$10$MwguwN/EVgDHxDX127kyG.AUp6pEP7G29jbtl0/qWOeeoWNda9PDK';
+const JSONBIN_BASE = 'https://api.jsonbin.io/v3/b/' + JSONBIN_ID;
+const JSONBIN_ID = '6a8c1f81f5f4af5e293ba6d2';
+const JSONBIN_MASTER_KEY = '$2a$10$MwguwN/EVgDHxDX127kyG.AUp6pEP7G29jbtl0/qWOeeoWNda9PDK';
+const JSONBIN_BASE = 'https://api.jsonbin.io/v3/b/' + JSONBIN_ID;
+let currentLang = 'tr';
+
+const LANG = {
+  tr: {
+    eyebrow: "Saha Dosyası · Dahili Kayıt Sistemi",
+    title: "Lokasyon Takip Sistemi",
+    stat_total: "Toplam Dosya", stat_script: "Script Hazır", stat_filmed: "Çekildi", stat_published: "Yayında", stat_permission: "İzin Bekliyor",
+    search_ph: "Lokasyon, ilçe veya konu ara...",
+    fmt_all: "Tüm Formatlar", fmt_saha: "Saha", fmt_masabasi: "Masabaşı", fmt_hibrit: "Hibrit",
+    district_all: "Tüm İlçeler", city_all: "Tüm İller",
+    status_all: "Tüm Durumlar", status_pending: "Devam Eden", status_done: "Tamamlanan (Yayında)", status_unfilmed: "Henüz Çekilmedi", status_permission: "İzin Bekliyor", status_needsscript: "🎬 Script Yazılması Gereken", status_prepqueue: "⏳ Hazırlık Bekleyenler", status_cancelled: "İptal Edilenler",
+    needs_script_badge: "🎬 SCRIPT BEKLİYOR",
+    prep_requested_badge: "⏳ HAZIRLIK BEKLİYOR", btn_trigger_prep: "🎬 Hazırlığı Tetikle", btn_prep_requested: "⏳ Tetiklendi",
+    pkg_section_shotlist: "🎥 Sahada Çekilmesi Gerekenler", p_shotlist_ph: "Giriş çekimi, çıkış çekimi, kapanış planı, özellikle vurgulanacak detay çekimleri vs. — maddeler halinde",
+    f_fieldnotes_label: "Saha Notu (Neler Anlattım)", f_fieldnotes_ph: "Kamerada söylediklerinin kısa özeti — script bunun üzerinden yazılacak",
+    sort_default: "Sıra: Varsayılan", sort_date: "Sıra: Planlanan Tarihe Göre",
+    view_card: "🗂 Kart Görünümü", view_row: "☰ Liste Görünümü",
+    add_new: "+ Yeni Lokasyon",
+    col_location: "Lokasyon", col_detail: "Detay", col_scr: "Scr", col_cek: "Çek", col_ses: "Ses", col_krg: "Krg", col_yay: "Yay", col_actions: "İşlemler",
+    empty_state: "Bu filtrelerle eşleşen bir dosya bulunamadı.",
+    file_no: "DOSYA №",
+    closed_badge: "KAPALI",
+    permission_pending: "⚠ İzin bekliyor",
+    script_open: "📄 Script'i Drive'da Aç →", script_short: "📄 Script",
+    maps_open: "🗺️ Haritada Aç →", f_mapslink_label: "Google Maps Linki (opsiyonel)",
+    drive_folder_open: "📁 Drive Klasörünü Aç →",
+    btn_package: "📦 Yayın Paketi", btn_edit: "Düzenle",
+    stamp_script: "Script", stamp_filmed: "Çekim", stamp_audio: "Ses", stamp_edited: "Kurgu", stamp_published: "Yayın",
+    modal_new: "Yeni Lokasyon Dosyası", modal_edit: "Dosyayı Düzenle",
+    f_name_label: "Yer Adı", f_name_ph: "Örn: Gül Camii",
+    f_district_label: "İlçe", f_city_label: "İl", f_address_label: "Adres / Semt Notu",
+    f_format_label: "Format", f_permission_label: "İzin Gerekiyor mu?", opt_no: "Hayır", opt_yes_pending: "Evet — bekliyor",
+    f_topic_label: "Çekim Konusu / Hook", f_topic_ph: "Kısa gizem/hook özeti",
+    f_script_label: "Script Hazır mı?", f_filmed_label: "Çekildi mi?", f_audio_label: "Ses Kaydı", f_edited_label: "Kurgu", f_published_label: "Yayınlandı",
+    f_scriptlink_label: "Script Drive Linki", f_drivefolder_label: "Drive Klasörü Linki", f_notes_label: "Notlar", f_notes_ph: "Ek notlar, script durumu vs.",
+    btn_delete: "Sil", btn_cancel: "Vazgeç", btn_save: "Kaydet",
+    pkg_title: "Yayın Paketi",
+    pkg_section_youtube: "YouTube (Uzun Video)", pkg_section_reels: "Reels / Shorts", pkg_section_seo: "SEO — Hashtag / Tag / Arama Hacmi", pkg_section_captions: "Platform Bazlı Caption'lar",
+    p_ytitles_label: "Başlık Seçenekleri (satır satır)", p_ytthumb_label: "Thumbnail Görsel Prompt'u",
+    p_thumb_hint: "Görseli ben üretemiyorum (Gemini'ye doğrudan bağlantım yok) — bu metni Flow'a yapıştırman yeterli.",
+    p_reelscount_label: "Kaç Adet Reels Hazırlanacak", p_reelstitles_label: "Reels Kısa Başlıkları (satır satır)", p_reelsprompts_label: "Reels Thumbnail Prompt'ları (satır satır)",
+    p_hashtags_label: "5 Yüksek Arama Hacimli Hashtag", p_tags_label: "Tag Listesi (YouTube — Uzun Video)", p_shortstags_label: "Tag Listesi (YouTube Shorts — ayrı)", p_keywordnotes_label: "vidIQ Arama Hacmi Notu",
+    p_shorts_label: "YouTube Shorts", p_ytdesc_label: "YouTube (Uzun Video Açıklaması)",
+    name_empty_alert: "Yer adı boş olamaz.",
+    delete_confirm: "Bu dosyayı silmek istediğine emin misin?",
+    save_error: "Kayıt başarısız oldu — bağlantı sorunu olabilir. Tekrar deniyor...",
+    yes_char: "E", no_char: "H", planned_date_title: "Planlanan çekim tarihi",
+    read_more: "Devamını oku", btn_close: "Kapat",
+    btn_cancel_shoot: "🚫 İptal Et", btn_uncancel: "↩ İptali Kaldır", cancelled_badge: "İPTAL", stat_cancelled: "İptal Edilen"
+  },
+  en: {
+    eyebrow: "Field File · Internal Tracking System",
+    title: "Location Tracking System",
+    stat_total: "Total Files", stat_script: "Script Ready", stat_filmed: "Filmed", stat_published: "Published", stat_permission: "Awaiting Permit",
+    search_ph: "Search location, district or topic...",
+    fmt_all: "All Formats", fmt_saha: "On-site", fmt_masabasi: "Desk", fmt_hibrit: "Hybrid",
+    district_all: "All Districts", city_all: "All Cities",
+    status_all: "All Statuses", status_pending: "In Progress", status_done: "Completed (Live)", status_unfilmed: "Not Filmed Yet", status_permission: "Awaiting Permit", status_needsscript: "🎬 Needs Script", status_prepqueue: "⏳ Prep Requested", status_cancelled: "Cancelled",
+    needs_script_badge: "🎬 NEEDS SCRIPT",
+    prep_requested_badge: "⏳ PREP REQUESTED", btn_trigger_prep: "🎬 Trigger Prep", btn_prep_requested: "⏳ Triggered",
+    pkg_section_shotlist: "🎥 On-Location Shot List", p_shotlist_ph: "Opening shot, closing shot, wrap-up, detail cutaways to emphasize, etc. — as a list",
+    f_fieldnotes_label: "Field Notes (What I Said)", f_fieldnotes_ph: "Short summary of what you said on camera — the script will be based on this",
+    sort_default: "Sort: Default", sort_date: "Sort: Planned Date",
+    view_card: "🗂 Card View", view_row: "☰ List View",
+    add_new: "+ New Location",
+    col_location: "Location", col_detail: "Detail", col_scr: "Scr", col_cek: "Film", col_ses: "Aud", col_krg: "Edt", col_yay: "Pub", col_actions: "Actions",
+    empty_state: "No file matches these filters.",
+    file_no: "FILE №",
+    closed_badge: "CLOSED",
+    permission_pending: "⚠ Awaiting permit",
+    script_open: "📄 Open script in Drive →", script_short: "📄 Script",
+    maps_open: "🗺️ Open in Maps →", f_mapslink_label: "Google Maps Link (optional)",
+    drive_folder_open: "📁 Open Drive Folder →",
+    btn_package: "📦 Publish Kit", btn_edit: "Edit",
+    stamp_script: "Script", stamp_filmed: "Filmed", stamp_audio: "Audio", stamp_edited: "Edited", stamp_published: "Published",
+    modal_new: "New Location File", modal_edit: "Edit File",
+    f_name_label: "Location Name", f_name_ph: "e.g. Gül Mosque",
+    f_district_label: "District", f_city_label: "City", f_address_label: "Address / Area Note",
+    f_format_label: "Format", f_permission_label: "Permit Required?", opt_no: "No", opt_yes_pending: "Yes — pending",
+    f_topic_label: "Topic / Hook", f_topic_ph: "Short mystery/hook summary",
+    f_script_label: "Script Ready?", f_filmed_label: "Filmed?", f_audio_label: "Audio Recorded", f_edited_label: "Edited", f_published_label: "Published",
+    f_scriptlink_label: "Script Drive Link", f_drivefolder_label: "Drive Folder Link", f_notes_label: "Notes", f_notes_ph: "Extra notes, script status, etc.",
+    btn_delete: "Delete", btn_cancel: "Cancel", btn_save: "Save",
+    pkg_title: "Publish Kit",
+    pkg_section_youtube: "YouTube (Long Video)", pkg_section_reels: "Reels / Shorts", pkg_section_seo: "SEO — Hashtags / Tags / Search Volume", pkg_section_captions: "Platform Captions",
+    p_ytitles_label: "Title Options (one per line)", p_ytthumb_label: "Thumbnail Image Prompt",
+    p_thumb_hint: "I can't generate the image myself (no direct link to Gemini) — paste this prompt into Flow.",
+    p_reelscount_label: "Number of Reels to Prepare", p_reelstitles_label: "Reels Short Titles (one per line)", p_reelsprompts_label: "Reels Thumbnail Prompts (one per line)",
+    p_hashtags_label: "5 High-Volume Hashtags", p_tags_label: "Tag List (YouTube — Long Video)", p_shortstags_label: "Tag List (YouTube Shorts — separate)", p_keywordnotes_label: "vidIQ Search Volume Notes",
+    p_shorts_label: "YouTube Shorts", p_ytdesc_label: "YouTube (Long Video Description)",
+    name_empty_alert: "Location name cannot be empty.",
+    delete_confirm: "Are you sure you want to delete this file?",
+    save_error: "Save failed — possible connection issue. Retrying...",
+    yes_char: "Y", no_char: "N", planned_date_title: "Planned filming date",
+    read_more: "Read more", btn_close: "Close",
+    btn_cancel_shoot: "🚫 Cancel", btn_uncancel: "↩ Uncancel", cancelled_badge: "CANCELLED", stat_cancelled: "Cancelled"
+  },
+  ru: {
+    eyebrow: "Полевое досье · Внутренняя система учёта",
+    title: "Система учёта локаций",
+    stat_total: "Всего файлов", stat_script: "Сценарий готов", stat_filmed: "Отснято", stat_published: "Опубликовано", stat_permission: "Ждёт разрешения",
+    search_ph: "Поиск локации, района или темы...",
+    fmt_all: "Все форматы", fmt_saha: "На месте", fmt_masabasi: "Кабинетный", fmt_hibrit: "Гибрид",
+    district_all: "Все районы", city_all: "Все города",
+    status_all: "Все статусы", status_pending: "В процессе", status_done: "Завершено (в эфире)", status_unfilmed: "Ещё не отснято", status_permission: "Ждёт разрешения", status_needsscript: "🎬 Нужен сценарий", status_prepqueue: "⏳ Запрошена подготовка", status_cancelled: "Отменённые",
+    needs_script_badge: "🎬 НУЖЕН СЦЕНАРИЙ",
+    prep_requested_badge: "⏳ ЗАПРОШЕНА ПОДГОТОВКА", btn_trigger_prep: "🎬 Запросить подготовку", btn_prep_requested: "⏳ Запрошено",
+    pkg_section_shotlist: "🎥 Что снять на месте", p_shotlist_ph: "Начальный план, финальный план, закадровые вставки, детали для акцента и т.д. — списком",
+    f_fieldnotes_label: "Заметки со съёмки (что я рассказал)", f_fieldnotes_ph: "Краткое содержание того, что ты сказал на камеру — сценарий будет основан на этом",
+    sort_default: "Сортировка: по умолчанию", sort_date: "Сортировка: по дате съёмки",
+    view_card: "🗂 Вид карточек", view_row: "☰ Вид списка",
+    add_new: "+ Новая локация",
+    col_location: "Локация", col_detail: "Детали", col_scr: "Скр", col_cek: "Съём", col_ses: "Звук", col_krg: "Монт", col_yay: "Пуб", col_actions: "Действия",
+    empty_state: "По этим фильтрам файлов не найдено.",
+    file_no: "ДОСЬЕ №",
+    closed_badge: "ЗАКРЫТО",
+    permission_pending: "⚠ Ждёт разрешения",
+    script_open: "📄 Открыть сценарий в Drive →", script_short: "📄 Сценарий",
+    maps_open: "🗺️ Открыть на карте →", f_mapslink_label: "Ссылка Google Maps (опционально)",
+    drive_folder_open: "📁 Открыть папку Drive →",
+    btn_package: "📦 Пакет публикации", btn_edit: "Изменить",
+    stamp_script: "Сценарий", stamp_filmed: "Съёмка", stamp_audio: "Звук", stamp_edited: "Монтаж", stamp_published: "Публикация",
+    modal_new: "Новое досье локации", modal_edit: "Редактировать досье",
+    f_name_label: "Название места", f_name_ph: "напр. мечеть Гюль",
+    f_district_label: "Район", f_city_label: "Город", f_address_label: "Адрес / заметка о районе",
+    f_format_label: "Формат", f_permission_label: "Нужно разрешение?", opt_no: "Нет", opt_yes_pending: "Да — в ожидании",
+    f_topic_label: "Тема / завязка", f_topic_ph: "Краткое описание загадки/завязки",
+    f_script_label: "Сценарий готов?", f_filmed_label: "Отснято?", f_audio_label: "Звук записан", f_edited_label: "Монтаж", f_published_label: "Опубликовано",
+    f_scriptlink_label: "Ссылка на сценарий в Drive", f_drivefolder_label: "Ссылка на папку Drive", f_notes_label: "Заметки", f_notes_ph: "Доп. заметки, статус сценария и т.д.",
+    btn_delete: "Удалить", btn_cancel: "Отмена", btn_save: "Сохранить",
+    pkg_title: "Пакет публикации",
+    pkg_section_youtube: "YouTube (полное видео)", pkg_section_reels: "Reels / Shorts", pkg_section_seo: "SEO — хэштеги / теги / частотность", pkg_section_captions: "Подписи по платформам",
+    p_ytitles_label: "Варианты заголовка (по одному на строку)", p_ytthumb_label: "Промпт для превью",
+    p_thumb_hint: "Я не могу сгенерировать изображение сам (нет прямой связи с Gemini) — вставь этот промпт в Flow.",
+    p_reelscount_label: "Сколько Reels подготовить", p_reelstitles_label: "Короткие заголовки Reels (по одному на строку)", p_reelsprompts_label: "Промпты превью для Reels (по одному на строку)",
+    p_hashtags_label: "5 высокочастотных хэштегов", p_tags_label: "Список тегов (YouTube — Длинное видео)", p_shortstags_label: "Список тегов (YouTube Shorts — отдельно)", p_keywordnotes_label: "Заметки по частотности (vidIQ)",
+    p_shorts_label: "YouTube Shorts", p_ytdesc_label: "YouTube (описание полного видео)",
+    name_empty_alert: "Название места не может быть пустым.",
+    delete_confirm: "Вы уверены, что хотите удалить это досье?",
+    save_error: "Сохранение не удалось — возможна проблема соединения. Повтор...",
+    yes_char: "Д", no_char: "Н", planned_date_title: "Планируемая дата съёмки",
+    read_more: "Читать полностью", btn_close: "Закрыть",
+    btn_cancel_shoot: "🚫 Отменить", btn_uncancel: "↩ Вернуть", cancelled_badge: "ОТМЕНЕНО", stat_cancelled: "Отменено"
+  }
+};
+
+function t(key){
+  return (LANG[currentLang] && LANG[currentLang][key]) || LANG.tr[key] || key;
+}
+
+function applyStaticI18n(){
+  document.querySelectorAll('[data-i18n]').forEach(el=>{
+    el.textContent = t(el.dataset.i18n);
+  });
+  document.querySelectorAll('[data-i18n-placeholder]').forEach(el=>{
+    el.placeholder = t(el.dataset.i18nPlaceholder);
+  });
+  document.documentElement.lang = currentLang;
+}
+
+async function setLanguage(lang){
+  currentLang = lang;
+  document.getElementById('langSelect').value = lang;
+  applyStaticI18n();
+  render();
+  try{ await window.storage.set(LANG_KEY, lang, false); }catch(e){ /* non-critical */ }
+}
+
+
+const seedData = [
+  {name:"Yedikule Zindanları", district:"Fatih", city:"İstanbul", address:"Yedikule Hisarı", format:"Saha", topic:"Yılanlı kuyu, Mısır mumyası efsaneleri, örülmüş altın kapı", filmed:"E", audio:"E", edited:"E", published:"E", permission:"H", notes:"Tamamlandı, Reels serisi yayınlandı."},
+  {name:"İmrahor İlyas Bey Camii (Stüdyos Manastırı)", district:"Fatih", city:"İstanbul", address:"Samatya/Yedikule, İmam Aşir Sokak", format:"Saha", topic:"İstanbul'un ayakta kalan en eski dini yapısı, 5. yüzyılda inşa edilmiş, Ayasofya'dan ~100 yıl önce. Bizans imparatorlarının şehre tören alayıyla giriş/çıkış yaptığı Altın Kapı'dan sonra uğradığı önemli durak noktalarından biriydi. 1204 Latin İşgali'nde büyük zarar gördü — kanalın işlediği Latin İşgali temasıyla doğrudan bağlantılı.", filmed:"H", audio:"H", edited:"H", published:"H", permission:"E", notes:"⚠️ 2023'ten beri aktif restorasyonda (geçici çelik/uzay kafes çatı sistemi kuruldu) — gitmeden önce güncel ziyaret/erişim durumu teyit edilmeli, şu an tamamen kapalı olabilir. YouTube yorumundan gelen öneri (22 Ağustos), ikinci bir yorumla Altın Kapı/tören güzergahı detayı doğrulandı.", script:"H", scriptLink:"", driveFolderLink:"", prepRequested:"H"},
+  {name:"Yerebatan Sarnıcı", district:"Fatih", city:"İstanbul", address:"Sultanahmet", format:"Saha", topic:"Medusa başları, unutulmuş Bizans sarnıcı", filmed:"E", audio:"E", edited:"E", published:"E", permission:"H", notes:""},
+  {name:"Kariye (Chora)", district:"Fatih", city:"İstanbul", address:"Edirnekapı", format:"Saha", topic:"Bizans mozaikleri, kara kanatlı melek", filmed:"E", audio:"E", edited:"E", published:"E", permission:"H", notes:""},
+  {name:"Süleymaniye Camii", district:"Fatih", city:"İstanbul", address:"Süleymaniye", format:"Saha", topic:"Mimar Sinan gizemleri, gizli tünel rivayeti", filmed:"E", audio:"E", edited:"E", published:"E", permission:"H", notes:""},
+  {name:"Yoros Kalesi", district:"Beykoz", city:"İstanbul", address:"Anadolu Kavağı", format:"Saha", topic:"Argonotlar efsanesi, boğaz gözcü kalesi", filmed:"E", audio:"E", edited:"E", published:"E", permission:"H", notes:""},
+  {name:"Mihrimah Sultan Camii", district:"Üsküdar/Fatih", city:"İstanbul", address:"Edirnekapı & Üsküdar", format:"Saha", topic:"Ekinoks efsanesi (rivayet olarak işlendi)", filmed:"E", audio:"E", edited:"E", published:"E", permission:"H", notes:""},
+  {name:"Binbirdirek Sarnıcı", district:"Fatih", city:"İstanbul", address:"Sultanahmet", format:"Saha", topic:"Ters duran haç efsanesi (yalanlandı), 224 sütun", filmed:"E", audio:"E", edited:"E", published:"E", permission:"H", notes:""},
+  {name:"Şerefiye Sarnıcı (Theodosius Sarnıcı)", district:"Fatih", city:"İstanbul", address:"Piyer Loti Caddesi, Binbirdirek Mahallesi", format:"Saha", topic:"Üç büyük sarnıcın en eskisi (II. Theodosius dönemi, 408-450 — Yerebatan'dan bile önce). Yıllarca üzerindeki belediye binasının altında tamamen unutulmuş, ancak 2010'da bina yıkımı sırasında yeniden keşfedilmiş. 45 yelken tonoz, 32 sütun, 360° projeksiyon gösterimi var.", filmed:"H", audio:"H", edited:"H", published:"H", permission:"H", notes:"YouTube yorumundan gelen öneri (23 Ağustos) — Yerebatan/Binbirdirek üçlemesini tamamlıyor, aynı bölgede (Sultanahmet).", script:"H", scriptLink:"", driveFolderLink:"", prepRequested:"H"},
+  {name:"Zeyrek Camii", district:"Fatih", city:"İstanbul", address:"Zeyrek", format:"Saha", topic:"Üç kilisenin birleşimi, İmparatoriçe İrini mezar taşı", filmed:"E", audio:"E", edited:"E", published:"E", permission:"H", notes:"21 Ağustos yayınlandı.", script:"E", scriptLink:"https://docs.google.com/document/d/1_dwifNRnlj-Da12R7TSgfFiqVIm1pTs6ij1HkMUv7F4/edit", package:{
+    youtubeTitles:"",
+    youtubeThumbPrompt:"",
+    reelsCount:"4",
+    reelsTitles:"Reel1 (HOOK) — Ayasofya'dan Sonra En Büyük Bizans Yapısı\nReel2 — İmparatoriçenin Mezar Taşı\nReel3 — Gizli Gökyüzü\nReel4 — Kimse İnmedi",
+    reelsThumbPrompts:"",
+    hashtags:"#zeyrekcamii #tarihidedektif #bizanstarihi #rivayetdeğilkayıt #istanbultarihi",
+    tags:"zeyrek camii, pantokrator manastırı, bizans tarihi, tarihi dedektif, istanbul tarihi",
+    keywordNotes:"Bu lokasyon için ayrı vidIQ analizi henüz yapılmadı.",
+    captionShorts:"İstanbul'da, Ayasofya'dan sonra ayakta kalan en büyük Bizans yapısı burada duruyor — ama yanından geçen 10 kişiden 9'u adını bile bilmiyor. 12. yüzyılda İmparatoriçe İrini, kocası için 'Evrenin Hakimi' anlamına gelen Pantokrator'a ithaf edilen dev bir kompleks yaptırıyor: kilise, kütüphane ve inanılmaz organize bir hastane. Bizans'ın son yıllarında bu hastanenin başhekimliğine bir Türk hekim gelmiş — bir Hristiyan imparatorluk kurumunun en kritik görevinde. İçinde bir düzineden fazla imparator gömülüydü, bugün mezar odaları vakıf tarafından ziyarete kapalı. Latin İstilası'nda yağmalanan mezarlardan İmparatoriçe İrini'nin mezar taşı bugün Ayasofya'nın dış nartexinde sergileniyor. Fetihten sonra buraya İstanbul'un ilk medresesi kurulmuş, camiye bugünkü adını veren de o ilk müderris Molla Zeyrek Mehmet Efendi. Tam belgesel kanalımda. Rivayet değil, kayıt. #belgesel #tarih #zeyrekcamii #tarihidedektif #bizanstarihi #istanbul #fatih",
+    captionYouTube:"İstanbul'da, Ayasofya'dan sonra ayakta kalan en büyük Bizans yapısı burada duruyor. Yanından geçen 10 kişiden 9'u adını bile bilmiyor.\n\nİçinde bir düzineden fazla imparator gömülüydü — bugün mezarları açık, cesetler yok. Bizans'ın en kutsal hastanesinde başhekimlik görevine bir Türk hekim gelmiş. Taşların altında opus sectile bir taban gizli — bazı araştırmacılara göre zodyak sembolleri barındırıyor.\n\nÖnce kilise ve hastane, sonra İstanbul'un ilk medresesi, şimdi cami — aynı taşlar, üç farklı inanç.\n\nBu belgesel serimizde Fatih'in tarihini kanıtla anlatıyoruz.\n\nRivayet değil, kayıt.\n\n📍 Kaynaklar:\nİslam ve İhsan, Vikipedi, TDV İslâm Ansiklopedisi, Korku101, Gazete Duvar, The Byzantine Legacy, Cogito İstanbul, PallasWeb (Imperial Porphyry Tombs), Eileen Stephenson (The Pantokrator Monastery) — saha ziyaretinde doğrulanan bilgiler dahil edilmiştir.\n\n🔔 Abone ol, her hafta yeni bir gizem: youtube.com/@gerceginizleritv\n📸 Instagram: instagram.com/gerceginizleritv\n🎵 TikTok: @gerceginizleritv\n📱 Facebook: facebook.com/gerceginizleritv\n\n#belgesel #tarih #zeyrekcamii #tarihidedektif #bizanstarihi #istanbul #fatih",
+    captionInstagram:"İstanbul'da, Ayasofya'dan sonra ayakta kalan en büyük Bizans yapısı burada duruyor. Yanından geçen 10 kişiden 9'u adını bile bilmiyor. İçinde bir düzineden fazla imparator gömülüydü — önce kilise ve hastane, sonra medrese, şimdi cami — aynı taşlar, üç farklı inanç. Tam belgesel YouTube'da. Rivayet değil, kayıt. #belgesel #tarih #zeyrekcamii #tarihidedektif #bizanstarihi #istanbul #fatih\n\n(Reel2-4 için tam metinler Drive dosya 15/16'da)",
+    captionFacebook:"İstanbul'da, Ayasofya'dan sonra ayakta kalan en büyük Bizans yapısı burada duruyor. Yanından geçen 10 kişiden 9'u adını bile bilmiyor. 🏛️\n\n🎬 TAM BELGESELİ İZLEMEK İÇİN: [YouTube video linki] — hemen tıkla, kaçırma.\n\nSayfamda Abonelikler açık. 🙏\n\n#belgesel #tarih"
+  }},
+  {name:"Çatladıkapı", district:"Fatih", city:"İstanbul", address:"Küçükayasofya Mahallesi, Kumkapı-Kadırga arası", format:"Saha", topic:"Bizans'ta Leon (Aslan) Kapısı — Bukoleon Sarayı'nın liman kapısı. 1532 depreminde kemeri çatladı ama yıkılmadı. Sultan Abdülaziz demiryolu için yıktırdı, aslan heykelleri Arkeoloji Müzesi'ne taşındı. Hemen yanındaki Kontoskalion Limanı (Bizans donanma tersanesi) bugün otopark.", filmed:"H", audio:"H", edited:"H", published:"H", permission:"H", notes:"Araştırma 21 Ağustos'ta tamamlandı, script henüz yazılmadı.", script:"H", scriptLink:""},
+  {name:"Kız Kulesi", district:"Üsküdar", city:"İstanbul", address:"Salacak açıkları", format:"Saha", topic:"Kader kaçamayan kız efsanesi", filmed:"H", audio:"H", edited:"H", published:"H", permission:"H", notes:"⚠️ Drive'da script dosyası bulunamadı — önceki 'script hazır' notu doğrulanamadı, teyit gerekiyor.", script:"H", scriptLink:""},
+  {name:"Pera Palas / Agatha Christie", district:"Beyoğlu", city:"İstanbul", address:"Oda 411", format:"Masabaşı", topic:"1926'daki 11 günlük açıklanamayan kayboluş", filmed:"E", audio:"H", edited:"H", published:"H", permission:"E", notes:"Otel çekim izni reddetti (ücret talep etti) — masabaşı formata çevrildi. Script + teleprompter hazır.", script:"E", scriptLink:"https://docs.google.com/document/d/1urGh8EBo4yF7TX2t9nKGwlJyTGcVrKaSQh2w1c6qYPE/edit", package:{
+    youtubeTitles:"",
+    youtubeThumbPrompt:"",
+    reelsCount:"3",
+    reelsTitles:"Reel1 — Hook (15sn): 1926'da 11 gün kayboldu\nReel2 — 15.000 Kişilik Arama (15sn)\nReel3 — 1979 Anahtar Olayı (20sn)",
+    reelsThumbPrompts:"",
+    hashtags:"#agathachristie #perapalas #hercülepoirot #tarihidedektif #rivayetdeğilkayıt",
+    tags:"agatha christie, pera palas, hercule poirot, doğu ekspresinde cinayet, istanbul gizemleri, osmanlı tarihi",
+    keywordNotes:"vidIQ: 'hercule poirot' (65.8/100), 'midnight at the pera palace' (66.6/100), 'agatha christie' (63/100) — dört sorguda tutarlı, yüksek fırsatlı terimler. 'tarih'/'belgesel'/'istanbul' genel destek terimleri (145-173K hacim).",
+    captionShorts:"1926'da dünyaca ünlü yazar Agatha Christie, kocasıyla yaşadığı ciddi bir gerginliğin ardından evinden ayrıldı ve ortadan kayboldu. Arabası ertesi sabah farları açık, içinde bavulu ve kürk mantosuyla bir tebeşir ocağının kenarında bulundu — kendisi yoktu. On beş bine yakın kişi, uçaklar ve köpekler seferber edildi; Sherlock Holmes'un yazarı Arthur Conan Doyle bile bir medyuma başvurdu. On bir gün sonra Christie, Harrogate'teki bir otelde bulundu — ama kendi adıyla değil, kocasının sevgilisinin soyadıyla kayıt yaptırmıştı. O günlerde ne yaşadığını hiçbir zaman anlatmadı. 2023'te tarihçi Lucy Worsley bunun travmatik bir 'fugue' durumu olabileceğini öne sürdü, ama bu kesin bir kayıt değil, sadece teori. Asıl gizem İstanbul'da başlıyor: Christie'nin sık kaldığı Pera Palas'ta, 1979'da bir medyumun iddiası üzerine oda 411'in döşemesi canlı yayında kaldırıldı ve gerçekten paslı bir anahtar bulundu — bu bir efsane değil, belgelenmiş bir olay. Tam hikaye kanalımda. Rivayet değil, kayıt. #belgesel #tarih #agathachristie #perapalas #tarihidedektif",
+    captionYouTube:"1926'da dünyaca ünlü yazar Agatha Christie, on bir gün boyunca ortadan kayboldu. Arabası ertesi sabah farları açık halde bulundu, kendisi yoktu. On beş bine yakın kişi, uçaklar ve köpeklerle seferber edilen dev bir arama başladı — hatta Sherlock Holmes'un yazarı Arthur Conan Doyle bile bir medyuma başvurdu.\n\nOn bir gün sonra Christie, Harrogate'teki bir otelde, kendi adıyla değil kocasının sevgilisinin soyadıyla kayıtlı olarak bulundu. O günlerde ne yaşadığını hayatı boyunca hiçbir zaman anlatmadı; otobiyografisinde bile bu konudan neredeyse hiç bahsetmiyor.\n\n2023'te tarihçi Lucy Worsley bunun travmatik bir kişilik ayrışması ('fugue') olabileceğini öne sürdü — ama bunu net bir kayıt değil, bir teori olarak belirtiyoruz.\n\nPeki bunun İstanbul'la ne ilgisi var? Christie, 1920'lerin sonu ile 1930'ların başı arasında birden fazla kez Pera Palas'ta kalmış. 1979'da bir medyumun, oda 411'in döşemesi altında bir anahtar olduğu iddiası üzerine, Amerikan basını ve TV kameraları önünde döşeme gerçekten kaldırıldı — ve gerçekten paslı, 8 santimetre uzunluğunda bir anahtar bulundu. Bu kısmı özellikle vurguluyoruz: anahtarın bulunması bir efsane değil, canlı yayında belgelenmiş gerçek bir olay. Anahtar bugüne kadar hiçbir şeyi açmadı.\n\nRivayet değil, kayıt.\n\n📍 Kaynaklar:\n[Bu bölüm için kullanılan kaynak listesi netleşince eklenecek.]\n\n🔔 Abone ol, her hafta yeni bir gizem: youtube.com/@gerceginizleritv\n📸 Instagram: instagram.com/gerceginizleritv\n🎵 TikTok: @gerceginizleritv\n📱 Facebook: facebook.com/gerceginizleritv\n\n#belgesel #tarih #istanbul #agathachristie #hercülepoirot #perapalas #tarihidedektif #gizemlitarih #istanbultarihi #rivayetdeğilkayıt",
+    captionInstagram:"1926'da dünyaca ünlü bir yazar 11 gün boyunca ortadan kayboldu. 15.000 kişilik bir arama başlatıldı — uçaklar, köpekler, hatta Sherlock Holmes'un yazarı Arthur Conan Doyle bile bir medyuma başvurdu.\n\nBulunduğunda gerçek adıyla değil, kocasının sevgilisinin soyadıyla kayıt yaptırmıştı. Ve o 11 günde ne yaşadığını hiçbir zaman anlatmadı.\n\nYıllar sonra, İstanbul'da, Pera Palas'ta bir otel odasının döşemesi canlı yayında kaldırıldı — ve gerçekten paslı bir anahtar bulundu.\n\nO anahtar hâlâ hiçbir şeyi açmadı.\n\nRivayet değil, kayıt.\n\n#belgesel #tarih #istanbul #agathachristie #hercülepoirot #perapalas #tarihidedektif #gizemlitarih #istanbultarihi #osmanlitarihi #rivayetdeğilkayıt #gerceginizleritv",
+    captionFacebook:"1926'da dünyaca ünlü bir yazar 11 gün boyunca ortadan kayboldu. 15.000 kişilik bir arama başlatıldı, ama bulunduğunda o günlerde ne yaşadığını hiçbir zaman anlatmadı.\n\nYıllar sonra, İstanbul'da, Pera Palas'ta bir otel odasının döşemesi canlı yayında kaldırıldı — ve gerçekten paslı bir anahtar bulundu. O anahtar hâlâ hiçbir şeyi açmadı.\n\n🎬 TAM BELGESELİ İZLEMEK İÇİN: [YouTube video linki]\n\nSayfamda Abonelikler açık. 🙏\n\n#belgesel #tarih"
+  }},
+  {name:"Rumeli Hisarı", district:"Sarıyer", city:"İstanbul", address:"Rumeli Hisarı", format:"Saha", topic:"Fatih'in 4 ayda inşa ettirdiği kale, öküz derisi rivayeti, üç paşa görev dağılımı, Boğazkesen adı", filmed:"E", audio:"H", edited:"H", published:"H", permission:"H", notes:"Script v2 + tam yayın paketi 28 Ağustos yayını için hazırlandı.", script:"E", scriptLink:"https://docs.google.com/document/d/1mbrjTtthCzWS7eElWNOnSES09LmddaTcrdzkEY4pSoU/edit", driveFolderLink:"https://drive.google.com/drive/folders/1ix2Ej9LROOnREOw8fn31NPiv11p9iWUn", prepRequested:"H", package:{
+    shotList:"Üç kule (Saruca Paşa, Zağanos Paşa, Halil Paşa kuleleri) — geniş açı ve taş işçiliği yakın plan\nManzara noktası (burçlara restorasyon nedeniyle çıkılamadı — alternatif yükseklik noktasından Boğaz görüntüsü)\nAnadolu Hisarı karşılaştırma çekimi (karşı yakadan)\nBahçe — top ve gülle sergisi yakın çekim\nKule taşındaki 'M harfi' iddia edilen işaret\nGiriş kapısı ve genel dış cephe, gün batımı ışığı",
+    youtubeTitles:"Fatih Sultan Mehmed'in 4 Ayda İnşa Ettirdiği Kale: Rumeli Hisarı'nın Sırrı\nBir Öküz Derisi ve Bir İmparatorluk: Rumeli Hisarı Nasıl Yapıldı?\nRumeli Hisarı Yapılışı: 4 Ayda İmkansızı Başaran Sır",
+    youtubeThumbPrompt:"YouTube thumbnail, 16:9, 1280x720. Close-medium composition — a man in full motorcycle riding gear in the lower-right third, intense curious/shocked expression, pointing toward the fortress. Reference photo for face. Background: Rumeli Hisarı towers, golden-hour light, one tower stone highlighted with a soft glowing red circle/arrow (the 'M harfi' mystery mark). High contrast, punchy saturated colors, deep black shadows, sharp focus, empty upper-left space for bold text overlay, no text baked in.",
+    reelsCount:"4",
+    reelsTitles:"Reel1 (HOOK) — Öküz Derisi Efsanesi (0:00-0:25)\nReel2 — 4 Ayda İnşa + Boğazkesen Adı\nReel3 — Kule Detay + Sultan Bizzat Tasarladı\nReel4 — Toplar/Gülleler + Zincir Deniz Müzesi'nde",
+    reelsThumbPrompts:"",
+    hashtags:"#rumelihisarı #fatihsultanmehmet #tarihidedektif #boğazkesen #istanbultarihi",
+    tags:"rumeli hisarı, rumeli hisarı yapılışı, fatih sultan mehmet, boğazkesen, öküz derisi rivayeti, istanbul fethi, tarihi dedektif, osmanlı tarihi, istanbul tarihi",
+    keywordNotes:"vidIQ (23 Ağustos): 'rumeli hisarı yapılışı' yüksek fırsat skoru — 67.3/100 (hacim 54.8, rekabet 13.9, düşük). 'fatih sultan mehmet' TR'de çok yüksek hacim — 39.9K.",
+    captionShorts:"Bir sultan bir imparatordan toprak istedi, imparator alaycı bir şekilde \"sana bir öküz derisi kadar yer veririm\" dedi — ve bu hikaye bugün hâlâ ayakta duran Rumeli Hisarı'nın sınırlarını çiziyor. 1452'de, 20 yaşındaki II. Mehmed, İstanbul'u fethetmeden önce Karadeniz'den gelecek yardımı kesmek için bu kaleyi sadece 4 ayda inşa ettirdi — üç ayrı paşaya bölünmüş bir görev dağılımı, İznik'ten Çubuklu'ya uzanan devasa bir malzeme seferberliğiyle. Kaleye verilen isim bile tesadüf değildi: Boğazkesen — çünkü tamamlandıktan sonra hiçbir gemi Sultan'ın izni olmadan geçemedi. Videoda kulelerdeki gizemli \"M harfi\" iddiasını da araştırıyoruz, ve o öküz derisi rivayetinin gerçekten belgeli olup olmadığını sorguluyoruz. Tam belgesel kanalımda, link profilde. Rivayet değil, kayıt. #belgesel #tarih #rumelihisarı #fatihsultanmehmet #tarihidedektif #istanbul #osmanlıtarihi",
+    captionYouTube:"Bir sultan, bir imparatordan toprak istiyor. İmparator gülüyor: \"Sana sadece bir öküz derisi kadar yer veririm.\" Sultan kabul ediyor — ve bu hikaye, bugün hâlâ ayakta duran bir kalenin sınırlarını çiziyor.\n\n1452, II. Mehmed, 20 yaşında. İstanbul'u fethetmeden önce Karadeniz yardımını kesmesi gerekiyor. Rumeli Hisarı sadece 4 ayda inşa ediliyor — üç paşa (Saruca, Zağanos, Halil Paşa) arasında bölünmüş bir seferberlikle, İznik'ten Çubuklu'ya uzanan bir malzeme lojistiğiyle.\n\nBu videoda: öküz derisi rivayetinin gerçekliğini sorguluyoruz, kulelerdeki gizemli \"M harfi\" iddiasını araştırıyoruz, ve kalenin bugün neden kısmen kapalı olduğunu (restorasyon) gösteriyoruz.\n\nRivayet değil, kayıt.\n\n📍 Kaynaklar: Fikriyat Gazetesi, Vikipedi, Gezimanya, Hisarlar Müzesi (muze.gov.tr)\n\n🔔 Abone ol: youtube.com/@gerceginizleritv\n📸 Instagram: instagram.com/gerceginizleritv\n🎵 TikTok: @gerceginizleritv\n📱 Facebook: facebook.com/gerceginizleritv\n\n#belgesel #tarih #rumelihisarı #fatihsultanmehmet #tarihidedektif #istanbul #osmanlıtarihi",
+    captionInstagram:"Bir sultan, bir imparatordan toprak istiyor. İmparator gülerek \"sana bir öküz derisi kadar yer veririm\" diyor. Sultan kabul ediyor — ve bu hikaye bugün hâlâ ayakta duran bir kalenin sınırlarını çiziyor. 🏰\n\nRumeli Hisarı, 1452'de sadece 4 ayda inşa edildi — üç paşa arasında bölünmüş bir seferberlik, devasa bir malzeme lojistiği ve kulelerde gizemli bir \"M harfi\" iddiasıyla.\n\nPeki öküz derisi hikayesi gerçek bir diplomatik oyun mu, yoksa sonradan süslenmiş bir efsane mi? Tam belgesel YouTube'da.\n\nRivayet değil, kayıt.\n\n#belgesel #tarih #rumelihisarı #fatihsultanmehmet #tarihidedektif #istanbul #osmanlıtarihi #boğazkesen #istanbultarihi #osmanlıimparatorluğu #rivayetdeğilkayıt #gerceginizleritv",
+    captionFacebook:"Bir sultan, bir imparatordan toprak istiyor. İmparator gülerek \"sana bir öküz derisi kadar yer veririm\" diyor. Sultan kabul ediyor — ve bu hikaye bugün hâlâ ayakta duran bir kalenin sınırlarını çiziyor. 🏰\n\nRumeli Hisarı, Fatih Sultan Mehmed'in emriyle sadece 4 ayda inşa edildi.\n\nTam belgesel yukarıda 👆 Rivayet değil, kayıt.\n\nSayfamda Abonelikler açık. 🙏\n\n#belgesel #tarih",
+    fbTags:"rumeli hisarı, fatih sultan mehmet, boğazkesen, istanbul fethi, osmanlı tarihi, istanbul tarihi, tarihi belgesel, bizans tarihi, istanbul boğazı, tarihi dedektif, motovlog, osmanlı imparatorluğu, 1453 istanbul, boğaziçi tarihi",
+    fbCoverPrompt:"YouTube-style thumbnail composition but calmer and more dignified — 16:9 landscape. A man in full motorcycle riding gear standing at the edge of Rumeli Hisarı fortress at golden hour, looking thoughtfully toward the towers with a curious, investigative expression (NOT shocked/mouth-open — composed, intrigued). Reference photo for face. Background: fortress towers and the Bosphorus in dramatic warm sunset light, cinematic wide shot, deep shadows with rich amber highlights, atmospheric and painterly. He's positioned in the right third of frame. Generous empty space in the upper-left sky area for a subtitle text overlay. No text baked in. Elegant, heritage-documentary tone."
+  }},
+  {name:"İstanbul Arkeoloji Müzeleri + Çinili Köşk", district:"Fatih", city:"İstanbul", address:"Gülhane", format:"Saha", topic:"İskender Lahdi, dünyanın en eski aşk şiiri, İştar Kapısı", filmed:"H", audio:"H", edited:"H", published:"H", permission:"H", notes:"Script v2 (gelişme kısa, saha genişletilmiş standardına uygun) 23 Ağustos'ta güncellendi.", script:"E", scriptLink:"https://docs.google.com/document/d/1hL4RWZ5uilIHygiM_QejTh29YKgmUMYtcCqnvwKpvgE/edit", driveFolderLink:"https://drive.google.com/drive/folders/1QklqW4_GUbBYnL16348cCJ95t0ZK8O1t", prepRequested:"H", package:{
+    shotList:"İskender Lahdi (ana salon, en ünlü eser) — yakın plan\nAğlayan Kadınlar Lahdi — kederli kadın figürleri, detay çekim şart\nTabnit Lahdi (mumyalı lahit)\nGirişte devasa Bes heykeli (~4,5-5 metre)\nKadeş Antlaşması Tableti\nDünyanın En Eski Aşk Şiiri Tableti (İstanbul #2461)\nİştar Kapısı'ndan kalan özgün parçalar\nAkad Kralı Naramsin Steli\nTablet Arşivi genel görüntüsü (75.000 belge, geniş açı)\nÇinili Köşk dış cephe (1472 çini/seramik örnekleri)",
+    youtubeTitles:"70 Yıl Çekmecede Unutulan Dünyanın En Eski Aşk Şiiri\nİstanbul Arkeoloji Müzeleri'nin 4 Yıllık Sırrı\nİskender'e Ait mi Değil mi? Bir Lahdin Gizemi",
+    youtubeThumbPrompt:"İskender Lahdi'nin dramatik yakın çekimi, altın/amber ışıklandırma, arka planda çivi yazılı tablet siluetleri, gizemli müze atmosferi, marka renkleri (ink black, antique gold #C8A24A)",
+    reelsCount:"4",
+    reelsTitles:"Reel1 (HOOK) — 70 Yıl Çekmecede Unutulan Aşk Şiiri\nReel2 — İskender Lahdi Gerçekten İskender'e mi Ait?\nReel3 — İştar Kapısı'nın Almanya'ya Giden Yarısı\nReel4 — Girişte Karşılayan Dev Bes Heykeli",
+    reelsThumbPrompts:"",
+    hashtags:"#arkeolojimüzesi #tarihidedektif #bizanstarihi #istanbultarihi #rivayetdeğilkayıt",
+    tags:"istanbul arkeoloji müzesi, iskender lahdi, çinili köşk, en eski aşk şiiri, iştar kapısı, tarihi dedektif, osman hamdi bey",
+    keywordNotes:"Bu lokasyon için ayrı vidIQ analizi henüz yapılmadı.",
+    captionShorts:"Bir kil tablet, kazıldıktan sonra 70 yıl boyunca bir müze çekmecesinde unutuldu. Çözüldüğünde ortaya dünyanın bilinen en eski aşk şiiri çıktı. İstanbul Arkeoloji Müzeleri'nin 4 yıllık restorasyondan yeni çıkan kanadında, bu ve daha fazlası var. Tam belgesel kanalımda. #belgesel #tarih #arkeolojimüzesi #tarihidedektif #istanbul",
+    captionYouTube:"Bir kil tablet, kazıldıktan sonra yetmiş yıl boyunca bir müze çekmecesinde unutuldu. Kimse onu okuyamadı, kimse ne olduğunu bilmiyordu. Sonunda bir Amerikalı ve bir Türk bilim insanı birlikte deşifre etti — ortaya dünyanın bilinen en eski aşk şiiri çıktı.\n\n1891'de Osman Hamdi Bey tarafından kurulan İstanbul Arkeoloji Müzeleri'nin bir kanadı — Eski Şark Eserleri Müzesi — dört yıllık restorasyondan sadece bir hafta önce yeniden açıldı.\n\nMüzenin en ünlü eseri İskender Lahdi. Ama burada ilk gizem başlıyor: tarihçilerin çoğu bu lahdin aslında Büyük İskender'e değil, muhtemelen bir Sidon kralına ait olduğunu düşünüyor.\n\nBir başka gizem: İştar Kapısı'nın büyük kısmı, yüzyıl önce yapılan kazılarda Almanya'ya götürülüp bugün Berlin'de sergileniyor.\n\nRivayet değil, kayıt.\n\n📍 Kaynaklar: Saha ziyaretinde doğrulanan bilgiler ve müze bilgilendirme panoları esas alınmıştır.\n\n🔔 Abone ol: youtube.com/@gerceginizleritv\n📸 Instagram: instagram.com/gerceginizleritv\n🎵 TikTok: @gerceginizleritv\n📱 Facebook: facebook.com/gerceginizleritv\n\n#belgesel #tarih #arkeolojimüzesi #tarihidedektif #istanbul",
+    captionInstagram:"Bir kil tablet, kazıldıktan sonra 70 yıl boyunca bir müze çekmecesinde unutuldu. Kimse ne olduğunu bilmiyordu. Çözüldüğünde ortaya dünyanın bilinen en eski aşk şiiri çıktı. 📜\n\nİstanbul Arkeoloji Müzeleri'nin bir kanadı, 4 yıllık restorasyondan sadece bir hafta önce yeniden açıldı. İçeride İskender Lahdi de var — ama tarihçilerin çoğu bunun gerçekten İskender'e ait olmadığını düşünüyor.\n\nRivayet değil, kayıt.\n\n#belgesel #tarih #istanbul #arkeolojimüzesi #tarihidedektif #iskenderlahdi #rivayetdeğilkayıt #gerceginizleritv",
+    captionFacebook:"Bir kil tablet, kazıldıktan sonra 70 yıl boyunca bir müze çekmecesinde unutuldu. Çözüldüğünde ortaya dünyanın bilinen en eski aşk şiiri çıktı. 📜\n\n🎬 TAM BELGESELİ İZLEMEK İÇİN: [YouTube video linki]\n\nSayfamda Abonelikler açık. 🙏\n\n#belgesel #tarih"
+  }},
+  {name:"Nuruosmaniye Camii", district:"Fatih", city:"İstanbul", address:"Kapalıçarşı girişi", format:"Saha", topic:"İki padişah için hazırlanan boş türbe, gayrimüslim mimar Simeon, 270 yıldır hiç kullanılmamış mahzen, ilk Osmanlı Barok camisi", filmed:"H", audio:"H", edited:"H", published:"H", permission:"H", notes:"Script v1 (tam, ~1.500 kelime) + kurgu reçetesi + teleprompter 22 Ağustos'ta hazırlandı.", script:"E", scriptLink:"https://docs.google.com/document/d/1pjCwmGqll4dnq0XywIMWus8zBB4pGtyOmWMKDBXo1-o/edit", driveFolderLink:"https://drive.google.com/drive/folders/1cj0dCmg2LvXXFiKFfQKTQ7wGKvcBv7oc", prepRequested:"H", package:{
+    shotList:"Yarım daire (oval/poligonal) avlu — geniş açı, en ayırt edici özellik\nKare planlı harim (iç mekân) — 25,5m tek kubbe, dört büyük kemer\nKütüphane binası — dış cephe\nTürbe — Şehsuvar Sultan ve şehzade sandukaları, boş kalan asıl mezar yerine vurgu\nMahzen/alt kat girişi — 270 yıldır hiç kullanılmamış alanın dış görüntüsü\nBarok süsleme detayları — kemerler, oymalar, renkli cam pencereler\nKapalıçarşı'ya bitişik konum — giriş kapısından geçiş çekimi\nSebil/çeşme yapısı (dış avlu)",
+    youtubeTitles:"İki Padişah Kendine Türbe Yaptırdı Ama İkisi de Yatmıyor\nNuruosmaniye'nin Altındaki 270 Yıllık Sır\nBir Rum Kalfanın İnşa Ettiği İmparatorluk Camisi",
+    youtubeThumbPrompt:"Nuruosmaniye Camii'nin yarım daire avlusu, dramatik altın ışıkla aydınlatılmış, ön planda boş bir mermer sanduka/türbe silueti, gizemli/sinematik atmosfer, marka renkleri (ink black, antique gold #C8A24A)",
+    reelsCount:"4",
+    reelsTitles:"Reel1 (HOOK) — İki Padişah, Boş İki Türbe (0:00-0:25)\nReel2 — Boş Türbe Gizemi (3:50-5:10)\nReel3 — 270 Yıldır Kullanılmayan Mahzen (6:20-7:00)\nReel4 — İstanbul'un Tek Barok Camisi (5:10-6:00)",
+    reelsThumbPrompts:"",
+    hashtags:"#nuruosmaniyecamii #tarihidedektif #osmanlıtarihi #istanbultarihi #rivayetdeğilkayıt",
+    tags:"nuruosmaniye camii, osmanlı barok mimari, kapalıçarşı, III. Osman, I. Mahmud, simeon kalfa, tarihi dedektif",
+    keywordNotes:"Bu lokasyon için ayrı vidIQ analizi henüz yapılmadı.",
+    captionShorts:"İki padişah kendine türbe yaptırdı ama ikisi de içinde yatmıyor. Nuruosmaniye Camii'nin altında ise 270 yıldır hiç kullanılmamış gizemli bir mahzen var. Tam belgesel kanalımda. #belgesel #tarih #nuruosmaniyecamii #tarihidedektif #istanbul",
+    captionYouTube:"İki padişah, kendine özel bir türbe yaptırdı. Ama ikisi de o türbede yatmıyor.\n\n1749'da I. Mahmud, Kapalıçarşı'nın girişinde büyük bir külliye yaptırmaya başladı. Ömrü tamamlanmasına yetmedi — kardeşi III. Osman, camiyi 1755'te bitirdi ve adını kendine mal etti: Nur-u Osmani, \"Osmanlı'nın Nuru.\"\n\nİnşaatı günlük olarak yöneten kalfa bir Rum: Simeon — bu yüzden Nuruosmaniye, yapım süreci en iyi belgelenmiş Osmanlı yapılarından biri.\n\nKülliye içinde kendileri için hazırlanan türbeye ise ikisi de hiç girmedi. Ve altında, 270 yıldır asıl amacına uygun hiç kullanılmamış gizemli bir mahzen var.\n\nRivayet değil, kayıt.\n\n📍 Kaynaklar:\nTDV İslâm Ansiklopedisi, Vikipedi, Özhan Öztürk Makaleleri, İslam Düşünce Atlası (Ahmed Efendi risalesi), Anadolu Ajansı (2023), Türk Diyanet Vakıf-Sen\n\n🔔 Abone ol: youtube.com/@gerceginizleritv\n📸 Instagram: instagram.com/gerceginizleritv\n🎵 TikTok: @gerceginizleritv\n📱 Facebook: facebook.com/gerceginizleritv\n\n#belgesel #tarih #nuruosmaniyecamii #tarihidedektif #osmanlıtarihi #istanbul",
+    captionInstagram:"İki padişah, kendine özel bir türbe yaptırdı. Sandukalar hazırlandı, her şey hazırdı. Ama ikisi de o türbede yatmıyor. 🕌\n\nCaminin inşaatını günlük olarak yöneten kalfa bir Rum: Simeon. Ve altında, 270 yıldır hiç kullanılmamış gizemli bir mahzen var.\n\nRivayet değil, kayıt.\n\n#belgesel #tarih #istanbul #nuruosmaniyecamii #tarihidedektif #osmanlıtarihi #kapalıçarşı #rivayetdeğilkayıt #gerceginizleritv",
+    captionFacebook:"İki padişah kendine özel bir türbe yaptırdı. Ama ikisi de içinde yatmıyor. 🕌\n\nNuruosmaniye Camii'nin altında ise 270 yıldır hiç kullanılmamış gizemli bir mahzen var.\n\n🎬 TAM BELGESELİ İZLEMEK İÇİN: [YouTube video linki]\n\nSayfamda Abonelikler açık. 🙏\n\n#belgesel #tarih"
+  }},
+  {name:"Gül Camii", district:"Fatih", city:"İstanbul", address:"Ayakapı, Balat", format:"Saha", topic:"Aya Theodosia Kilisesi, 1453 gül efsanesi", filmed:"H", audio:"H", edited:"H", published:"H", permission:"H", notes:""},
+  {name:"Sveti Stefan Kilisesi (Demir Kilise)", district:"Fatih", city:"İstanbul", address:"Balat, Haliç kıyısı", format:"Saha", topic:"Dünyanın nadir demir kiliselerinden biri", filmed:"H", audio:"H", edited:"H", published:"H", permission:"H", notes:"09:00-17:00 açık, aktif ibadete devam ediyor."},
+  {name:"Panagia Muhliotissa (Kanlı Kilise)", district:"Fatih", city:"İstanbul", address:"Fener, Tevkii Cafer Mektebi Sokak — Fener Rum Erkek Lisesi'nin (Kırmızı Okul) karşısı", format:"Saha", topic:"Osmanlı fethinden bu yana hiç camiye çevrilmeden, kesintisiz Rum Ortodoks ibadetine açık kalan tek Bizans dönemi kilisesi. Kurucusu Maria Palaiologina — VIII. Mihael'in gayrimeşru kızı, siyasi barış evliliğiyle önce Hülagü Han'a (o ölünce oğlu Abaka Han'a) gönderilip İran'da 15 yıl yaşadı, kocasının ölümünden sonra dönüp bu kiliseyi kurdu. 'Kanlı Kilise' adı, 1453 fetih sırasında bölgede yaşanan çatışmalarla ilişkilendiriliyor.", filmed:"H", audio:"H", edited:"H", published:"H", permission:"E", notes:"YouTube yorumundan gelen öneri (22 Ağustos). Genelde halka açık değil — ziyaret/çekim izni için önceden iletişime geçilmeli, aynı gün Gül Camii ve Sveti Stefan ile birleştirilebilir (aynı Fener/Balat bölgesi).", script:"H", scriptLink:"", driveFolderLink:"", prepRequested:"H"},
+  {name:"Ayios Dimitrios Kilisesi", district:"Beşiktaş", city:"İstanbul", address:"Kuruçeşme", format:"Saha", topic:"Yeraltı tüneli + şifalı ayazma", filmed:"H", audio:"H", edited:"H", published:"H", permission:"E", notes:"Aktif küçük cemaat — önceden izin şart."},
+  {name:"Kuştul (Peristera) Manastırı", district:"Maçka", city:"Trabzon", address:"Şimşirli Köyü", format:"Saha", topic:"752 yılı kaya-üstü manastır, terk edilmiş kütüphane", filmed:"H", audio:"H", edited:"H", published:"H", permission:"H", notes:"Eylül'deki Sümela gezisiyle birleştirilecek — ayrı 'Karadeniz' mini-seri etiketi."},
+  {name:"Galata Kulesi", district:"Beyoğlu", city:"İstanbul", address:"Galata", format:"Saha", topic:"Hezarfen Ahmet Çelebi uçuş efsanesi", filmed:"H", audio:"H", edited:"H", published:"H", permission:"H", notes:""},
+  {name:"Bukoleon Sarayı", district:"Fatih", city:"İstanbul", address:"Sur duvarları, Kumkapı-Cankurtaran arası", format:"Saha", topic:"Hayalet Bizans sahil sarayı, restorasyonda bulunan iskeletler", filmed:"H", audio:"H", edited:"H", published:"H", permission:"H", notes:""},
+  {name:"Eyüp Sultan Türbesi", district:"Eyüp", city:"İstanbul", address:"Eyüp", format:"Saha", topic:"Akşemseddin'in rüyada yer bulma iddiası", filmed:"H", audio:"H", edited:"H", published:"H", permission:"H", notes:"Pierre Loti ile aynı gün çekilebilir."},
+  {name:"Kapalıçarşı Cevahir Bedesteni", district:"Fatih", city:"İstanbul", address:"Beyazıt", format:"Saha", topic:"En eski/korunaklı bölüm, yangın ve tünel efsaneleri", filmed:"H", audio:"H", edited:"H", published:"H", permission:"H", notes:"Pazar günü kapalı olabilir — gitmeden saat teyidi şart."},
+  {name:"Sirkeci Garı", district:"Fatih", city:"İstanbul", address:"Sirkeci", format:"Saha", topic:"Orient Ekspres son durağı, casusluk hikayeleri", filmed:"H", audio:"H", edited:"H", published:"H", permission:"H", notes:""},
+  {name:"Tekfur Sarayı", district:"Fatih", city:"İstanbul", address:"Edirnekapı", format:"Saha", topic:"Ayakta kalan tek sivil Bizans sarayı", filmed:"H", audio:"H", edited:"H", published:"H", permission:"H", notes:""},
+  {name:"Aya İrini", district:"Fatih", city:"İstanbul", address:"Topkapı Sarayı 1. Avlu", format:"Saha", topic:"Hiç camiye çevrilmemiş tek Bizans kilisesi", filmed:"H", audio:"H", edited:"H", published:"H", permission:"H", notes:"Nadiren halka açık — takvim kontrolü gerek."},
+  {name:"Pierre Loti Tepesi", district:"Eyüp", city:"İstanbul", address:"Eyüp", format:"Saha", topic:"Fransız yazarın efsaneleşmiş kahvesi, mezarlık", filmed:"H", audio:"H", edited:"H", published:"H", permission:"H", notes:"Eyüp Sultan ile aynı gün."},
+  {name:"Anadolu Hisarı", district:"Beykoz", city:"İstanbul", address:"Anadolu Hisarı", format:"Saha", topic:"Rumeli Hisarı'nın daha az bilinen kardeşi", filmed:"H", audio:"H", edited:"H", published:"H", permission:"H", notes:""},
+  {name:"Galata Mevlevihanesi", district:"Beyoğlu", city:"İstanbul", address:"Galata", format:"Saha", topic:"Sema ayini geleneği", filmed:"H", audio:"H", edited:"H", published:"H", permission:"H", notes:"Galata Kulesi ile aynı gün."},
+  {name:"Küçük Ayasofya", district:"Fatih", city:"İstanbul", address:"Sultanahmet", format:"Saha", topic:"Büyük Ayasofya'nın mimari provası iddiası", filmed:"H", audio:"H", edited:"H", published:"H", permission:"H", notes:""},
+  {name:"Büyük Saray Mozaik Müzesi", district:"Fatih", city:"İstanbul", address:"Sultanahmet", format:"Saha", topic:"Bizans imparatorluk sarayı zemin mozaikleri", filmed:"H", audio:"H", edited:"H", published:"H", permission:"H", notes:""},
+  {name:"Ahrida Sinagogu", district:"Fatih", city:"İstanbul", address:"Balat", format:"Saha", topic:"Tekne şeklindeki kürsü", filmed:"H", audio:"H", edited:"H", published:"H", permission:"E", notes:"Hahambaşılık'tan önceden izin gerekiyor."},
+  {name:"Haydarpaşa Garı / Khalkedon efsanesi", district:"Kadıköy", city:"İstanbul", address:"Haydarpaşa", format:"Masabaşı", topic:"'Körler Ülkesi' kuruluş efsanesi, 1917 patlaması", filmed:"H", audio:"H", edited:"H", published:"H", permission:"H", notes:"Aktif restorasyon/tahliye alanı, iç mekân kapalı — masabaşı formatla ele alınacak."},
+  {name:"Dolmabahçe Sarayı", district:"Beşiktaş", city:"İstanbul", address:"Dolmabahçe", format:"Masabaşı", topic:"Atatürk'ün son nefesi, saatlerin 9:05'te durdurulması", filmed:"H", audio:"H", edited:"H", published:"H", permission:"E", notes:"Milli Saraylar — iç mekân çekimi yasak."},
+  {name:"Küçüksu Kasrı", district:"Beykoz", city:"İstanbul", address:"Küçüksu", format:"Masabaşı", topic:"Az bilinen padişah kaçış rotası iddiası", filmed:"H", audio:"H", edited:"H", published:"H", permission:"E", notes:"Milli Saraylar — iç mekân yasak olabilir, teyit gerek."},
+  {name:"Aynalıkavak Kasrı", district:"Beyoğlu", city:"İstanbul", address:"Kasımpaşa/Hasköy", format:"Masabaşı", topic:"III. Selim'in beste yaptığı oda", filmed:"H", audio:"H", edited:"H", published:"H", permission:"E", notes:"Milli Saraylar — teyit gerek."},
+  {name:"Beylerbeyi Sarayı", district:"Üsküdar", city:"İstanbul", address:"Beylerbeyi", format:"Hibrit", topic:"II. Abdülhamid'in esareti, Abdülaziz'in şüpheli ölümü", filmed:"H", audio:"H", edited:"H", published:"H", permission:"H", notes:"Bahçe çekimi serbest, iç mekân yasak — hibrit format planlandı."},
+  {name:"Topkapı Sarayı Harem Dairesi", district:"Fatih", city:"İstanbul", address:"Topkapı Sarayı", format:"Masabaşı", topic:"'Kafes' sistemi, şehzade hapsi", filmed:"H", audio:"H", edited:"H", published:"H", permission:"E", notes:"⚠️ Erişim kuralları doğrulanmadı, saha kontrolü gerek."},
+  {name:"Çırağan Sarayı", district:"Beşiktaş", city:"İstanbul", address:"Çırağan", format:"Masabaşı", topic:"V. Murad'ın hapsi, büyük yangın gizemi", filmed:"H", audio:"H", edited:"H", published:"H", permission:"E", notes:"⚠️ Şu an otel — iç çekim için otel izni gerekebilir, doğrulanmadı."}
+];
+
+let locations = [];
+let saveTimer = null;
+let saveInFlight = false;
+let pendingResave = false;
+
+function defaultPackage(){
+  return {
+    youtubeTitles:"", youtubeThumbPrompt:"",
+    reelsCount:"", reelsTitles:"", reelsThumbPrompts:"",
+    hashtags:"", tags:"", shortsTags:"", keywordNotes:"",
+    captionShorts:"", captionYouTube:"", captionInstagram:"", captionFacebook:"",
+    fbTags:"", fbCoverPrompt:"",
+    shotList:""
+  };
+}
+
+// Fills in any fields a location object is missing (script/scriptLink/package)
+// without touching fields that already have real values — safe to run on
+// both fresh seed data and data people already had saved from before.
+function normalizeLocation(l){
+  let touched = false;
+  if(l.script === undefined){ l.script = (l.published === 'E' ? 'E' : 'H'); touched = true; }
+  if(l.scriptLink === undefined){ l.scriptLink = ""; touched = true; }
+  if(l.plannedDate === undefined){ l.plannedDate = ""; touched = true; }
+  if(l.cancelled === undefined){ l.cancelled = "H"; touched = true; }
+  if(l.mapsLink === undefined){ l.mapsLink = ""; touched = true; }
+  if(l.fieldNotes === undefined){ l.fieldNotes = ""; touched = true; }
+  if(l.prepRequested === undefined){ l.prepRequested = "H"; touched = true; }
+  if(l.driveFolderLink === undefined){ l.driveFolderLink = ""; touched = true; }
+  if(!l.package){ l.package = defaultPackage(); touched = true; }
+  else l.package = {...defaultPackage(), ...l.package};
+  l._normalized = touched;
+  return l;
+}
+
+// One-time corrections applied to already-saved data, so earlier mistakes
+// get fixed even for people who already have this stored from before.
+function applyCorrections(){
+  let changed = false;
+
+  const catladikapi = locations.find(l => l.name === "Çatladıkapı");
+  if(catladikapi && catladikapi.notes && catladikapi.notes.includes("Script hazır")){
+    catladikapi.topic = "Henüz araştırma/script aşamasında değil.";
+    catladikapi.notes = "Herhangi bir hazırlık yapılmadı — sadece aday olarak duruyor.";
+    catladikapi.script = "H";
+    changed = true;
+  }
+  if(catladikapi && catladikapi.notes && catladikapi.notes.includes("sadece aday olarak duruyor")){
+    catladikapi.address = "Küçükayasofya Mahallesi, Kumkapı-Kadırga arası";
+    catladikapi.topic = "Bizans'ta Leon (Aslan) Kapısı — Bukoleon Sarayı'nın liman kapısı. 1532 depreminde kemeri çatladı ama yıkılmadı. Sultan Abdülaziz demiryolu için yıktırdı, aslan heykelleri Arkeoloji Müzesi'ne taşındı. Hemen yanındaki Kontoskalion Limanı (Bizans donanma tersanesi) bugün otopark.";
+    catladikapi.notes = "Araştırma 21 Ağustos'ta tamamlandı, script henüz yazılmadı.";
+    changed = true;
+  }
+
+  const kizkulesi = locations.find(l => l.name === "Kız Kulesi");
+  if(kizkulesi && kizkulesi.notes && kizkulesi.notes.includes("Script hazır, çekim bekliyor.")){
+    kizkulesi.topic = "Kader kaçamayan kız efsanesi";
+    kizkulesi.notes = "⚠️ Drive'da script dosyası bulunamadı — önceki 'script hazır' notu doğrulanamadı, teyit gerekiyor.";
+    kizkulesi.script = "H";
+    changed = true;
+  }
+
+  const zeyrek = locations.find(l => l.name === "Zeyrek Camii");
+  if(zeyrek && (!zeyrek.scriptLink || !zeyrek.package || !zeyrek.package.captionYouTube)){
+    zeyrek.script = "E";
+    zeyrek.scriptLink = "https://docs.google.com/document/d/1_dwifNRnlj-Da12R7TSgfFiqVIm1pTs6ij1HkMUv7F4/edit";
+    zeyrek.package = {...defaultPackage(), ...(zeyrek.package||{}),
+      reelsCount:"4",
+      reelsTitles:"Reel1 (HOOK) — Ayasofya'dan Sonra En Büyük Bizans Yapısı\nReel2 — İmparatoriçenin Mezar Taşı\nReel3 — Gizli Gökyüzü\nReel4 — Kimse İnmedi",
+      hashtags:"#zeyrekcamii #tarihidedektif #bizanstarihi #rivayetdeğilkayıt #istanbultarihi",
+      tags:"zeyrek camii, pantokrator manastırı, bizans tarihi, tarihi dedektif, istanbul tarihi",
+      captionShorts:"İstanbul'da, Ayasofya'dan sonra ayakta kalan en büyük Bizans yapısı burada duruyor — ama yanından geçen 10 kişiden 9'u adını bile bilmiyor. 12. yüzyılda İmparatoriçe İrini, kocası için 'Evrenin Hakimi' anlamına gelen Pantokrator'a ithaf edilen dev bir kompleks yaptırıyor: kilise, kütüphane ve inanılmaz organize bir hastane. Bizans'ın son yıllarında bu hastanenin başhekimliğine bir Türk hekim gelmiş — bir Hristiyan imparatorluk kurumunun en kritik görevinde. İçinde bir düzineden fazla imparator gömülüydü, bugün mezar odaları vakıf tarafından ziyarete kapalı. Latin İstilası'nda yağmalanan mezarlardan İmparatoriçe İrini'nin mezar taşı bugün Ayasofya'nın dış nartexinde sergileniyor. Fetihten sonra buraya İstanbul'un ilk medresesi kurulmuş, camiye bugünkü adını veren de o ilk müderris Molla Zeyrek Mehmet Efendi. Tam belgesel kanalımda. Rivayet değil, kayıt. #belgesel #tarih #zeyrekcamii #tarihidedektif #bizanstarihi #istanbul #fatih",
+      captionYouTube:"İstanbul'da, Ayasofya'dan sonra ayakta kalan en büyük Bizans yapısı burada duruyor. Yanından geçen 10 kişiden 9'u adını bile bilmiyor.\n\nİçinde bir düzineden fazla imparator gömülüydü — bugün mezarları açık, cesetler yok. Bizans'ın en kutsal hastanesinde başhekimlik görevine bir Türk hekim gelmiş. Taşların altında opus sectile bir taban gizli — bazı araştırmacılara göre zodyak sembolleri barındırıyor.\n\nÖnce kilise ve hastane, sonra İstanbul'un ilk medresesi, şimdi cami — aynı taşlar, üç farklı inanç.\n\nBu belgesel serimizde Fatih'in tarihini kanıtla anlatıyoruz.\n\nRivayet değil, kayıt.\n\n📍 Kaynaklar:\nİslam ve İhsan, Vikipedi, TDV İslâm Ansiklopedisi, Korku101, Gazete Duvar, The Byzantine Legacy, Cogito İstanbul, PallasWeb (Imperial Porphyry Tombs), Eileen Stephenson (The Pantokrator Monastery) — saha ziyaretinde doğrulanan bilgiler dahil edilmiştir.\n\n🔔 Abone ol, her hafta yeni bir gizem: youtube.com/@gerceginizleritv\n📸 Instagram: instagram.com/gerceginizleritv\n🎵 TikTok: @gerceginizleritv\n📱 Facebook: facebook.com/gerceginizleritv\n\n#belgesel #tarih #zeyrekcamii #tarihidedektif #bizanstarihi #istanbul #fatih",
+      captionInstagram:"İstanbul'da, Ayasofya'dan sonra ayakta kalan en büyük Bizans yapısı burada duruyor. Yanından geçen 10 kişiden 9'u adını bile bilmiyor. İçinde bir düzineden fazla imparator gömülüydü — önce kilise ve hastane, sonra medrese, şimdi cami — aynı taşlar, üç farklı inanç. Tam belgesel YouTube'da. Rivayet değil, kayıt. #belgesel #tarih #zeyrekcamii #tarihidedektif #bizanstarihi #istanbul #fatih\n\n(Reel2-4 için tam metinler Drive dosya 15/16'da)",
+      captionFacebook:"İstanbul'da, Ayasofya'dan sonra ayakta kalan en büyük Bizans yapısı burada duruyor. Yanından geçen 10 kişiden 9'u adını bile bilmiyor. 🏛️\n\n🎬 TAM BELGESELİ İZLEMEK İÇİN: [YouTube video linki] — hemen tıkla, kaçırma.\n\nSayfamda Abonelikler açık. 🙏\n\n#belgesel #tarih"
+    };
+    changed = true;
+  }
+
+  const pera = locations.find(l => l.name === "Pera Palas / Agatha Christie");
+  if(pera && (!pera.scriptLink || !pera.package || !pera.package.captionYouTube)){
+    pera.script = "E";
+    pera.scriptLink = "https://docs.google.com/document/d/1urGh8EBo4yF7TX2t9nKGwlJyTGcVrKaSQh2w1c6qYPE/edit";
+    pera.package = {...defaultPackage(), ...(pera.package||{}),
+      reelsCount:"3",
+      reelsTitles:"Reel1 — Hook (15sn): 1926'da 11 gün kayboldu\nReel2 — 15.000 Kişilik Arama (15sn)\nReel3 — 1979 Anahtar Olayı (20sn)",
+      hashtags:"#agathachristie #perapalas #hercülepoirot #tarihidedektif #rivayetdeğilkayıt",
+      tags:"agatha christie, pera palas, hercule poirot, doğu ekspresinde cinayet, istanbul gizemleri, osmanlı tarihi",
+      keywordNotes:"vidIQ: 'hercule poirot' (65.8/100), 'midnight at the pera palace' (66.6/100), 'agatha christie' (63/100) — dört sorguda tutarlı, yüksek fırsatlı terimler.",
+      captionShorts:"1926'da dünyaca ünlü yazar Agatha Christie, kocasıyla yaşadığı ciddi bir gerginliğin ardından evinden ayrıldı ve ortadan kayboldu. Arabası ertesi sabah farları açık, içinde bavulu ve kürk mantosuyla bir tebeşir ocağının kenarında bulundu — kendisi yoktu. On beş bine yakın kişi, uçaklar ve köpekler seferber edildi; Sherlock Holmes'un yazarı Arthur Conan Doyle bile bir medyuma başvurdu. On bir gün sonra Christie, Harrogate'teki bir otelde bulundu — ama kendi adıyla değil, kocasının sevgilisinin soyadıyla kayıt yaptırmıştı. O günlerde ne yaşadığını hiçbir zaman anlatmadı. 2023'te tarihçi Lucy Worsley bunun travmatik bir 'fugue' durumu olabileceğini öne sürdü, ama bu kesin bir kayıt değil, sadece teori. Asıl gizem İstanbul'da başlıyor: Christie'nin sık kaldığı Pera Palas'ta, 1979'da bir medyumun iddiası üzerine oda 411'in döşemesi canlı yayında kaldırıldı ve gerçekten paslı bir anahtar bulundu — bu bir efsane değil, belgelenmiş bir olay. Tam hikaye kanalımda. Rivayet değil, kayıt. #belgesel #tarih #agathachristie #perapalas #tarihidedektif",
+      captionYouTube:"1926'da dünyaca ünlü yazar Agatha Christie, on bir gün boyunca ortadan kayboldu. Arabası ertesi sabah farları açık halde bulundu, kendisi yoktu. On beş bine yakın kişi, uçaklar ve köpeklerle seferber edilen dev bir arama başladı — hatta Sherlock Holmes'un yazarı Arthur Conan Doyle bile bir medyuma başvurdu.\n\nOn bir gün sonra Christie, Harrogate'teki bir otelde, kendi adıyla değil kocasının sevgilisinin soyadıyla kayıtlı olarak bulundu. O günlerde ne yaşadığını hayatı boyunca hiçbir zaman anlatmadı; otobiyografisinde bile bu konudan neredeyse hiç bahsetmiyor.\n\n2023'te tarihçi Lucy Worsley bunun travmatik bir kişilik ayrışması ('fugue') olabileceğini öne sürdü — ama bunu net bir kayıt değil, bir teori olarak belirtiyoruz.\n\nPeki bunun İstanbul'la ne ilgisi var? Christie, 1920'lerin sonu ile 1930'ların başı arasında birden fazla kez Pera Palas'ta kalmış. 1979'da bir medyumun, oda 411'in döşemesi altında bir anahtar olduğu iddiası üzerine, Amerikan basını ve TV kameraları önünde döşeme gerçekten kaldırıldı — ve gerçekten paslı, 8 santimetre uzunluğunda bir anahtar bulundu. Bu kısmı özellikle vurguluyoruz: anahtarın bulunması bir efsane değil, canlı yayında belgelenmiş gerçek bir olay. Anahtar bugüne kadar hiçbir şeyi açmadı.\n\nRivayet değil, kayıt.\n\n📍 Kaynaklar:\n[Bu bölüm için kullanılan kaynak listesi netleşince eklenecek.]\n\n🔔 Abone ol, her hafta yeni bir gizem: youtube.com/@gerceginizleritv\n📸 Instagram: instagram.com/gerceginizleritv\n🎵 TikTok: @gerceginizleritv\n📱 Facebook: facebook.com/gerceginizleritv\n\n#belgesel #tarih #istanbul #agathachristie #hercülepoirot #perapalas #tarihidedektif #gizemlitarih #istanbultarihi #rivayetdeğilkayıt",
+      captionInstagram:"1926'da dünyaca ünlü bir yazar 11 gün boyunca ortadan kayboldu. 15.000 kişilik bir arama başlatıldı — uçaklar, köpekler, hatta Sherlock Holmes'un yazarı Arthur Conan Doyle bile bir medyuma başvurdu.\n\nBulunduğunda gerçek adıyla değil, kocasının sevgilisinin soyadıyla kayıt yaptırmıştı. Ve o 11 günde ne yaşadığını hiçbir zaman anlatmadı.\n\nYıllar sonra, İstanbul'da, Pera Palas'ta bir otel odasının döşemesi canlı yayında kaldırıldı — ve gerçekten paslı bir anahtar bulundu.\n\nO anahtar hâlâ hiçbir şeyi açmadı.\n\nRivayet değil, kayıt.\n\n#belgesel #tarih #istanbul #agathachristie #hercülepoirot #perapalas #tarihidedektif #gizemlitarih #istanbultarihi #osmanlitarihi #rivayetdeğilkayıt #gerceginizleritv",
+      captionFacebook:"1926'da dünyaca ünlü bir yazar 11 gün boyunca ortadan kayboldu. 15.000 kişilik bir arama başlatıldı, ama bulunduğunda o günlerde ne yaşadığını hiçbir zaman anlatmadı.\n\nYıllar sonra, İstanbul'da, Pera Palas'ta bir otel odasının döşemesi canlı yayında kaldırıldı — ve gerçekten paslı bir anahtar bulundu. O anahtar hâlâ hiçbir şeyi açmadı.\n\n🎬 TAM BELGESELİ İZLEMEK İÇİN: [YouTube video linki]\n\nSayfamda Abonelikler açık. 🙏\n\n#belgesel #tarih"
+    };
+    changed = true;
+  }
+
+  const arkeoloji = locations.find(l => l.name === "İstanbul Arkeoloji Müzeleri + Çinili Köşk");
+  if(arkeoloji && (!arkeoloji.scriptLink || arkeoloji.scriptLink.includes("1z2oEcrFgyTiM3wdOqyvAAkDL2uvjdVB27Dyh5DCxvWU"))){
+    arkeoloji.script = "E";
+    arkeoloji.scriptLink = "https://docs.google.com/document/d/1hL4RWZ5uilIHygiM_QejTh29YKgmUMYtcCqnvwKpvgE/edit";
+    arkeoloji.notes = "Script v2 (gelişme kısa, saha genişletilmiş standardına uygun) 23 Ağustos'ta güncellendi.";
+    changed = true;
+  }
+  if(arkeoloji && !arkeoloji.driveFolderLink){
+    arkeoloji.driveFolderLink = "https://drive.google.com/drive/folders/1QklqW4_GUbBYnL16348cCJ95t0ZK8O1t";
+    arkeoloji.prepRequested = "H";
+    arkeoloji.package = {...defaultPackage(), ...(arkeoloji.package||{}),
+      shotList:"İskender Lahdi (ana salon, en ünlü eser) — yakın plan\nAğlayan Kadınlar Lahdi — kederli kadın figürleri, detay çekim şart\nTabnit Lahdi (mumyalı lahit)\nGirişte devasa Bes heykeli (~4,5-5 metre)\nKadeş Antlaşması Tableti\nDünyanın En Eski Aşk Şiiri Tableti (İstanbul #2461)\nİştar Kapısı'ndan kalan özgün parçalar\nAkad Kralı Naramsin Steli\nTablet Arşivi genel görüntüsü (75.000 belge, geniş açı)\nÇinili Köşk dış cephe (1472 çini/seramik örnekleri)",
+      reelsCount:"4",
+      reelsTitles:"Reel1 (HOOK) — 70 Yıl Çekmecede Unutulan Aşk Şiiri\nReel2 — İskender Lahdi Gerçekten İskender'e mi Ait?\nReel3 — İştar Kapısı'nın Almanya'ya Giden Yarısı\nReel4 — Girişte Karşılayan Dev Bes Heykeli",
+      hashtags:"#arkeolojimüzesi #tarihidedektif #bizanstarihi #istanbultarihi #rivayetdeğilkayıt",
+      tags:"istanbul arkeoloji müzesi, iskender lahdi, çinili köşk, en eski aşk şiiri, iştar kapısı, tarihi dedektif, osman hamdi bey",
+      captionShorts:"Bir kil tablet, kazıldıktan sonra 70 yıl boyunca bir müze çekmecesinde unutuldu. Çözüldüğünde ortaya dünyanın bilinen en eski aşk şiiri çıktı. İstanbul Arkeoloji Müzeleri'nin 4 yıllık restorasyondan yeni çıkan kanadında, bu ve daha fazlası var. Tam belgesel kanalımda. #belgesel #tarih #arkeolojimüzesi #tarihidedektif #istanbul",
+      captionYouTube:"Bir kil tablet, kazıldıktan sonra yetmiş yıl boyunca bir müze çekmecesinde unutuldu. Kimse onu okuyamadı, kimse ne olduğunu bilmiyordu. Sonunda bir Amerikalı ve bir Türk bilim insanı birlikte deşifre etti — ortaya dünyanın bilinen en eski aşk şiiri çıktı.\n\n1891'de Osman Hamdi Bey tarafından kurulan İstanbul Arkeoloji Müzeleri'nin bir kanadı — Eski Şark Eserleri Müzesi — dört yıllık restorasyondan sadece bir hafta önce yeniden açıldı.\n\nMüzenin en ünlü eseri İskender Lahdi. Ama burada ilk gizem başlıyor: tarihçilerin çoğu bu lahdin aslında Büyük İskender'e değil, muhtemelen bir Sidon kralına ait olduğunu düşünüyor.\n\nBir başka gizem: İştar Kapısı'nın büyük kısmı, yüzyıl önce yapılan kazılarda Almanya'ya götürülüp bugün Berlin'de sergileniyor.\n\nRivayet değil, kayıt.\n\n📍 Kaynaklar: Saha ziyaretinde doğrulanan bilgiler ve müze bilgilendirme panoları esas alınmıştır.\n\n🔔 Abone ol: youtube.com/@gerceginizleritv\n📸 Instagram: instagram.com/gerceginizleritv\n🎵 TikTok: @gerceginizleritv\n📱 Facebook: facebook.com/gerceginizleritv\n\n#belgesel #tarih #arkeolojimüzesi #tarihidedektif #istanbul",
+      captionInstagram:"Bir kil tablet, kazıldıktan sonra 70 yıl boyunca bir müze çekmecesinde unutuldu. Kimse ne olduğunu bilmiyordu. Çözüldüğünde ortaya dünyanın bilinen en eski aşk şiiri çıktı. 📜\n\nİstanbul Arkeoloji Müzeleri'nin bir kanadı, 4 yıllık restorasyondan sadece bir hafta önce yeniden açıldı. İçeride İskender Lahdi de var — ama tarihçilerin çoğu bunun gerçekten İskender'e ait olmadığını düşünüyor.\n\nRivayet değil, kayıt.\n\n#belgesel #tarih #istanbul #arkeolojimüzesi #tarihidedektif #iskenderlahdi #rivayetdeğilkayıt #gerceginizleritv",
+      captionFacebook:"Bir kil tablet, kazıldıktan sonra 70 yıl boyunca bir müze çekmecesinde unutuldu. Çözüldüğünde ortaya dünyanın bilinen en eski aşk şiiri çıktı. 📜\n\n🎬 TAM BELGESELİ İZLEMEK İÇİN: [YouTube video linki]\n\nSayfamda Abonelikler açık. 🙏\n\n#belgesel #tarih"
+    };
+    changed = true;
+  }
+
+  const nuruosmaniye = locations.find(l => l.name === "Nuruosmaniye Camii");
+  if(nuruosmaniye && (!nuruosmaniye.scriptLink || (nuruosmaniye.package && nuruosmaniye.package.captionYouTube && nuruosmaniye.package.captionYouTube.includes("Yerebatan Sarnıcı'nı andıran")))){
+    nuruosmaniye.script = "E";
+    nuruosmaniye.scriptLink = "https://docs.google.com/document/d/1pjCwmGqll4dnq0XywIMWus8zBB4pGtyOmWMKDBXo1-o/edit";
+    nuruosmaniye.driveFolderLink = "https://drive.google.com/drive/folders/1cj0dCmg2LvXXFiKFfQKTQ7wGKvcBv7oc";
+    nuruosmaniye.prepRequested = "H";
+    nuruosmaniye.topic = "İki padişah için hazırlanan boş türbe, gayrimüslim mimar Simeon, 270 yıldır hiç kullanılmamış mahzen, ilk Osmanlı Barok camisi";
+    nuruosmaniye.notes = "Script v1 (tam, ~1.500 kelime) + kurgu reçetesi + teleprompter 22 Ağustos'ta hazırlandı.";
+    nuruosmaniye.package = {...defaultPackage(), ...(nuruosmaniye.package||{}),
+      shotList:"Yarım daire (oval/poligonal) avlu — geniş açı, en ayırt edici özellik\nKare planlı harim (iç mekân) — 25,5m tek kubbe, dört büyük kemer\nKütüphane binası — dış cephe\nTürbe — Şehsuvar Sultan ve şehzade sandukaları, boş kalan asıl mezar yerine vurgu\nMahzen/alt kat girişi — 270 yıldır hiç kullanılmamış alanın dış görüntüsü\nBarok süsleme detayları — kemerler, oymalar, renkli cam pencereler\nKapalıçarşı'ya bitişik konum — giriş kapısından geçiş çekimi\nSebil/çeşme yapısı (dış avlu)",
+      reelsCount:"4",
+      reelsTitles:"Reel1 (HOOK) — İki Padişah, Boş İki Türbe (0:00-0:25)\nReel2 — Boş Türbe Gizemi (3:50-5:10)\nReel3 — 270 Yıldır Kullanılmayan Mahzen (6:20-7:00)\nReel4 — İstanbul'un Tek Barok Camisi (5:10-6:00)",
+      hashtags:"#nuruosmaniyecamii #tarihidedektif #osmanlıtarihi #istanbultarihi #rivayetdeğilkayıt",
+      tags:"nuruosmaniye camii, osmanlı barok mimari, kapalıçarşı, III. Osman, I. Mahmud, simeon kalfa, tarihi dedektif",
+      captionShorts:"İki padişah kendine türbe yaptırdı ama ikisi de içinde yatmıyor. Nuruosmaniye Camii'nin altında ise 270 yıldır hiç kullanılmamış gizemli bir mahzen var. Tam belgesel kanalımda. #belgesel #tarih #nuruosmaniyecamii #tarihidedektif #istanbul",
+      captionYouTube:"İki padişah, kendine özel bir türbe yaptırdı. Ama ikisi de o türbede yatmıyor.\n\n1749'da I. Mahmud, Kapalıçarşı'nın girişinde büyük bir külliye yaptırmaya başladı. Ömrü tamamlanmasına yetmedi — kardeşi III. Osman, camiyi 1755'te bitirdi ve adını kendine mal etti: Nur-u Osmani, \"Osmanlı'nın Nuru.\"\n\nİnşaatı günlük olarak yöneten kalfa bir Rum: Simeon — bu yüzden Nuruosmaniye, yapım süreci en iyi belgelenmiş Osmanlı yapılarından biri.\n\nKülliye içinde kendileri için hazırlanan türbeye ise ikisi de hiç girmedi. Ve altında, 270 yıldır asıl amacına uygun hiç kullanılmamış gizemli bir mahzen var.\n\nRivayet değil, kayıt.\n\n📍 Kaynaklar:\nTDV İslâm Ansiklopedisi, Vikipedi, Özhan Öztürk Makaleleri, İslam Düşünce Atlası (Ahmed Efendi risalesi), Anadolu Ajansı (2023), Türk Diyanet Vakıf-Sen\n\n🔔 Abone ol: youtube.com/@gerceginizleritv\n📸 Instagram: instagram.com/gerceginizleritv\n🎵 TikTok: @gerceginizleritv\n📱 Facebook: facebook.com/gerceginizleritv\n\n#belgesel #tarih #nuruosmaniyecamii #tarihidedektif #osmanlıtarihi #istanbul",
+      captionInstagram:"İki padişah, kendine özel bir türbe yaptırdı. Sandukalar hazırlandı, her şey hazırdı. Ama ikisi de o türbede yatmıyor. 🕌\n\nCaminin inşaatını günlük olarak yöneten kalfa bir Rum: Simeon. Ve altında, 270 yıldır hiç kullanılmamış gizemli bir mahzen var.\n\nRivayet değil, kayıt.\n\n#belgesel #tarih #istanbul #nuruosmaniyecamii #tarihidedektif #osmanlıtarihi #kapalıçarşı #rivayetdeğilkayıt #gerceginizleritv",
+      captionFacebook:"İki padişah kendine özel bir türbe yaptırdı. Ama ikisi de içinde yatmıyor. 🕌\n\nNuruosmaniye Camii'nin altında ise 270 yıldır hiç kullanılmamış gizemli bir mahzen var.\n\n🎬 TAM BELGESELİ İZLEMEK İÇİN: [YouTube video linki]\n\nSayfamda Abonelikler açık. 🙏\n\n#belgesel #tarih"
+    };
+    changed = true;
+  }
+
+  const hasImrahor = locations.some(l => l.name === "İmrahor İlyas Bey Camii (Stüdyos Manastırı)");
+  if(!hasImrahor){
+    const yedikuleIdx = locations.findIndex(l => l.name === "Yedikule Zindanları");
+    const newLoc = normalizeLocation({
+      id: 'loc_'+Date.now()+'_imrahor',
+      name:"İmrahor İlyas Bey Camii (Stüdyos Manastırı)", district:"Fatih", city:"İstanbul", address:"Samatya/Yedikule, İmam Aşir Sokak", format:"Saha",
+      topic:"İstanbul'un ayakta kalan en eski dini yapısı, 5. yüzyılda inşa edilmiş, Ayasofya'dan ~100 yıl önce. Bizans imparatorlarının şehre tören alayıyla giriş/çıkış yaptığı Altın Kapı'dan sonra uğradığı önemli durak noktalarından biriydi. 1204 Latin İşgali'nde büyük zarar gördü — kanalın işlediği Latin İşgali temasıyla doğrudan bağlantılı.",
+      filmed:"H", audio:"H", edited:"H", published:"H", permission:"E",
+      notes:"⚠️ 2023'ten beri aktif restorasyonda (geçici çelik/uzay kafes çatı sistemi kuruldu) — gitmeden önce güncel ziyaret/erişim durumu teyit edilmeli, şu an tamamen kapalı olabilir. YouTube yorumundan gelen öneri (22 Ağustos), ikinci bir yorumla Altın Kapı/tören güzergahı detayı doğrulandı.",
+      script:"H", scriptLink:"", driveFolderLink:"", prepRequested:"H"
+    });
+    if(yedikuleIdx >= 0) locations.splice(yedikuleIdx+1, 0, newLoc);
+    else locations.push(newLoc);
+    changed = true;
+  }
+  const imrahorExisting = locations.find(l => l.name === "İmrahor İlyas Bey Camii (Stüdyos Manastırı)");
+  if(imrahorExisting && imrahorExisting.topic && !imrahorExisting.topic.includes("Altın Kapı")){
+    imrahorExisting.topic = "İstanbul'un ayakta kalan en eski dini yapısı, 5. yüzyılda inşa edilmiş, Ayasofya'dan ~100 yıl önce. Bizans imparatorlarının şehre tören alayıyla giriş/çıkış yaptığı Altın Kapı'dan sonra uğradığı önemli durak noktalarından biriydi. 1204 Latin İşgali'nde büyük zarar gördü — kanalın işlediği Latin İşgali temasıyla doğrudan bağlantılı.";
+    imrahorExisting.notes = "⚠️ 2023'ten beri aktif restorasyonda (geçici çelik/uzay kafes çatı sistemi kuruldu) — gitmeden önce güncel ziyaret/erişim durumu teyit edilmeli, şu an tamamen kapalı olabilir. YouTube yorumundan gelen öneri (22 Ağustos), ikinci bir yorumla Altın Kapı/tören güzergahı detayı doğrulandı.";
+    changed = true;
+  }
+
+  const hasKanliKilise = locations.some(l => l.name === "Panagia Muhliotissa (Kanlı Kilise)");
+  if(!hasKanliKilise){
+    const svetiIdx = locations.findIndex(l => l.name === "Sveti Stefan Kilisesi (Demir Kilise)");
+    const newLoc2 = normalizeLocation({
+      id: 'loc_'+Date.now()+'_kanlikilise',
+      name:"Panagia Muhliotissa (Kanlı Kilise)", district:"Fatih", city:"İstanbul", address:"Fener, Tevkii Cafer Mektebi Sokak — Fener Rum Erkek Lisesi'nin (Kırmızı Okul) karşısı", format:"Saha",
+      topic:"Osmanlı fethinden bu yana hiç camiye çevrilmeden, kesintisiz Rum Ortodoks ibadetine açık kalan tek Bizans dönemi kilisesi. Kurucusu Maria Palaiologina — VIII. Mihael'in gayrimeşru kızı, siyasi barış evliliğiyle önce Hülagü Han'a (o ölünce oğlu Abaka Han'a) gönderilip İran'da 15 yıl yaşadı, kocasının ölümünden sonra dönüp bu kiliseyi kurdu. 'Kanlı Kilise' adı, 1453 fetih sırasında bölgede yaşanan çatışmalarla ilişkilendiriliyor.",
+      filmed:"H", audio:"H", edited:"H", published:"H", permission:"E",
+      notes:"YouTube yorumundan gelen öneri (22 Ağustos). Genelde halka açık değil — ziyaret/çekim izni için önceden iletişime geçilmeli, aynı gün Gül Camii ve Sveti Stefan ile birleştirilebilir (aynı Fener/Balat bölgesi).",
+      script:"H", scriptLink:"", driveFolderLink:"", prepRequested:"H"
+    });
+    if(svetiIdx >= 0) locations.splice(svetiIdx+1, 0, newLoc2);
+    else locations.push(newLoc2);
+    changed = true;
+  }
+
+  const rumeliHisari = locations.find(l => l.name === "Rumeli Hisarı");
+  if(rumeliHisari && !rumeliHisari.scriptLink){
+    rumeliHisari.script = "E";
+    rumeliHisari.scriptLink = "https://docs.google.com/document/d/1mbrjTtthCzWS7eElWNOnSES09LmddaTcrdzkEY4pSoU/edit";
+    rumeliHisari.driveFolderLink = "https://drive.google.com/drive/folders/1ix2Ej9LROOnREOw8fn31NPiv11p9iWUn";
+    rumeliHisari.topic = "Fatih'in 4 ayda inşa ettirdiği kale, öküz derisi rivayeti, üç paşa görev dağılımı, Boğazkesen adı";
+    rumeliHisari.notes = "Script v2 (gelişme kısa, saha genişletilmiş standardına uygun) 23 Ağustos'ta hazırlandı.";
+    changed = true;
+  }
+  if(rumeliHisari && (!rumeliHisari.package || !rumeliHisari.package.captionFacebook || rumeliHisari.package.captionFacebook.includes("YouTube video linki"))){
+    rumeliHisari.notes = "Script v2 + tam yayın paketi 28 Ağustos yayını için hazırlandı.";
+    rumeliHisari.package = {...defaultPackage(), ...(rumeliHisari.package||{}),
+      shotList:"Üç kule (Saruca Paşa, Zağanos Paşa, Halil Paşa kuleleri) — geniş açı ve taş işçiliği yakın plan\nManzara noktası (burçlara restorasyon nedeniyle çıkılamadı — alternatif yükseklik noktasından Boğaz görüntüsü)\nAnadolu Hisarı karşılaştırma çekimi (karşı yakadan)\nBahçe — top ve gülle sergisi yakın çekim\nKule taşındaki 'M harfi' iddia edilen işaret\nGiriş kapısı ve genel dış cephe, gün batımı ışığı",
+      youtubeTitles:"Fatih Sultan Mehmed'in 4 Ayda İnşa Ettirdiği Kale: Rumeli Hisarı'nın Sırrı\nBir Öküz Derisi ve Bir İmparatorluk: Rumeli Hisarı Nasıl Yapıldı?\nRumeli Hisarı Yapılışı: 4 Ayda İmkansızı Başaran Sır",
+      youtubeThumbPrompt:"YouTube thumbnail, 16:9, 1280x720. Close-medium composition — a man in full motorcycle riding gear in the lower-right third, intense curious/shocked expression, pointing toward the fortress. Reference photo for face. Background: Rumeli Hisarı towers, golden-hour light, one tower stone highlighted with a soft glowing red circle/arrow (the 'M harfi' mystery mark). High contrast, punchy saturated colors, deep black shadows, sharp focus, empty upper-left space for bold text overlay, no text baked in.",
+      reelsCount:"4",
+      reelsTitles:"Reel1 (HOOK) — Öküz Derisi Efsanesi (0:00-0:25)\nReel2 — 4 Ayda İnşa + Boğazkesen Adı\nReel3 — Kule Detay + Sultan Bizzat Tasarladı\nReel4 — Toplar/Gülleler + Zincir Deniz Müzesi'nde",
+      hashtags:"#rumelihisarı #fatihsultanmehmet #tarihidedektif #boğazkesen #istanbultarihi",
+      tags:"rumeli hisarı, rumeli hisarı yapılışı, fatih sultan mehmet, boğazkesen, öküz derisi rivayeti, istanbul fethi, tarihi dedektif, osmanlı tarihi, istanbul tarihi",
+      keywordNotes:"vidIQ (23 Ağustos): 'rumeli hisarı yapılışı' yüksek fırsat skoru — 67.3/100 (hacim 54.8, rekabet 13.9, düşük). 'fatih sultan mehmet' TR'de çok yüksek hacim — 39.9K.",
+      captionShorts:"Bir sultan bir imparatordan toprak istedi, imparator alaycı bir şekilde \"sana bir öküz derisi kadar yer veririm\" dedi — ve bu hikaye bugün hâlâ ayakta duran Rumeli Hisarı'nın sınırlarını çiziyor. 1452'de, 20 yaşındaki II. Mehmed, İstanbul'u fethetmeden önce Karadeniz'den gelecek yardımı kesmek için bu kaleyi sadece 4 ayda inşa ettirdi — üç ayrı paşaya bölünmüş bir görev dağılımı, İznik'ten Çubuklu'ya uzanan devasa bir malzeme seferberliğiyle. Kaleye verilen isim bile tesadüf değildi: Boğazkesen — çünkü tamamlandıktan sonra hiçbir gemi Sultan'ın izni olmadan geçemedi. Videoda kulelerdeki gizemli \"M harfi\" iddiasını da araştırıyoruz, ve o öküz derisi rivayetinin gerçekten belgeli olup olmadığını sorguluyoruz. Tam belgesel kanalımda, link profilde. Rivayet değil, kayıt. #belgesel #tarih #rumelihisarı #fatihsultanmehmet #tarihidedektif #istanbul #osmanlıtarihi",
+      captionYouTube:"Bir sultan, bir imparatordan toprak istiyor. İmparator gülüyor: \"Sana sadece bir öküz derisi kadar yer veririm.\" Sultan kabul ediyor — ve bu hikaye, bugün hâlâ ayakta duran bir kalenin sınırlarını çiziyor.\n\n1452, II. Mehmed, 20 yaşında. İstanbul'u fethetmeden önce Karadeniz yardımını kesmesi gerekiyor. Rumeli Hisarı sadece 4 ayda inşa ediliyor — üç paşa (Saruca, Zağanos, Halil Paşa) arasında bölünmüş bir seferberlikle, İznik'ten Çubuklu'ya uzanan bir malzeme lojistiğiyle.\n\nBu videoda: öküz derisi rivayetinin gerçekliğini sorguluyoruz, kulelerdeki gizemli \"M harfi\" iddiasını araştırıyoruz, ve kalenin bugün neden kısmen kapalı olduğunu (restorasyon) gösteriyoruz.\n\nRivayet değil, kayıt.\n\n📍 Kaynaklar: Fikriyat Gazetesi, Vikipedi, Gezimanya, Hisarlar Müzesi (muze.gov.tr)\n\n🔔 Abone ol: youtube.com/@gerceginizleritv\n📸 Instagram: instagram.com/gerceginizleritv\n🎵 TikTok: @gerceginizleritv\n📱 Facebook: facebook.com/gerceginizleritv\n\n#belgesel #tarih #rumelihisarı #fatihsultanmehmet #tarihidedektif #istanbul #osmanlıtarihi",
+      captionInstagram:"Bir sultan, bir imparatordan toprak istiyor. İmparator gülerek \"sana bir öküz derisi kadar yer veririm\" diyor. Sultan kabul ediyor — ve bu hikaye bugün hâlâ ayakta duran bir kalenin sınırlarını çiziyor. 🏰\n\nRumeli Hisarı, 1452'de sadece 4 ayda inşa edildi — üç paşa arasında bölünmüş bir seferberlik, devasa bir malzeme lojistiği ve kulelerde gizemli bir \"M harfi\" iddiasıyla.\n\nPeki öküz derisi hikayesi gerçek bir diplomatik oyun mu, yoksa sonradan süslenmiş bir efsane mi? Tam belgesel YouTube'da.\n\nRivayet değil, kayıt.\n\n#belgesel #tarih #rumelihisarı #fatihsultanmehmet #tarihidedektif #istanbul #osmanlıtarihi #boğazkesen #istanbultarihi #osmanlıimparatorluğu #rivayetdeğilkayıt #gerceginizleritv",
+      captionFacebook:"Bir sultan, bir imparatordan toprak istiyor. İmparator gülerek \"sana bir öküz derisi kadar yer veririm\" diyor. Sultan kabul ediyor — ve bu hikaye bugün hâlâ ayakta duran bir kalenin sınırlarını çiziyor. 🏰\n\nRumeli Hisarı, Fatih Sultan Mehmed'in emriyle sadece 4 ayda inşa edildi.\n\nTam belgesel yukarıda 👆 Rivayet değil, kayıt.\n\nSayfamda Abonelikler açık. 🙏\n\n#belgesel #tarih",
+      fbTags:"rumeli hisarı, fatih sultan mehmet, boğazkesen, istanbul fethi, osmanlı tarihi, istanbul tarihi, tarihi belgesel, bizans tarihi, istanbul boğazı, tarihi dedektif, motovlog, osmanlı imparatorluğu, 1453 istanbul, boğaziçi tarihi",
+      fbCoverPrompt:"YouTube-style thumbnail composition but calmer and more dignified — 16:9 landscape. A man in full motorcycle riding gear standing at the edge of Rumeli Hisarı fortress at golden hour, looking thoughtfully toward the towers with a curious, investigative expression (NOT shocked/mouth-open — composed, intrigued). Reference photo for face. Background: fortress towers and the Bosphorus in dramatic warm sunset light, cinematic wide shot, deep shadows with rich amber highlights, atmospheric and painterly. He's positioned in the right third of frame. Generous empty space in the upper-left sky area for a subtitle text overlay. No text baked in. Elegant, heritage-documentary tone."
+    };
+    changed = true;
+  }
+
+  const hasSerefiye = locations.some(l => l.name === "Şerefiye Sarnıcı (Theodosius Sarnıcı)");
+  if(!hasSerefiye){
+    const binbirdirekIdx = locations.findIndex(l => l.name === "Binbirdirek Sarnıcı");
+    const newLoc3 = normalizeLocation({
+      id: 'loc_'+Date.now()+'_serefiye',
+      name:"Şerefiye Sarnıcı (Theodosius Sarnıcı)", district:"Fatih", city:"İstanbul", address:"Piyer Loti Caddesi, Binbirdirek Mahallesi", format:"Saha",
+      topic:"Üç büyük sarnıcın en eskisi (II. Theodosius dönemi, 408-450 — Yerebatan'dan bile önce). Yıllarca üzerindeki belediye binasının altında tamamen unutulmuş, ancak 2010'da bina yıkımı sırasında yeniden keşfedilmiş. 45 yelken tonoz, 32 sütun, 360° projeksiyon gösterimi var.",
+      filmed:"H", audio:"H", edited:"H", published:"H", permission:"H",
+      notes:"YouTube yorumundan gelen öneri (23 Ağustos) — Yerebatan/Binbirdirek üçlemesini tamamlıyor, aynı bölgede (Sultanahmet).",
+      script:"H", scriptLink:"", driveFolderLink:"", prepRequested:"H"
+    });
+    if(binbirdirekIdx >= 0) locations.splice(binbirdirekIdx+1, 0, newLoc3);
+    else locations.push(newLoc3);
+    changed = true;
+  }
+
+  locations.forEach(l=>{ normalizeLocation(l); if(l._normalized) changed = true; delete l._normalized; });
+  return changed;
+}
+
+async function loadData(){
+  try{
+    const res = await fetch(JSONBIN_BASE + '/latest', {
+      method: 'GET',
+      headers: { 'X-Master-Key': JSONBIN_MASTER_KEY }
+    });
+    if(!res.ok) throw new Error('HTTP ' + res.status);
+    const json = await res.json();
+    const record = json && json.record ? json.record : {};
+    locations = Array.isArray(record.locations) ? record.locations : [];
+    if(locations.length === 0){
+      locations = seedData.map((l,i)=>({...l, id: 'loc_'+Date.now()+'_'+i}));
+      await persistNow();
+    }
+  }catch(e){
+    console.error('Veri okuma hatası (JSONBin)', e);
+    locations = seedData.map((l,i)=>({...l, id: 'loc_'+Date.now()+'_'+i}));
+    await persistNow();
+  }
+  if(applyCorrections()) await persistNow();
+  render();
+}
+
+// Debounced entry point: rapid clicks (e.g. toggling several stamps fast)
+// get merged into a single save instead of firing one request per click.
+function persist(){
+  clearTimeout(saveTimer);
+  saveTimer = setTimeout(()=>{ persistNow(); }, 450);
+}
+
+async function persistNow(retriesLeft){
+  if(retriesLeft === undefined) retriesLeft = 2;
+  if(saveInFlight){ pendingResave = true; return; }
+  saveInFlight = true;
+  try{
+    const res = await fetch(JSONBIN_BASE, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+        'X-Master-Key': JSONBIN_MASTER_KEY
+      },
+      body: JSON.stringify({ locations: locations })
+    });
+    if(!res.ok) throw new Error('HTTP ' + res.status);
+    hideToast();
+  }catch(e){
+    console.error('Kayıt hatası (JSONBin)', e);
+    if(retriesLeft > 0){
+      await new Promise(r=>setTimeout(r, 700));
+      saveInFlight = false;
+      return persistNow(retriesLeft - 1);
+    }
+    showToast(t('save_error'));
+    // keep retrying quietly in the background every 5s until it succeeds
+    setTimeout(()=>persistNow(2), 5000);
+  }finally{
+    saveInFlight = false;
+    if(pendingResave){
+      pendingResave = false;
+      persistNow();
+    }
+  }
+}
+
+function showToast(msg){
+  let t = document.getElementById('toast');
+  if(!t){
+    t = document.createElement('div');
+    t.id = 'toast';
+    t.style.cssText = 'position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:var(--red);color:#fff;padding:10px 18px;font-family:Poppins,sans-serif;font-size:12.5px;z-index:100;border:1px solid var(--red-dim);max-width:90vw;text-align:center;';
+    document.body.appendChild(t);
+  }
+  t.textContent = msg;
+  t.style.display = 'block';
+}
+function hideToast(){
+  const t = document.getElementById('toast');
+  if(t) t.style.display = 'none';
+}
+
+function computeStats(){
+  const total = locations.length;
+  const scriptReady = locations.filter(l=>l.script==='E').length;
+  const published = locations.filter(l=>l.published==='E').length;
+  const filmed = locations.filter(l=>l.filmed==='E').length;
+  const pendingPermission = locations.filter(l=>l.permission==='E').length;
+  const cancelled = locations.filter(l=>l.cancelled==='E').length;
+  return {total, scriptReady, published, filmed, pendingPermission, cancelled};
+}
+
+function renderStats(){
+  const s = computeStats();
+  document.getElementById('statsRow').innerHTML = `
+    <div class="stat"><div class="num">${s.total}</div><div class="lbl">${t('stat_total')}</div></div>
+    <div class="stat"><div class="num">${s.scriptReady}</div><div class="lbl">${t('stat_script')}</div></div>
+    <div class="stat"><div class="num">${s.filmed}</div><div class="lbl">${t('stat_filmed')}</div></div>
+    <div class="stat"><div class="num">${s.published}</div><div class="lbl">${t('stat_published')}</div></div>
+    <div class="stat"><div class="num">${s.pendingPermission}</div><div class="lbl">${t('stat_permission')}</div></div>
+    <div class="stat"><div class="num">${s.cancelled}</div><div class="lbl">${t('stat_cancelled')}</div></div>
+  `;
+}
+
+function matchesFilters(l){
+  const q = document.getElementById('search').value.trim().toLowerCase();
+  const fmt = document.getElementById('filterFormat').value;
+  const district = document.getElementById('filterDistrict').value;
+  const city = document.getElementById('filterCity').value;
+  const status = document.getElementById('filterStatus').value;
+
+  if(q){
+    const hay = (l.name+' '+l.district+' '+l.city+' '+l.topic).toLowerCase();
+    if(!hay.includes(q)) return false;
+  }
+  if(fmt && l.format !== fmt) return false;
+  if(district && l.district !== district) return false;
+  if(city && l.city !== city) return false;
+  if(status === 'cancelled') return l.cancelled === 'E';
+  if(status === 'needsscript') return l.filmed==='E' && l.script==='H' && l.cancelled!=='E';
+  if(status === 'prepqueue') return l.prepRequested==='E' && l.script!=='E' && l.cancelled!=='E';
+  if(l.cancelled === 'E' && status && status !== 'cancelled') return false;
+  if(status === 'done' && l.published !== 'E') return false;
+  if(status === 'pending' && (l.published === 'E' || l.filmed !== 'E')) return false;
+  if(status === 'unfilmed' && l.filmed === 'E') return false;
+  if(status === 'permission' && l.permission !== 'E') return false;
+  return true;
+}
+
+function populateLocationFilters(){
+  const districtSel = document.getElementById('filterDistrict');
+  const citySel = document.getElementById('filterCity');
+  const curDistrict = districtSel.value;
+  const curCity = citySel.value;
+
+  const districts = [...new Set(locations.map(l=>l.district).filter(Boolean))].sort((a,b)=>a.localeCompare('tr'));
+  const cities = [...new Set(locations.map(l=>l.city).filter(Boolean))].sort((a,b)=>a.localeCompare('tr'));
+
+  districtSel.innerHTML = `<option value="">${t('district_all')}</option>` +
+    districts.map(d=>`<option value="${escapeHtml(d)}">${escapeHtml(d)}</option>`).join('');
+  citySel.innerHTML = `<option value="">${t('city_all')}</option>` +
+    cities.map(c=>`<option value="${escapeHtml(c)}">${escapeHtml(c)}</option>`).join('');
+
+  if(districts.includes(curDistrict)) districtSel.value = curDistrict;
+  if(cities.includes(curCity)) citySel.value = curCity;
+}
+
+function isFullyDone(l){
+  return l.filmed==='E' && l.audio==='E' && l.edited==='E' && l.published==='E';
+}
+
+function render(){
+  renderStats();
+  populateLocationFilters();
+  const grid = document.getElementById('grid');
+  let filtered = locations.filter(matchesFilters);
+  const sortMode = document.getElementById('sortMode').value;
+
+  // Completed (KAPALI) entries always sink to the bottom. Within the rest,
+  // either keep original order or sort by planned filming date (soonest
+  // first, entries with no date go last).
+  filtered = filtered
+    .map((l, i)=>({l, i}))
+    .sort((a,b)=>{
+      const tierOf = x => x.cancelled==='E' ? 2 : (isFullyDone(x) ? 1 : 0);
+      const ta = tierOf(a.l), tb = tierOf(b.l);
+      if(ta !== tb) return ta - tb;
+      if(sortMode === 'date' && ta === 0){
+        const ad = a.l.plannedDate || '9999-99-99';
+        const bd = b.l.plannedDate || '9999-99-99';
+        if(ad !== bd) return ad < bd ? -1 : 1;
+      }
+      return a.i - b.i;
+    })
+    .map(x=>x.l);
+
+  document.getElementById('emptyState').style.display = filtered.length ? 'none' : 'block';
+  const viewMode = document.getElementById('viewMode').value;
+  document.getElementById('rowHeader').style.display = viewMode === 'row' ? 'grid' : 'none';
+  grid.className = viewMode === 'row' ? 'list' : 'grid';
+  grid.innerHTML = viewMode === 'row' ? renderRows(filtered) : renderCards(filtered);
+  wireCardEvents(grid);
+}
+
+function renderCards(filtered){
+  return filtered.map((l, idx)=>{
+    const allDone = l.filmed==='E' && l.audio==='E' && l.edited==='E' && l.published==='E';
+    const needsScript = l.filmed==='E' && l.script==='H' && l.cancelled!=='E';
+    const topicLong = (l.topic||'').length > 110;
+    const notesLong = (l.notes||'').length > 90;
+    return `
+    <div class="card ${allDone?'done':''} ${l.permission==='E'?'hybrid-flag':''} ${l.cancelled==='E'?'cancelled':''} ${needsScript?'needs-script':''}">
+      ${allDone?`<div class="completed-badge">${t('closed_badge')}</div>`:''}
+      ${l.cancelled==='E'?`<div class="cancelled-badge">${t('cancelled_badge')}</div>`:''}
+      <div class="card-top">
+        <div class="card-top-main">
+          <div class="card-idx">${t('file_no')}${String(locations.indexOf(l)+1).padStart(3,'0')}</div>
+          <div class="card-name" title="${escapeHtml(l.name)}">${escapeHtml(l.name)}</div>
+          <div class="card-loc" title="${escapeHtml(l.district)} / ${escapeHtml(l.city)}${l.address?' — '+escapeHtml(l.address):''}">${escapeHtml(l.district)} / ${escapeHtml(l.city)}${l.address?' — '+escapeHtml(l.address):''}</div>
+          <a class="maps-link" href="${mapsUrl(l)}" target="_blank" rel="noopener">${t('maps_open')}</a>
+        </div>
+        <div class="fmt-tag fmt-${l.format}">${formatLabel(l.format)}</div>
+      </div>
+      <div class="needs-script-badge ${needsScript?'':'slot-empty'}">${t('needs_script_badge')}</div>
+      <div class="prep-badge ${(l.prepRequested==='E' && l.script!=='E')?'':'slot-empty'}">${t('prep_requested_badge')}</div>
+      <div class="perm-flag ${l.permission==='E'?'':'slot-empty'}">${t('permission_pending')}</div>
+      <div class="topic">${escapeHtml(l.topic||'—')}</div>
+      <button class="read-more ${(topicLong||notesLong)?'':'slot-empty'}" data-detail="${l.id}">${t('read_more')} →</button>
+      <a class="script-link ${l.scriptLink?'':'slot-empty'}" href="${escapeHtml(l.scriptLink||'#')}" target="_blank" rel="noopener">${t('script_open')}</a>
+      <a class="script-link ${l.driveFolderLink?'':'slot-empty'}" href="${escapeHtml(l.driveFolderLink||'#')}" target="_blank" rel="noopener">${t('drive_folder_open')}</a>
+      <div class="stages">
+        <div class="stamp ${l.script}" data-id="${l.id}" data-field="script"><span class="v">${statusChar(l.script)}</span>${t('stamp_script')}</div>
+        <div class="stamp ${l.filmed}" data-id="${l.id}" data-field="filmed"><span class="v">${statusChar(l.filmed)}</span>${t('stamp_filmed')}</div>
+        <div class="stamp ${l.audio}" data-id="${l.id}" data-field="audio"><span class="v">${statusChar(l.audio)}</span>${t('stamp_audio')}</div>
+        <div class="stamp ${l.edited}" data-id="${l.id}" data-field="edited"><span class="v">${statusChar(l.edited)}</span>${t('stamp_edited')}</div>
+        <div class="stamp ${l.published}" data-id="${l.id}" data-field="published"><span class="v">${statusChar(l.published)}</span>${t('stamp_published')}</div>
+      </div>
+      <div class="notes">${escapeHtml(l.notes||'')}</div>
+      <div class="card-actions">
+        <input type="date" class="inline-date" data-id="${l.id}" value="${l.plannedDate||''}" title="${t('planned_date_title')}">
+        <div class="card-actions-buttons">
+          ${l.plannedDate ? `<button class="icon-btn ${l.prepRequested==='E'?'trigger-active':''}" data-trigger="${l.id}">${l.prepRequested==='E'?t('btn_prep_requested'):t('btn_trigger_prep')}</button>` : ''}
+          <button class="icon-btn" data-cancel="${l.id}">${l.cancelled==='E'?t('btn_uncancel'):t('btn_cancel_shoot')}</button>
+          <button class="icon-btn" data-pkg="${l.id}">${t('btn_package')}</button>
+          <button class="icon-btn" data-edit="${l.id}">${t('btn_edit')}</button>
+        </div>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function formatLabel(fmt){
+  if(fmt==='Saha') return t('fmt_saha');
+  if(fmt==='Masabaşı') return t('fmt_masabasi');
+  if(fmt==='Hibrit') return t('fmt_hibrit');
+  return fmt;
+}
+function statusChar(v){
+  return v==='E' ? t('yes_char') : t('no_char');
+}
+
+function renderRows(filtered){
+  return filtered.map((l)=>{
+    const allDone = l.filmed==='E' && l.audio==='E' && l.edited==='E' && l.published==='E';
+    const needsScript = l.filmed==='E' && l.script==='H' && l.cancelled!=='E';
+    return `
+    <div class="row ${allDone?'row-done':''} ${l.cancelled==='E'?'row-cancelled':''} ${needsScript?'row-needs-script':''}">
+      <div class="row-main">
+        <div class="row-idx">${t('file_no')}${String(locations.indexOf(l)+1).padStart(3,'0')}</div>
+        <div class="row-name"><span class="name-text">${escapeHtml(l.name)}</span>${allDone?`<span class="mini-badge">${t('closed_badge')}</span>`:''}${l.cancelled==='E'?`<span class="mini-badge" style="background:var(--red);">${t('cancelled_badge')}</span>`:''}${needsScript?`<span class="mini-badge" style="background:#E8912D;color:#000;">${t('needs_script_badge')}</span>`:''}<input type="date" class="inline-date" data-id="${l.id}" value="${l.plannedDate||''}" title="${t('planned_date_title')}"></div>
+        <div class="row-loc">${escapeHtml(l.district)} / ${escapeHtml(l.city)}</div>
+      </div>
+      <div class="row-meta">
+        <div class="fmt-tag fmt-${l.format}">${formatLabel(l.format)}</div>
+        <a class="maps-link" href="${mapsUrl(l)}" target="_blank" rel="noopener">🗺️</a>
+        ${l.permission==='E' ? `<span class="perm-flag">${t('permission_pending')}</span>` : ''}
+        ${l.scriptLink ? `<a class="script-link" href="${escapeHtml(l.scriptLink)}" target="_blank" rel="noopener">${t('script_short')}</a>` : ''}
+        ${l.driveFolderLink ? `<a class="script-link" href="${escapeHtml(l.driveFolderLink)}" target="_blank" rel="noopener">📁</a>` : ''}
+      </div>
+      <div class="row-stamps">
+        <div class="row-stamp ${l.script}" data-id="${l.id}" data-field="script" title="${t('stamp_script')}">${statusChar(l.script)}</div>
+        <div class="row-stamp ${l.filmed}" data-id="${l.id}" data-field="filmed" title="${t('stamp_filmed')}">${statusChar(l.filmed)}</div>
+        <div class="row-stamp ${l.audio}" data-id="${l.id}" data-field="audio" title="${t('stamp_audio')}">${statusChar(l.audio)}</div>
+        <div class="row-stamp ${l.edited}" data-id="${l.id}" data-field="edited" title="${t('stamp_edited')}">${statusChar(l.edited)}</div>
+        <div class="row-stamp ${l.published}" data-id="${l.id}" data-field="published" title="${t('stamp_published')}">${statusChar(l.published)}</div>
+      </div>
+      <div class="row-actions">
+        ${l.plannedDate ? `<button class="icon-btn ${l.prepRequested==='E'?'trigger-active':''}" data-trigger="${l.id}">${l.prepRequested==='E'?'⏳':'🎬'}</button>` : ''}
+        <button class="icon-btn" data-cancel="${l.id}">${l.cancelled==='E'?'↩':'🚫'}</button>
+        <button class="icon-btn" data-pkg="${l.id}">📦</button>
+        <button class="icon-btn" data-edit="${l.id}">${t('btn_edit')}</button>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function wireCardEvents(container){
+  container.querySelectorAll('.stamp, .row-stamp').forEach(el=>{
+    el.addEventListener('click', async ()=>{
+      const id = el.dataset.id, field = el.dataset.field;
+      const loc = locations.find(x=>x.id===id);
+      loc[field] = loc[field] === 'E' ? 'H' : 'E';
+      if(field==='script' && loc[field]==='E') loc.prepRequested = 'H';
+      await persist();
+      render();
+    });
+  });
+  container.querySelectorAll('[data-edit]').forEach(el=>{
+    el.addEventListener('click', ()=> openModal(el.dataset.edit));
+  });
+  container.querySelectorAll('[data-pkg]').forEach(el=>{
+    el.addEventListener('click', ()=> openPkgModal(el.dataset.pkg));
+  });
+  container.querySelectorAll('.inline-date').forEach(el=>{
+    el.addEventListener('click', (e)=> e.stopPropagation());
+    el.addEventListener('change', async ()=>{
+      const loc = locations.find(x=>x.id===el.dataset.id);
+      if(!loc) return;
+      loc.plannedDate = el.value;
+      await persist();
+      render();
+    });
+  });
+  container.querySelectorAll('[data-detail]').forEach(el=>{
+    el.addEventListener('click', ()=> openDetail(el.dataset.detail));
+  });
+  container.querySelectorAll('[data-cancel]').forEach(el=>{
+    el.addEventListener('click', async ()=>{
+      const loc = locations.find(x=>x.id===el.dataset.cancel);
+      if(!loc) return;
+      loc.cancelled = loc.cancelled === 'E' ? 'H' : 'E';
+      await persist();
+      render();
+    });
+  });
+  container.querySelectorAll('[data-trigger]').forEach(el=>{
+    el.addEventListener('click', async ()=>{
+      const loc = locations.find(x=>x.id===el.dataset.trigger);
+      if(!loc) return;
+      loc.prepRequested = loc.prepRequested === 'E' ? 'H' : 'E';
+      await persist();
+      render();
+    });
+  });
+}
+
+function openDetail(id){
+  const l = locations.find(x=>x.id===id);
+  if(!l) return;
+  document.getElementById('detailTitle').textContent = l.name;
+  document.getElementById('detailTopic').textContent = l.topic || '—';
+  const notesWrap = document.getElementById('detailNotesWrap');
+  if(l.notes){
+    notesWrap.style.display = '';
+    document.getElementById('detailNotes').textContent = l.notes;
+  }else{
+    notesWrap.style.display = 'none';
+  }
+  const fieldNotesWrap = document.getElementById('detailFieldNotesWrap');
+  if(l.fieldNotes){
+    fieldNotesWrap.style.display = '';
+    document.getElementById('detailFieldNotes').textContent = l.fieldNotes;
+  }else{
+    fieldNotesWrap.style.display = 'none';
+  }
+  document.getElementById('detailOverlay').classList.add('open');
+}
+document.getElementById('detailCloseBtn').addEventListener('click', ()=>{
+  document.getElementById('detailOverlay').classList.remove('open');
+});
+document.getElementById('detailOverlay').addEventListener('click', (e)=>{
+  if(e.target.id==='detailOverlay') document.getElementById('detailOverlay').classList.remove('open');
+});
+
+function escapeHtml(str){
+  const d = document.createElement('div');
+  d.textContent = str||'';
+  return d.innerHTML;
+}
+
+function mapsUrl(l){
+  if(l.mapsLink) return l.mapsLink;
+  const q = [l.name, l.address, l.district, l.city].filter(Boolean).join(', ');
+  return 'https://www.google.com/maps/search/?api=1&query=' + encodeURIComponent(q);
+}
+
+function formatDate(iso){
+  if(!iso) return '';
+  const [y,m,d] = iso.split('-');
+  const aylar = ['Oca','Şub','Mar','Nis','May','Haz','Tem','Ağu','Eyl','Eki','Kas','Ara'];
+  return `${parseInt(d,10)} ${aylar[parseInt(m,10)-1]} ${y}`;
+}
+
+function populateModalDatalists(){
+  const districts = [...new Set(locations.map(l=>l.district).filter(Boolean))].sort((a,b)=>a.localeCompare('tr'));
+  const cities = [...new Set(locations.map(l=>l.city).filter(Boolean))].sort((a,b)=>a.localeCompare('tr'));
+  document.getElementById('districtOptions').innerHTML = districts.map(d=>`<option value="${escapeHtml(d)}">`).join('');
+  document.getElementById('cityOptions').innerHTML = cities.map(c=>`<option value="${escapeHtml(c)}">`).join('');
+}
+
+function openModal(id){
+  const overlay = document.getElementById('overlay');
+  document.getElementById('editId').value = id || '';
+  populateModalDatalists();
+  if(id){
+    const l = locations.find(x=>x.id===id);
+    document.getElementById('modalTitle').textContent = t('modal_edit');
+    document.getElementById('f_name').value = l.name;
+    document.getElementById('f_district').value = l.district;
+    document.getElementById('f_city').value = l.city;
+    document.getElementById('f_address').value = l.address;
+    document.getElementById('f_mapsLink').value = l.mapsLink || '';
+    document.getElementById('f_format').value = l.format;
+    document.getElementById('f_permission').value = l.permission;
+    document.getElementById('f_topic').value = l.topic;
+    document.getElementById('f_fieldNotes').value = l.fieldNotes || '';
+    document.getElementById('f_script').value = l.script || 'H';
+    document.getElementById('f_scriptLink').value = l.scriptLink || '';
+    document.getElementById('f_driveFolderLink').value = l.driveFolderLink || '';
+    document.getElementById('f_filmed').value = l.filmed;
+    document.getElementById('f_audio').value = l.audio;
+    document.getElementById('f_edited').value = l.edited;
+    document.getElementById('f_published').value = l.published;
+    document.getElementById('f_notes').value = l.notes;
+    document.getElementById('deleteBtn').style.display = 'inline-block';
+  }else{
+    document.getElementById('modalTitle').textContent = t('modal_new');
+    ['f_name','f_district','f_address','f_topic','f_notes','f_scriptLink','f_mapsLink','f_fieldNotes','f_driveFolderLink'].forEach(f=>document.getElementById(f).value='');
+    document.getElementById('f_city').value = 'İstanbul';
+    document.getElementById('f_format').value = 'Saha';
+    document.getElementById('f_permission').value = 'H';
+    document.getElementById('f_script').value = 'H';
+    document.getElementById('f_filmed').value = 'H';
+    document.getElementById('f_audio').value = 'H';
+    document.getElementById('f_edited').value = 'H';
+    document.getElementById('f_published').value = 'H';
+    document.getElementById('deleteBtn').style.display = 'none';
+  }
+  overlay.classList.add('open');
+}
+
+function closeModal(){
+  document.getElementById('overlay').classList.remove('open');
+}
+
+document.getElementById('addBtn').addEventListener('click', ()=>openModal(null));
+document.getElementById('cancelBtn').addEventListener('click', closeModal);
+document.getElementById('overlay').addEventListener('click', (e)=>{
+  if(e.target.id==='overlay') closeModal();
+});
+
+document.getElementById('saveBtn').addEventListener('click', async ()=>{
+  const id = document.getElementById('editId').value;
+  const data = {
+    name: document.getElementById('f_name').value.trim(),
+    district: document.getElementById('f_district').value.trim(),
+    city: document.getElementById('f_city').value.trim(),
+    address: document.getElementById('f_address').value.trim(),
+    mapsLink: document.getElementById('f_mapsLink').value.trim(),
+    format: document.getElementById('f_format').value,
+    permission: document.getElementById('f_permission').value,
+    topic: document.getElementById('f_topic').value.trim(),
+    fieldNotes: document.getElementById('f_fieldNotes').value.trim(),
+    script: document.getElementById('f_script').value,
+    scriptLink: document.getElementById('f_scriptLink').value.trim(),
+    driveFolderLink: document.getElementById('f_driveFolderLink').value.trim(),
+    filmed: document.getElementById('f_filmed').value,
+    audio: document.getElementById('f_audio').value,
+    edited: document.getElementById('f_edited').value,
+    published: document.getElementById('f_published').value,
+    notes: document.getElementById('f_notes').value.trim()
+  };
+  if(!data.name){ alert(t('name_empty_alert')); return; }
+
+  if(id){
+    const idx = locations.findIndex(x=>x.id===id);
+    locations[idx] = {...locations[idx], ...data};
+  }else{
+    locations.push(normalizeLocation({...data, id:'loc_'+Date.now()}));
+  }
+  await persist();
+  closeModal();
+  render();
+});
+
+document.getElementById('deleteBtn').addEventListener('click', async ()=>{
+  const id = document.getElementById('editId').value;
+  if(!confirm(t('delete_confirm'))) return;
+  locations = locations.filter(x=>x.id!==id);
+  await persist();
+  closeModal();
+  render();
+});
+
+function openPkgModal(id){
+  const l = locations.find(x=>x.id===id);
+  if(!l) return;
+  normalizeLocation(l);
+  document.getElementById('pkgId').value = id;
+  document.getElementById('pkgTitle').textContent = t('pkg_title') + ' — ' + l.name;
+  document.getElementById('p_shotList').value = l.package.shotList;
+  document.getElementById('p_youtubeTitles').value = l.package.youtubeTitles;
+  document.getElementById('p_youtubeThumbPrompt').value = l.package.youtubeThumbPrompt;
+  document.getElementById('p_reelsCount').value = l.package.reelsCount;
+  document.getElementById('p_reelsTitles').value = l.package.reelsTitles;
+  document.getElementById('p_reelsThumbPrompts').value = l.package.reelsThumbPrompts;
+  document.getElementById('p_hashtags').value = l.package.hashtags;
+  document.getElementById('p_tags').value = l.package.tags;
+  document.getElementById('p_shortsTags').value = l.package.shortsTags;
+  document.getElementById('p_keywordNotes').value = l.package.keywordNotes;
+  document.getElementById('p_captionShorts').value = l.package.captionShorts;
+  document.getElementById('p_captionYouTube').value = l.package.captionYouTube;
+  document.getElementById('p_captionInstagram').value = l.package.captionInstagram;
+  document.getElementById('p_captionFacebook').value = l.package.captionFacebook;
+  document.getElementById('p_fbTags').value = l.package.fbTags;
+  document.getElementById('p_fbCoverPrompt').value = l.package.fbCoverPrompt;
+  document.getElementById('pkgOverlay').classList.add('open');
+}
+function closePkgModal(){
+  document.getElementById('pkgOverlay').classList.remove('open');
+}
+document.getElementById('pkgCancelBtn').addEventListener('click', closePkgModal);
+document.getElementById('pkgOverlay').addEventListener('click', (e)=>{
+  if(e.target.id==='pkgOverlay') closePkgModal();
+});
+document.getElementById('pkgSaveBtn').addEventListener('click', async ()=>{
+  const id = document.getElementById('pkgId').value;
+  const l = locations.find(x=>x.id===id);
+  if(!l) return;
+  l.package = {
+    shotList: document.getElementById('p_shotList').value,
+    youtubeTitles: document.getElementById('p_youtubeTitles').value,
+    youtubeThumbPrompt: document.getElementById('p_youtubeThumbPrompt').value,
+    reelsCount: document.getElementById('p_reelsCount').value,
+    reelsTitles: document.getElementById('p_reelsTitles').value,
+    reelsThumbPrompts: document.getElementById('p_reelsThumbPrompts').value,
+    hashtags: document.getElementById('p_hashtags').value,
+    tags: document.getElementById('p_tags').value,
+    shortsTags: document.getElementById('p_shortsTags').value,
+    keywordNotes: document.getElementById('p_keywordNotes').value,
+    captionShorts: document.getElementById('p_captionShorts').value,
+    captionYouTube: document.getElementById('p_captionYouTube').value,
+    captionInstagram: document.getElementById('p_captionInstagram').value,
+    captionFacebook: document.getElementById('p_captionFacebook').value,
+    fbTags: document.getElementById('p_fbTags').value,
+    fbCoverPrompt: document.getElementById('p_fbCoverPrompt').value
+  };
+  await persist();
+  closePkgModal();
+  render();
+});
+
+// ===== Backup: export current data as a downloadable JSON file =====
+document.getElementById('exportBtn').addEventListener('click', ()=>{
+  const dataStr = JSON.stringify(locations, null, 2);
+  const blob = new Blob([dataStr], {type:'application/json'});
+  const url = URL.createObjectURL(blob);
+  const now = new Date();
+  const stamp = now.getFullYear()+'-'+String(now.getMonth()+1).padStart(2,'0')+'-'+String(now.getDate()).padStart(2,'0')+'_'+String(now.getHours()).padStart(2,'0')+String(now.getMinutes()).padStart(2,'0');
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = `lokasyon-takip-yedek-${stamp}.json`;
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+  showToast('Yedek indirildi ✓');
+});
+
+// ===== Backup: restore from a previously downloaded JSON file =====
+document.getElementById('importBtn').addEventListener('click', ()=>{
+  document.getElementById('importFile').click();
+});
+document.getElementById('importFile').addEventListener('change', (e)=>{
+  const file = e.target.files[0];
+  if(!file) return;
+  const reader = new FileReader();
+  reader.onload = async (ev)=>{
+    try{
+      const parsed = JSON.parse(ev.target.result);
+      if(!Array.isArray(parsed)) throw new Error('Geçersiz format');
+      const confirmMsg = `Bu dosyada ${parsed.length} lokasyon var. Mevcut ${locations.length} lokasyonun ÜZERİNE yazılacak. Devam edilsin mi?`;
+      if(!confirm(confirmMsg)) return;
+      locations = parsed;
+      locations.forEach(l => normalizeLocation(l));
+      await persistNow();
+      render();
+      showToast('Yedekten geri yüklendi ✓');
+    }catch(err){
+      alert('Dosya okunamadı — geçerli bir yedek JSON dosyası olduğundan emin ol.\n\n' + err.message);
+    }
+    e.target.value = '';
+  };
+  reader.readAsText(file);
+});
+
+document.getElementById('search').addEventListener('input', render);
+document.getElementById('filterFormat').addEventListener('change', render);
+document.getElementById('filterDistrict').addEventListener('change', render);
+document.getElementById('filterCity').addEventListener('change', render);
+document.getElementById('filterStatus').addEventListener('change', render);
+document.getElementById('sortMode').addEventListener('change', render);
+document.getElementById('viewMode').addEventListener('change', render);
+document.getElementById('langSelect').addEventListener('change', (e)=> setLanguage(e.target.value));
+
+// Copy-to-clipboard buttons in the Yayın Paketi modal — works for every
+// caption/tag field via event delegation, no per-field listener needed.
+document.getElementById('pkgOverlay').addEventListener('click', (e)=>{
+  const btn = e.target.closest('.copy-btn');
+  if(!btn) return;
+  const targetId = btn.dataset.copyTarget;
+  const el = document.getElementById(targetId);
+  if(!el) return;
+  const text = el.value || '';
+  const showCopied = ()=>{
+    const original = btn.textContent;
+    btn.textContent = '✓ Kopyalandı';
+    btn.classList.add('copied');
+    setTimeout(()=>{ btn.textContent = original; btn.classList.remove('copied'); }, 1400);
+  };
+  if(navigator.clipboard && navigator.clipboard.writeText){
+    navigator.clipboard.writeText(text).then(showCopied).catch(()=>{
+      el.select(); document.execCommand('copy'); showCopied();
+    });
+  } else {
+    el.select(); document.execCommand('copy'); showCopied();
+  }
+});
+
+async function loadLanguage(){
+  try{
+    const res = await window.storage.get(LANG_KEY, false);
+    if(res && res.value && LANG[res.value]) currentLang = res.value;
+  }catch(e){ /* default to tr */ }
+  document.getElementById('langSelect').value = currentLang;
+  applyStaticI18n();
+}
+
+loadLanguage();
+loadData();
+</script>
+</body>
+</html>
