@@ -1497,6 +1497,14 @@ function normalizeLocation(l){
 function applyCorrections(){
   let changed = false;
 
+  {
+    const ev = calendarEvents.find(e => e.date === '2026-08-29' && e.title === 'Bu Sahne Tanıdık Geldi mi?');
+    if(ev){
+      ev.title = 'Bu Sahne Tanıdık Geldi Mi?';
+      changed = true;
+    }
+  }
+
   if(!locations.find(l => l.name === "Kin Kapısı (Fener Rum Patrikhanesi)")){
     locations.push({
       id: 'loc_'+Date.now()+'_kinkapisi',
