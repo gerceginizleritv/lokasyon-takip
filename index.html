@@ -372,6 +372,8 @@ select{cursor:pointer;}
 }
 .stamp .v{display:block;font-weight:700;font-size:13px;margin-bottom:2px;}
 .stamp.E{background:rgba(200,162,74,0.15);border-color:var(--gold);color:var(--gold);}
+.perm-stamp.E{background:rgba(180,48,43,0.15);border-color:var(--red);color:var(--red);}
+.perm-stamp.H{opacity:0.5;}
 .stamp.H{color:var(--parchment-dim);}
 .stamp:hover{border-color:var(--gold);}
 
@@ -571,6 +573,118 @@ select{cursor:pointer;}
   font-size:11px;
   padding:6px 12px;
 }
+
+/* ===== Main tabs ===== */
+.main-tabs{
+  display:flex;
+  gap:0;
+  margin-top:14px;
+  border:1px solid var(--line);
+  width:fit-content;
+}
+.main-tab{
+  background:var(--ink-2);
+  border:none;
+  color:var(--parchment-dim);
+  padding:9px 18px;
+  font-family:'JetBrains Mono',monospace;
+  font-size:11.5px;
+  letter-spacing:1px;
+  cursor:pointer;
+  border-right:1px solid var(--line);
+}
+.main-tab:last-child{border-right:none;}
+.main-tab.active{background:rgba(200,162,74,0.12);color:var(--gold);}
+
+/* ===== Calendar ===== */
+.cal-toolbar{display:flex;align-items:center;justify-content:space-between;margin:16px 0 14px;flex-wrap:wrap;gap:10px;}
+.cal-view-toggle{display:flex;border:1px solid var(--line);}
+.cal-toggle-btn{
+  background:var(--ink-2);border:none;color:var(--parchment-dim);
+  padding:8px 14px;font-family:'JetBrains Mono',monospace;font-size:11px;
+  letter-spacing:1px;cursor:pointer;border-right:1px solid var(--line);
+}
+.cal-toggle-btn:last-child{border-right:none;}
+.cal-toggle-btn.active{background:rgba(200,162,74,0.12);color:var(--gold);}
+.cal-legend{display:flex;gap:14px;margin-bottom:16px;flex-wrap:wrap;align-items:center;}
+.cal-legend-item{display:flex;align-items:center;gap:6px;font-size:11px;color:var(--parchment-dim);font-family:'JetBrains Mono',monospace;}
+.cal-dot{width:9px;height:9px;border-radius:50%;display:inline-block;}
+.cal-legend-sep{width:1px;height:14px;background:var(--line);}
+.cal-mini-chip{display:inline-flex;align-items:center;gap:4px;padding:2px 7px;font-size:10px;font-family:'JetBrains Mono',monospace;}
+.cal-mini-chip.cal-planned{border-left:3px solid var(--gold-dim);background:var(--ink-3);color:var(--parchment-dim);}
+.cal-mini-chip.cal-ready{border-left:3px solid var(--gold);background:var(--ink-3);color:var(--parchment);}
+.cal-mini-chip.cal-live{border-left:3px solid var(--gold);background:rgba(200,162,74,0.14);color:var(--gold);}
+
+.cal-grid{display:grid;grid-template-columns:repeat(7,1fr);border:1px solid var(--line);background:var(--line);gap:1px;}
+.cal-dow{background:var(--ink-2);padding:9px 10px;font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:1.5px;color:var(--gold-dim);text-transform:uppercase;text-align:center;}
+.cal-day{background:var(--ink);aspect-ratio:1/1;padding:8px 7px;position:relative;overflow:hidden;}
+.cal-day.today{background:rgba(200,162,74,0.06);}
+.cal-day-num{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--parchment-dim);margin-bottom:6px;}
+.cal-day.today .cal-day-num{color:var(--gold);font-weight:700;}
+.cal-chip-row{display:flex;gap:3px;margin-bottom:4px;}
+.cal-chip{
+  display:flex;align-items:center;gap:4px;background:var(--ink-3);
+  border-left:3px solid var(--gold-dim);padding:3px 5px;font-size:9.5px;
+  line-height:1.25;cursor:pointer;transition:background .12s;flex:1;min-width:0;
+}
+.cal-chip:hover{background:#282829;}
+.cal-badge{width:14px;height:14px;border-radius:3px;display:flex;align-items:center;justify-content:center;font-size:7px;font-weight:800;flex-shrink:0;font-family:'JetBrains Mono',monospace;color:#fff;}
+.cal-chip-mid{flex:1;min-width:0;overflow:hidden;}
+.cal-chip-time{font-family:'JetBrains Mono',monospace;font-size:8px;color:var(--parchment-dim);display:block;}
+.cal-chip-title{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:var(--parchment-dim);display:block;}
+.cal-status-icon{font-size:8px;flex-shrink:0;color:var(--parchment-dim);}
+.cal-chip.ready{border-left-color:var(--gold);}
+.cal-chip.ready .cal-chip-title{color:var(--parchment);}
+.cal-chip.live{border-left-color:var(--gold);background:rgba(200,162,74,0.12);}
+.cal-chip.live .cal-chip-title{color:var(--gold);font-weight:600;}
+.cal-chip.live .cal-chip-time{color:var(--gold-dim);}
+.cal-more{font-size:9px;color:var(--gold-dim);font-family:'JetBrains Mono',monospace;padding-left:2px;}
+
+.cal-table{width:100%;border-collapse:collapse;border:1px solid var(--line);}
+.cal-table thead th{background:var(--ink-2);border:1px solid var(--line);padding:12px 10px;font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:1.5px;text-transform:uppercase;}
+.cal-date-col{text-align:left;color:var(--gold-dim);width:110px;}
+.cal-platform-head{display:flex;flex-direction:column;align-items:center;gap:5px;}
+.cal-p-badge{width:26px;height:26px;border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:800;font-family:'JetBrains Mono',monospace;color:#fff;}
+.cal-table tbody td{border:1px solid var(--line);padding:8px;vertical-align:top;height:60px;}
+.cal-table tbody td.cal-date-cell{background:var(--ink-2);font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--parchment-dim);}
+.cal-table tbody tr.today td.cal-date-cell{color:var(--gold);font-weight:700;background:rgba(200,162,74,0.08);}
+.cal-table tbody tr.today td{background:rgba(200,162,74,0.04);}
+.cal-dow-lbl{font-size:9px;color:var(--gold-dim);letter-spacing:1px;display:block;margin-top:2px;}
+.cal-cell-chip{display:flex;flex-direction:column;gap:2px;background:var(--ink-3);border-left:3px solid var(--gold-dim);padding:5px 7px;margin-bottom:4px;cursor:pointer;transition:background .12s;}
+.cal-cell-chip:hover{background:#282829;}
+.cal-cell-chip .cctime{font-family:'JetBrains Mono',monospace;font-size:9.5px;color:var(--parchment-dim);display:flex;justify-content:space-between;}
+.cal-cell-chip .cctitle{font-size:10.5px;color:var(--parchment-dim);line-height:1.35;}
+.cal-cell-chip.ready{border-left-color:var(--gold);}
+.cal-cell-chip.ready .cctitle{color:var(--parchment);}
+.cal-cell-chip.live{border-left-color:var(--gold);background:rgba(200,162,74,0.12);}
+.cal-cell-chip.live .cctitle{color:var(--gold);font-weight:600;}
+.cal-cell-chip.live .cctime{color:var(--gold-dim);}
+.cal-empty-dash{color:var(--line);text-align:center;padding-top:12px;font-size:11px;}
+
+.cal-edit-row{display:flex;gap:10px;margin-bottom:16px;}
+.cal-edit-field{flex:1;}
+.cal-edit-field label{display:block;font-family:'JetBrains Mono',monospace;font-size:9.5px;letter-spacing:1px;color:var(--gold-dim);text-transform:uppercase;margin-bottom:5px;}
+.cal-edit-field input, .cal-edit-field select{
+  width:100%;background:var(--ink);border:1px solid var(--line);color:var(--parchment);
+  padding:7px 9px;font-family:'JetBrains Mono',monospace;font-size:12px;
+}
+.cal-upload-toggle{
+  display:flex;align-items:center;gap:9px;padding:10px 12px;background:var(--ink);
+  border:1px solid var(--line);margin-bottom:16px;cursor:pointer;user-select:none;
+}
+.cal-upload-toggle.checked{border-color:var(--gold);background:rgba(200,162,74,0.08);}
+.cal-upload-toggle .cal-box{
+  width:16px;height:16px;border:1px solid var(--parchment-dim);display:flex;
+  align-items:center;justify-content:center;font-size:11px;color:transparent;flex-shrink:0;
+}
+.cal-upload-toggle.checked .cal-box{border-color:var(--gold);color:var(--gold);background:rgba(200,162,74,0.15);}
+.cal-upload-toggle .cal-toggle-label{font-size:12.5px;color:var(--parchment);}
+.cal-upload-toggle .cal-toggle-sub{font-size:10.5px;color:var(--parchment-dim);margin-left:auto;}
+.cal-upload-toggle.disabled{opacity:0.45;cursor:default;}
+.cal-modal-status{display:inline-block;font-family:'JetBrains Mono',monospace;font-size:10px;padding:3px 8px;letter-spacing:1px;margin-bottom:16px;}
+.cal-modal-status.planned{color:var(--parchment-dim);border:1px solid var(--line);}
+.cal-modal-status.ready{color:var(--parchment);border:1px solid var(--gold-dim);background:rgba(200,162,74,0.08);}
+.cal-modal-status.live{color:var(--gold);border:1px solid var(--gold);background:rgba(200,162,74,0.14);}
 </style>
 </head>
 <body>
@@ -587,9 +701,13 @@ select{cursor:pointer;}
       <button class="btn btn-ghost btn-small" id="importBtn">📤 Yedekten Geri Yükle</button>
       <input type="file" id="importFile" accept="application/json" style="display:none;">
     </div>
+    <div class="main-tabs">
+      <button class="main-tab active" id="tabLocations">📋 Lokasyonlar</button>
+      <button class="main-tab" id="tabCalendar">📅 Yayın Takvimi</button>
+    </div>
   </div>
 
-  <div class="controls">
+  <div class="controls" id="controls">
     <input type="text" id="search" data-i18n-placeholder="search_ph" placeholder="Lokasyon, ilçe veya konu ara...">
     <select id="filterFormat">
       <option value="" data-i18n="fmt_all">Tüm Formatlar</option>
@@ -635,8 +753,100 @@ select{cursor:pointer;}
   </div>
 </div>
 
+<div id="locationsView">
   <div class="grid" id="grid"></div>
   <div class="empty" id="emptyState" style="display:none;" data-i18n="empty_state">Bu filtrelerle eşleşen bir dosya bulunamadı.</div>
+</div>
+
+<div id="calendarView" style="display:none;">
+  <div class="cal-toolbar">
+    <div class="cal-view-toggle">
+      <button class="cal-toggle-btn active" id="calBtnGrid">📅 Dikey (Ay)</button>
+      <button class="cal-toggle-btn" id="calBtnTable">📋 Yatay (Tablo)</button>
+    </div>
+    <button class="btn" id="calAddBtn">+ Yeni Yayın Girişi</button>
+  </div>
+  <div class="cal-legend">
+    <span class="cal-legend-item"><span class="cal-dot" style="background:#D64545;"></span>YouTube</span>
+    <span class="cal-legend-item"><span class="cal-dot" style="background:#E8632B;"></span>YT Shorts</span>
+    <span class="cal-legend-item"><span class="cal-dot" style="background:#C1447E;"></span>Instagram</span>
+    <span class="cal-legend-item"><span class="cal-dot" style="background:#3FC9D1;"></span>TikTok</span>
+    <span class="cal-legend-item"><span class="cal-dot" style="background:#4B7BD1;"></span>Facebook</span>
+    <span class="cal-legend-sep"></span>
+    <span class="cal-mini-chip cal-planned">🕒 Planlandı</span>
+    <span class="cal-mini-chip cal-ready">✓ Yüklendi</span>
+    <span class="cal-mini-chip cal-live">● Yayında</span>
+  </div>
+  <div id="calGridView">
+    <div class="cal-grid" id="calGrid"></div>
+  </div>
+  <div id="calTableView" style="display:none;">
+    <table class="cal-table">
+      <thead>
+        <tr>
+          <th class="cal-date-col">Tarih</th>
+          <th><div class="cal-platform-head"><span class="cal-p-badge" style="background:#D64545;">YT</span><span>YOUTUBE</span></div></th>
+          <th><div class="cal-platform-head"><span class="cal-p-badge" style="background:#E8632B;">YTS</span><span>SHORTS</span></div></th>
+          <th><div class="cal-platform-head"><span class="cal-p-badge" style="background:#C1447E;">IG</span><span>INSTAGRAM</span></div></th>
+          <th><div class="cal-platform-head"><span class="cal-p-badge" style="background:#4B7BD1;">FB</span><span>FACEBOOK</span></div></th>
+          <th><div class="cal-platform-head"><span class="cal-p-badge" style="background:#3FC9D1;color:#0a0a0a;">TT</span><span>TIKTOK</span></div></th>
+        </tr>
+      </thead>
+      <tbody id="calTbody"></tbody>
+    </table>
+  </div>
+</div>
+
+<div class="overlay" id="calOverlay">
+  <div class="modal">
+    <div class="modal-top" style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:6px;">
+      <div style="display:flex;align-items:center;gap:8px;">
+        <span class="cal-badge" id="calDBadge" style="width:22px;height:22px;font-size:10px;"></span>
+        <h2 id="calDTitle" style="margin:0;font-size:17px;">Yeni Yayın Girişi</h2>
+      </div>
+      <button class="btn btn-ghost" id="calCloseBtn">Kapat</button>
+    </div>
+
+    <div class="field">
+      <label>Lokasyon</label>
+      <select id="cal_locationId"></select>
+    </div>
+    <div class="field">
+      <label>Platform</label>
+      <select id="cal_platform">
+        <option value="yt">YouTube (Uzun Video)</option>
+        <option value="yts">YouTube Shorts</option>
+        <option value="ig">Instagram</option>
+        <option value="fb">Facebook</option>
+        <option value="tt">TikTok</option>
+      </select>
+    </div>
+    <div class="field">
+      <label>Başlık / Not</label>
+      <input type="text" id="cal_title" placeholder="Örn: Öküz Derisi Efsanesi (Reel 1)">
+    </div>
+
+    <div class="cal-edit-row">
+      <div class="cal-edit-field"><label>Tarih</label><input type="date" id="cal_date"></div>
+      <div class="cal-edit-field"><label>Saat</label><input type="time" id="cal_time"></div>
+    </div>
+
+    <div class="cal-upload-toggle" id="calUploadToggle">
+      <span class="cal-box" id="calUploadBox">✓</span>
+      <span class="cal-toggle-label">Yükledim / Zamanladım</span>
+      <span class="cal-toggle-sub" id="calUploadSub"></span>
+    </div>
+
+    <div class="cal-modal-status" id="calDStatus"></div>
+
+    <div id="calPkgFields"></div>
+
+    <div class="modal-actions">
+      <button class="btn btn-danger" id="calDeleteBtn" style="display:none;">Sil</button>
+      <button class="btn btn-ghost" id="calCancelBtn">Vazgeç</button>
+      <button class="btn" id="calSaveBtn">Kaydet</button>
+    </div>
+  </div>
 </div>
 
 <div class="overlay" id="overlay">
@@ -915,7 +1125,7 @@ const LANG = {
     maps_open: "🗺️ Haritada Aç →", f_mapslink_label: "Google Maps Linki (opsiyonel)",
     drive_folder_open: "📁 Drive Klasörünü Aç →",
     btn_package: "📦 Yayın Paketi", btn_edit: "Düzenle",
-    stamp_script: "Script", stamp_filmed: "Çekim", stamp_audio: "Ses", stamp_edited: "Kurgu", stamp_published: "Yayın",
+    stamp_script: "Script", stamp_filmed: "Çekim", stamp_audio: "Ses", stamp_edited: "Kurgu", stamp_published: "Yayın", stamp_permission: "İzin",
     modal_new: "Yeni Lokasyon Dosyası", modal_edit: "Dosyayı Düzenle",
     f_name_label: "Yer Adı", f_name_ph: "Örn: Gül Camii",
     f_district_label: "İlçe", f_city_label: "İl", f_address_label: "Adres / Semt Notu",
@@ -962,7 +1172,7 @@ const LANG = {
     maps_open: "🗺️ Open in Maps →", f_mapslink_label: "Google Maps Link (optional)",
     drive_folder_open: "📁 Open Drive Folder →",
     btn_package: "📦 Publish Kit", btn_edit: "Edit",
-    stamp_script: "Script", stamp_filmed: "Filmed", stamp_audio: "Audio", stamp_edited: "Edited", stamp_published: "Published",
+    stamp_script: "Script", stamp_filmed: "Filmed", stamp_audio: "Audio", stamp_edited: "Edited", stamp_published: "Published", stamp_permission: "Permit",
     modal_new: "New Location File", modal_edit: "Edit File",
     f_name_label: "Location Name", f_name_ph: "e.g. Gül Mosque",
     f_district_label: "District", f_city_label: "City", f_address_label: "Address / Area Note",
@@ -1009,7 +1219,7 @@ const LANG = {
     maps_open: "🗺️ Открыть на карте →", f_mapslink_label: "Ссылка Google Maps (опционально)",
     drive_folder_open: "📁 Открыть папку Drive →",
     btn_package: "📦 Пакет публикации", btn_edit: "Изменить",
-    stamp_script: "Сценарий", stamp_filmed: "Съёмка", stamp_audio: "Звук", stamp_edited: "Монтаж", stamp_published: "Публикация",
+    stamp_script: "Сценарий", stamp_filmed: "Съёмка", stamp_audio: "Звук", stamp_edited: "Монтаж", stamp_published: "Публикация", stamp_permission: "Разрешение",
     modal_new: "Новое досье локации", modal_edit: "Редактировать досье",
     f_name_label: "Название места", f_name_ph: "напр. мечеть Гюль",
     f_district_label: "Район", f_city_label: "Город", f_address_label: "Адрес / заметка о районе",
@@ -1053,7 +1263,7 @@ async function setLanguage(lang){
   document.getElementById('langSelect').value = lang;
   applyStaticI18n();
   render();
-  try{ await window.storage.set(LANG_KEY, lang, false); }catch(e){ /* non-critical */ }
+  try{ localStorage.setItem(LANG_KEY, lang); }catch(e){ /* non-critical */ }
 }
 
 
@@ -1172,6 +1382,7 @@ const seedData = [
 ];
 
 let locations = [];
+let calendarEvents = [];
 let saveTimer = null;
 let saveInFlight = false;
 let pendingResave = false;
@@ -1412,6 +1623,7 @@ async function loadData(){
     const json = await res.json();
     const record = json && json.record ? json.record : {};
     locations = Array.isArray(record.locations) ? record.locations : [];
+    calendarEvents = Array.isArray(record.calendarEvents) ? record.calendarEvents : [];
     if(locations.length === 0){
       locations = seedData.map((l,i)=>({...l, id: 'loc_'+Date.now()+'_'+i}));
       await persistNow();
@@ -1419,10 +1631,12 @@ async function loadData(){
   }catch(e){
     console.error('Veri okuma hatası (JSONBin)', e);
     locations = seedData.map((l,i)=>({...l, id: 'loc_'+Date.now()+'_'+i}));
+    calendarEvents = [];
     await persistNow();
   }
   if(applyCorrections()) await persistNow();
   render();
+  renderCal();
 }
 
 // Debounced entry point: rapid clicks (e.g. toggling several stamps fast)
@@ -1443,7 +1657,7 @@ async function persistNow(retriesLeft){
         'Content-Type': 'application/json',
         'X-Master-Key': JSONBIN_MASTER_KEY
       },
-      body: JSON.stringify({ locations: locations })
+      body: JSON.stringify({ locations: locations, calendarEvents: calendarEvents })
     });
     if(!res.ok) throw new Error('HTTP ' + res.status);
     hideToast();
@@ -1465,6 +1679,356 @@ async function persistNow(retriesLeft){
     }
   }
 }
+
+// ============================================================
+// YAYIN TAKVİMİ (Calendar)
+// ============================================================
+const CAL_LABELS = {yt:"YT", yts:"YTS", ig:"IG", tt:"TT", fb:"FB"};
+const CAL_PLATFORM_NAMES = {yt:"YouTube (Uzun Video)", yts:"YouTube Shorts", ig:"Instagram", tt:"TikTok", fb:"Facebook"};
+const CAL_PLATFORM_COLORS = {yt:"#D64545", yts:"#E8632B", ig:"#C1447E", tt:"#3FC9D1", fb:"#4B7BD1"};
+const CAL_PLATFORM_FIELD = {yt:"captionYouTube", yts:"captionShorts", ig:"captionInstagram", fb:"captionFacebook", tt:"captionInstagram"};
+const CAL_DOW = ["PZT","SAL","ÇAR","PER","CUM","CMT","PAZ"];
+const CAL_DOW_SHORT = ["Pzt","Sal","Çar","Per","Cum","Cmt","Paz"];
+
+let calCurrentEvent = null; // event object being viewed/edited in the modal (null = creating new)
+let calViewMode = 'grid'; // 'grid' | 'table'
+
+function calPad(n){ return n<10 ? '0'+n : ''+n; }
+
+function calEventStatus(ev){
+  const dt = new Date(ev.date + 'T' + (ev.time||'00:00') + ':00');
+  const now = new Date();
+  if(dt <= now) return 'live';
+  if(ev.uploaded) return 'ready';
+  return 'planned';
+}
+
+function calWindowStart(){
+  // Rolling 21-day window starting from today (grid) — always current, no
+  // hardcoded reference date.
+  const d = new Date();
+  d.setHours(0,0,0,0);
+  return d;
+}
+
+function renderCal(){
+  renderCalGrid();
+  renderCalTable();
+}
+
+function renderCalGrid(){
+  const grid = document.getElementById('calGrid');
+  if(!grid) return;
+  grid.innerHTML = '';
+  CAL_DOW.forEach(d=>{
+    const el = document.createElement('div');
+    el.className = 'cal-dow';
+    el.textContent = d;
+    grid.appendChild(el);
+  });
+
+  const start = calWindowStart();
+  const today = calWindowStart();
+  const totalDays = 21;
+
+  for(let i=0;i<totalDays;i++){
+    const d = new Date(start);
+    d.setDate(start.getDate()+i);
+    const key = `${d.getFullYear()}-${calPad(d.getMonth()+1)}-${calPad(d.getDate())}`;
+
+    const cell = document.createElement('div');
+    cell.className = 'cal-day';
+    if(d.toDateString() === today.toDateString()) cell.classList.add('today');
+
+    const num = document.createElement('div');
+    num.className = 'cal-day-num';
+    num.textContent = `${d.getDate()} ${d.toLocaleString('tr-TR',{month:'short'})}`;
+    cell.appendChild(num);
+
+    let dayEvents = calendarEvents.filter(e=>e.date===key).sort((a,b)=>(a.time||'').localeCompare(b.time||''));
+
+    // Pair up IG+FB entries sharing the same time (same native Meta upload)
+    const rows = [];
+    const used = new Set();
+    dayEvents.forEach((ev,i2)=>{
+      if(used.has(i2)) return;
+      if(ev.platform === 'ig'){
+        const pairIdx = dayEvents.findIndex((e2,j)=> j!==i2 && !used.has(j) && e2.platform==='fb' && e2.time===ev.time);
+        if(pairIdx !== -1){
+          rows.push([ev, dayEvents[pairIdx]]);
+          used.add(i2); used.add(pairIdx);
+          return;
+        }
+      }
+      rows.push([ev]);
+      used.add(i2);
+    });
+
+    const shownRows = rows.slice(0,3);
+    let hiddenCount = 0;
+    rows.slice(3).forEach(r=>hiddenCount+=r.length);
+
+    shownRows.forEach(rowEvs=>{
+      const rowDiv = document.createElement('div');
+      rowDiv.className = 'cal-chip-row';
+      rowEvs.forEach(ev=>{
+        const status = calEventStatus(ev);
+        const chip = document.createElement('div');
+        chip.className = 'cal-chip ' + status;
+        const icon = status==='live' ? '●' : (status==='ready' ? '✓' : '🕒');
+        chip.innerHTML = `<span class="cal-badge" style="background:${CAL_PLATFORM_COLORS[ev.platform]};">${CAL_LABELS[ev.platform]}</span>
+          <span class="cal-chip-mid"><span class="cal-chip-time">${ev.time||''}</span><span class="cal-chip-title">${escapeHtml(ev.title||'')}</span></span>
+          <span class="cal-status-icon">${icon}</span>`;
+        chip.addEventListener('click', ()=> openCalDetail(ev));
+        rowDiv.appendChild(chip);
+      });
+      cell.appendChild(rowDiv);
+    });
+
+    if(hiddenCount > 0){
+      const more = document.createElement('div');
+      more.className = 'cal-more';
+      more.textContent = `+${hiddenCount} daha`;
+      cell.appendChild(more);
+    }
+
+    grid.appendChild(cell);
+  }
+}
+
+function renderCalTable(){
+  const tbody = document.getElementById('calTbody');
+  if(!tbody) return;
+  tbody.innerHTML = '';
+  const start = calWindowStart();
+  const today = calWindowStart();
+  const totalDays = 14;
+  const platformOrder = ['yt','yts','ig','fb','tt'];
+
+  for(let i=0;i<totalDays;i++){
+    const d = new Date(start);
+    d.setDate(start.getDate()+i);
+    const key = `${d.getFullYear()}-${calPad(d.getMonth()+1)}-${calPad(d.getDate())}`;
+
+    const tr = document.createElement('tr');
+    if(d.toDateString() === today.toDateString()) tr.classList.add('today');
+
+    const dateTd = document.createElement('td');
+    dateTd.className = 'cal-date-cell';
+    dateTd.innerHTML = `${d.getDate()} ${d.toLocaleString('tr-TR',{month:'short'})}<span class="cal-dow-lbl">${CAL_DOW_SHORT[(d.getDay()+6)%7]}</span>`;
+    tr.appendChild(dateTd);
+
+    platformOrder.forEach(p=>{
+      const td = document.createElement('td');
+      const dayPlatformEvents = calendarEvents.filter(e=>e.date===key && e.platform===p).sort((a,b)=>(a.time||'').localeCompare(b.time||''));
+      if(dayPlatformEvents.length === 0){
+        td.innerHTML = '<div class="cal-empty-dash">—</div>';
+      } else {
+        dayPlatformEvents.forEach(ev=>{
+          const status = calEventStatus(ev);
+          const icon = status==='live' ? '●' : (status==='ready' ? '✓' : '🕒');
+          const chip = document.createElement('div');
+          chip.className = 'cal-cell-chip ' + status;
+          chip.innerHTML = `<span class="cctime">${ev.time||''}<span>${icon}</span></span><span class="cctitle">${escapeHtml(ev.title||'')}</span>`;
+          chip.addEventListener('click', ()=> openCalDetail(ev));
+          td.appendChild(chip);
+        });
+      }
+      tr.appendChild(td);
+    });
+    tbody.appendChild(tr);
+  }
+}
+
+function escapeHtml(s){
+  const d = document.createElement('div');
+  d.textContent = s;
+  return d.innerHTML;
+}
+
+function populateCalLocationSelect(){
+  const sel = document.getElementById('cal_locationId');
+  sel.innerHTML = locations
+    .slice()
+    .sort((a,b)=>a.name.localeCompare(b.name,'tr'))
+    .map(l=>`<option value="${l.id}">${escapeHtml(l.name)}</option>`)
+    .join('');
+}
+
+function openCalDetail(ev){
+  calCurrentEvent = ev || null;
+  populateCalLocationSelect();
+
+  const isNew = !ev;
+  document.getElementById('calDTitle').textContent = isNew ? 'Yeni Yayın Girişi' : 'Yayın Girişini Düzenle';
+  document.getElementById('calDBadge').style.background = ev ? CAL_PLATFORM_COLORS[ev.platform] : '#8C7538';
+  document.getElementById('calDBadge').textContent = ev ? CAL_LABELS[ev.platform] : '+';
+  document.getElementById('calDeleteBtn').style.display = isNew ? 'none' : '';
+
+  if(ev){
+    document.getElementById('cal_locationId').value = ev.locationId;
+    document.getElementById('cal_platform').value = ev.platform;
+    document.getElementById('cal_title').value = ev.title || '';
+    document.getElementById('cal_date').value = ev.date;
+    document.getElementById('cal_time').value = ev.time || '';
+  } else {
+    const today = new Date();
+    document.getElementById('cal_platform').value = 'yt';
+    document.getElementById('cal_title').value = '';
+    document.getElementById('cal_date').value = `${today.getFullYear()}-${calPad(today.getMonth()+1)}-${calPad(today.getDate())}`;
+    document.getElementById('cal_time').value = '20:00';
+  }
+
+  refreshCalModalStatus();
+  refreshCalPkgFields();
+  document.getElementById('calOverlay').classList.add('open');
+}
+
+function refreshCalModalStatus(){
+  const ev = calCurrentEvent;
+  const toggle = document.getElementById('calUploadToggle');
+  const box = document.getElementById('calUploadBox');
+  const sub = document.getElementById('calUploadSub');
+  const statusEl = document.getElementById('calDStatus');
+
+  if(!ev){
+    // New entry — nothing to mark as uploaded yet
+    toggle.classList.remove('checked');
+    toggle.classList.remove('disabled');
+    box.textContent = '';
+    sub.textContent = 'Yeni giriş';
+    statusEl.className = 'cal-modal-status planned';
+    statusEl.textContent = '🕒 PLANLANACAK';
+    return;
+  }
+  const status = calEventStatus(ev);
+  const isLive = status === 'live';
+  statusEl.className = 'cal-modal-status ' + status;
+  statusEl.textContent = status==='live' ? '● YAYINDA' : (status==='ready' ? '✓ YÜKLENDİ — BEKLİYOR' : '🕒 PLANLANDI');
+  toggle.classList.toggle('checked', !!ev.uploaded);
+  toggle.classList.toggle('disabled', isLive);
+  box.textContent = ev.uploaded ? '✓' : '';
+  sub.textContent = isLive ? 'Saat geçti — otomatik yayında' : (ev.uploaded ? 'İşaretli' : 'İşaretsiz');
+}
+
+function refreshCalPkgFields(){
+  const fields = document.getElementById('calPkgFields');
+  const locId = document.getElementById('cal_locationId').value;
+  const platform = document.getElementById('cal_platform').value;
+  const loc = locations.find(l=>l.id===locId);
+  if(!loc || !loc.package){ fields.innerHTML = ''; return; }
+  const pkg = loc.package;
+  const fieldKey = CAL_PLATFORM_FIELD[platform];
+  const caption = pkg[fieldKey] || '(bu lokasyon için henüz bu platforma ait caption girilmemiş — Yayın Paketi'+"'"+'nden doldurabilirsin)';
+  const hashtagVal = platform === 'fb' ? (pkg.fbTags || '') : (platform === 'yt' ? (pkg.tags||'') : (platform === 'yts' ? (pkg.shortsTags||'') : (pkg.hashtags||'')));
+  fields.innerHTML = `
+    <div class="pkg-field">
+      <div class="pkg-label">İlgili Caption (${CAL_PLATFORM_NAMES[platform]})</div>
+      <div class="pkg-value">${escapeHtml(caption)}</div>
+    </div>
+    ${hashtagVal ? `<div class="pkg-field">
+      <div class="pkg-label">Hashtag / Etiket</div>
+      <div class="pkg-value">${escapeHtml(hashtagVal)}</div>
+    </div>` : ''}
+  `;
+}
+
+document.getElementById('cal_locationId').addEventListener('change', refreshCalPkgFields);
+document.getElementById('cal_platform').addEventListener('change', ()=>{
+  refreshCalPkgFields();
+  if(calCurrentEvent) document.getElementById('calDBadge').style.background = CAL_PLATFORM_COLORS[document.getElementById('cal_platform').value];
+});
+
+document.getElementById('calUploadToggle').addEventListener('click', ()=>{
+  if(!calCurrentEvent) return; // nothing to toggle on a not-yet-saved new entry
+  if(calEventStatus(calCurrentEvent) === 'live') return;
+  calCurrentEvent.uploaded = !calCurrentEvent.uploaded;
+  refreshCalModalStatus();
+  renderCal();
+});
+
+document.getElementById('calSaveBtn').addEventListener('click', async ()=>{
+  const locationId = document.getElementById('cal_locationId').value;
+  const platform = document.getElementById('cal_platform').value;
+  const title = document.getElementById('cal_title').value.trim();
+  const date = document.getElementById('cal_date').value;
+  const time = document.getElementById('cal_time').value;
+  if(!date || !time){ alert('Tarih ve saat gerekli.'); return; }
+  if(!title){ alert('Başlık/not gerekli.'); return; }
+
+  if(calCurrentEvent){
+    calCurrentEvent.locationId = locationId;
+    calCurrentEvent.platform = platform;
+    calCurrentEvent.title = title;
+    calCurrentEvent.date = date;
+    calCurrentEvent.time = time;
+  } else {
+    calendarEvents.push({
+      id: 'cal_'+Date.now(),
+      locationId, platform, title, date, time,
+      uploaded: false
+    });
+  }
+  await persist();
+  closeCalModal();
+  renderCal();
+});
+
+document.getElementById('calDeleteBtn').addEventListener('click', async ()=>{
+  if(!calCurrentEvent) return;
+  if(!confirm('Bu takvim girişini silmek istediğine emin misin?')) return;
+  calendarEvents = calendarEvents.filter(e=>e.id !== calCurrentEvent.id);
+  await persist();
+  closeCalModal();
+  renderCal();
+});
+
+function closeCalModal(){
+  document.getElementById('calOverlay').classList.remove('open');
+  calCurrentEvent = null;
+}
+document.getElementById('calCancelBtn').addEventListener('click', closeCalModal);
+document.getElementById('calCloseBtn').addEventListener('click', closeCalModal);
+document.getElementById('calOverlay').addEventListener('click', (e)=>{
+  if(e.target.id === 'calOverlay') closeCalModal();
+});
+
+document.getElementById('calAddBtn').addEventListener('click', ()=> openCalDetail(null));
+
+// Grid/Table toggle within the calendar tab
+document.getElementById('calBtnGrid').addEventListener('click', ()=>{
+  calViewMode = 'grid';
+  document.getElementById('calGridView').style.display = '';
+  document.getElementById('calTableView').style.display = 'none';
+  document.getElementById('calBtnGrid').classList.add('active');
+  document.getElementById('calBtnTable').classList.remove('active');
+});
+document.getElementById('calBtnTable').addEventListener('click', ()=>{
+  calViewMode = 'table';
+  document.getElementById('calGridView').style.display = 'none';
+  document.getElementById('calTableView').style.display = '';
+  document.getElementById('calBtnTable').classList.add('active');
+  document.getElementById('calBtnGrid').classList.remove('active');
+});
+
+// Main Lokasyonlar / Takvim tab switch
+document.getElementById('tabLocations').addEventListener('click', ()=>{
+  document.getElementById('locationsView').style.display = '';
+  document.getElementById('calendarView').style.display = 'none';
+  document.getElementById('controls').style.display = '';
+  document.getElementById('rowHeader').style.display = document.getElementById('viewMode').value === 'row' ? '' : 'none';
+  document.getElementById('tabLocations').classList.add('active');
+  document.getElementById('tabCalendar').classList.remove('active');
+});
+document.getElementById('tabCalendar').addEventListener('click', ()=>{
+  document.getElementById('locationsView').style.display = 'none';
+  document.getElementById('calendarView').style.display = '';
+  document.getElementById('controls').style.display = 'none';
+  document.getElementById('rowHeader').style.display = 'none';
+  document.getElementById('tabCalendar').classList.add('active');
+  document.getElementById('tabLocations').classList.remove('active');
+  renderCal();
+});
 
 function showToast(msg){
   let t = document.getElementById('toast');
@@ -1616,6 +2180,7 @@ function renderCards(filtered){
         <div class="stamp ${l.audio}" data-id="${l.id}" data-field="audio"><span class="v">${statusChar(l.audio)}</span>${t('stamp_audio')}</div>
         <div class="stamp ${l.edited}" data-id="${l.id}" data-field="edited"><span class="v">${statusChar(l.edited)}</span>${t('stamp_edited')}</div>
         <div class="stamp ${l.published}" data-id="${l.id}" data-field="published"><span class="v">${statusChar(l.published)}</span>${t('stamp_published')}</div>
+        <div class="stamp perm-stamp ${l.permission}" data-id="${l.id}" data-field="permission"><span class="v">${statusChar(l.permission)}</span>${t('stamp_permission')}</div>
       </div>
       <div class="notes">${escapeHtml(l.notes||'')}</div>
       <div class="card-actions">
@@ -1665,6 +2230,7 @@ function renderRows(filtered){
         <div class="row-stamp ${l.audio}" data-id="${l.id}" data-field="audio" title="${t('stamp_audio')}">${statusChar(l.audio)}</div>
         <div class="row-stamp ${l.edited}" data-id="${l.id}" data-field="edited" title="${t('stamp_edited')}">${statusChar(l.edited)}</div>
         <div class="row-stamp ${l.published}" data-id="${l.id}" data-field="published" title="${t('stamp_published')}">${statusChar(l.published)}</div>
+        <div class="row-stamp perm-stamp ${l.permission}" data-id="${l.id}" data-field="permission" title="${t('stamp_permission')}">${statusChar(l.permission)}</div>
       </div>
       <div class="row-actions">
         ${l.plannedDate ? `<button class="icon-btn ${l.prepRequested==='E'?'trigger-active':''}" data-trigger="${l.id}">${l.prepRequested==='E'?'⏳':'🎬'}</button>` : ''}
@@ -1934,7 +2500,7 @@ document.getElementById('pkgSaveBtn').addEventListener('click', async ()=>{
 
 // ===== Backup: export current data as a downloadable JSON file =====
 document.getElementById('exportBtn').addEventListener('click', ()=>{
-  const dataStr = JSON.stringify(locations, null, 2);
+  const dataStr = JSON.stringify({ locations: locations, calendarEvents: calendarEvents }, null, 2);
   const blob = new Blob([dataStr], {type:'application/json'});
   const url = URL.createObjectURL(blob);
   const now = new Date();
@@ -1960,13 +2526,19 @@ document.getElementById('importFile').addEventListener('change', (e)=>{
   reader.onload = async (ev)=>{
     try{
       const parsed = JSON.parse(ev.target.result);
-      if(!Array.isArray(parsed)) throw new Error('Geçersiz format');
-      const confirmMsg = `Bu dosyada ${parsed.length} lokasyon var. Mevcut ${locations.length} lokasyonun ÜZERİNE yazılacak. Devam edilsin mi?`;
+      // Support both old-format backups (a bare array of locations) and
+      // new-format backups ({locations, calendarEvents}).
+      const newLocations = Array.isArray(parsed) ? parsed : parsed.locations;
+      const newCalEvents = Array.isArray(parsed) ? [] : (parsed.calendarEvents || []);
+      if(!Array.isArray(newLocations)) throw new Error('Geçersiz format');
+      const confirmMsg = `Bu dosyada ${newLocations.length} lokasyon ve ${newCalEvents.length} takvim girişi var. Mevcut verinin ÜZERİNE yazılacak. Devam edilsin mi?`;
       if(!confirm(confirmMsg)) return;
-      locations = parsed;
+      locations = newLocations;
+      calendarEvents = newCalEvents;
       locations.forEach(l => normalizeLocation(l));
       await persistNow();
       render();
+      renderCal();
       showToast('Yedekten geri yüklendi ✓');
     }catch(err){
       alert('Dosya okunamadı — geçerli bir yedek JSON dosyası olduğundan emin ol.\n\n' + err.message);
@@ -2011,8 +2583,8 @@ document.getElementById('pkgOverlay').addEventListener('click', (e)=>{
 
 async function loadLanguage(){
   try{
-    const res = await window.storage.get(LANG_KEY, false);
-    if(res && res.value && LANG[res.value]) currentLang = res.value;
+    const saved = localStorage.getItem(LANG_KEY);
+    if(saved && LANG[saved]) currentLang = saved;
   }catch(e){ /* default to tr */ }
   document.getElementById('langSelect').value = currentLang;
   applyStaticI18n();
