@@ -265,18 +265,6 @@ select{
   0%,100%{border-color:#E8912D;}
   50%{border-color:rgba(232,145,45,0.4);}
 }
-.prep-badge{
-  display:inline-block;
-  font-family:'JetBrains Mono',monospace;
-  font-size:9.5px;
-  letter-spacing:1px;
-  color:#7FA3B8;
-  background:rgba(127,163,184,0.12);
-  border:1px solid #7FA3B8;
-  padding:3px 8px;
-  margin-bottom:10px;
-}
-.icon-btn.trigger-active{border-color:#7FA3B8;color:#7FA3B8;}
 .cancelled-badge{
   position:absolute;
   top:14px;right:16px;
@@ -751,7 +739,6 @@ select{
       <option value="unfilmed" data-i18n="status_unfilmed">Henüz Çekilmedi</option>
       <option value="permission" data-i18n="status_permission">İzin Bekliyor</option>
       <option value="needsscript" data-i18n="status_needsscript">🎬 Script Yazılması Gereken</option>
-      <option value="prepqueue" data-i18n="status_prepqueue">⏳ Hazırlık Bekleyenler</option>
       <option value="cancelled" data-i18n="status_cancelled">İptal Edilenler</option>
     </select>
     <select id="sortMode">
@@ -1166,9 +1153,8 @@ const LANG = {
     search_ph: "Lokasyon, ilçe veya konu ara...",
     fmt_all: "Tüm Formatlar", fmt_saha: "Saha", fmt_masabasi: "Masabaşı", fmt_hibrit: "Hibrit",
     district_all: "Tüm İlçeler", city_all: "Tüm İller",
-    status_all: "Tüm Durumlar", status_pending: "Devam Eden", status_done: "Tamamlanan (Yayında)", status_unfilmed: "Henüz Çekilmedi", status_permission: "İzin Bekliyor", status_needsscript: "🎬 Script Yazılması Gereken", status_prepqueue: "⏳ Hazırlık Bekleyenler", status_cancelled: "İptal Edilenler",
+    status_all: "Tüm Durumlar", status_pending: "Devam Eden", status_done: "Tamamlanan (Yayında)", status_unfilmed: "Henüz Çekilmedi", status_permission: "İzin Bekliyor", status_needsscript: "🎬 Script Yazılması Gereken", status_cancelled: "İptal Edilenler",
     needs_script_badge: "🎬 SCRIPT BEKLİYOR",
-    prep_requested_badge: "⏳ HAZIRLIK BEKLİYOR", btn_trigger_prep: "🎬 Hazırlığı Tetikle", btn_prep_requested: "⏳ Tetiklendi",
     pkg_section_shotlist: "🎥 Sahada Çekilmesi Gerekenler", p_shotlist_ph: "Giriş çekimi, çıkış çekimi, kapanış planı, özellikle vurgulanacak detay çekimleri vs. — maddeler halinde",
     f_fieldnotes_label: "Saha Notu (Neler Anlattım)", f_fieldnotes_ph: "Kamerada söylediklerinin kısa özeti — script bunun üzerinden yazılacak",
     f_cautions_label: "⚠️ Çekim Esnasında Dikkat Edilecek Noktalar", f_cautions_ph: "Örn: burçlara restorasyon nedeniyle çıkılamıyor, zincir sahada yok (Deniz Müzesi'nde), güvenlik izin istiyor, en iyi ışık öğleden sonra vs.",
@@ -1214,9 +1200,8 @@ const LANG = {
     search_ph: "Search location, district or topic...",
     fmt_all: "All Formats", fmt_saha: "On-site", fmt_masabasi: "Desk", fmt_hibrit: "Hybrid",
     district_all: "All Districts", city_all: "All Cities",
-    status_all: "All Statuses", status_pending: "In Progress", status_done: "Completed (Live)", status_unfilmed: "Not Filmed Yet", status_permission: "Awaiting Permit", status_needsscript: "🎬 Needs Script", status_prepqueue: "⏳ Prep Requested", status_cancelled: "Cancelled",
+    status_all: "All Statuses", status_pending: "In Progress", status_done: "Completed (Live)", status_unfilmed: "Not Filmed Yet", status_permission: "Awaiting Permit", status_needsscript: "🎬 Needs Script", status_cancelled: "Cancelled",
     needs_script_badge: "🎬 NEEDS SCRIPT",
-    prep_requested_badge: "⏳ PREP REQUESTED", btn_trigger_prep: "🎬 Trigger Prep", btn_prep_requested: "⏳ Triggered",
     pkg_section_shotlist: "🎥 On-Location Shot List", p_shotlist_ph: "Opening shot, closing shot, wrap-up, detail cutaways to emphasize, etc. — as a list",
     f_fieldnotes_label: "Field Notes (What I Said)", f_fieldnotes_ph: "Short summary of what you said on camera — the script will be based on this",
     f_cautions_label: "⚠️ Important Points to Watch During Filming", f_cautions_ph: "e.g.: towers closed for restoration, chain not on-site (in Naval Museum), security requires permit, best light in the afternoon etc.",
@@ -1262,9 +1247,8 @@ const LANG = {
     search_ph: "Поиск локации, района или темы...",
     fmt_all: "Все форматы", fmt_saha: "На месте", fmt_masabasi: "Кабинетный", fmt_hibrit: "Гибрид",
     district_all: "Все районы", city_all: "Все города",
-    status_all: "Все статусы", status_pending: "В процессе", status_done: "Завершено (в эфире)", status_unfilmed: "Ещё не отснято", status_permission: "Ждёт разрешения", status_needsscript: "🎬 Нужен сценарий", status_prepqueue: "⏳ Запрошена подготовка", status_cancelled: "Отменённые",
+    status_all: "Все статусы", status_pending: "В процессе", status_done: "Завершено (в эфире)", status_unfilmed: "Ещё не отснято", status_permission: "Ждёт разрешения", status_needsscript: "🎬 Нужен сценарий", status_cancelled: "Отменённые",
     needs_script_badge: "🎬 НУЖЕН СЦЕНАРИЙ",
-    prep_requested_badge: "⏳ ЗАПРОШЕНА ПОДГОТОВКА", btn_trigger_prep: "🎬 Запросить подготовку", btn_prep_requested: "⏳ Запрошено",
     pkg_section_shotlist: "🎥 Что снять на месте", p_shotlist_ph: "Начальный план, финальный план, закадровые вставки, детали для акцента и т.д. — списком",
     f_fieldnotes_label: "Заметки со съёмки (что я рассказал)", f_fieldnotes_ph: "Краткое содержание того, что ты сказал на камеру — сценарий будет основан на этом",
     f_cautions_label: "⚠️ Важные моменты при съёмке", f_cautions_ph: "Напр.: башни закрыты на реставрацию, цепь не на месте (в Морском музее), нужен пропуск от охраны, лучший свет после обеда и т.д.",
@@ -2227,7 +2211,6 @@ function matchesFilters(l){
   if(city && l.city !== city) return false;
   if(status === 'cancelled') return l.cancelled === 'E';
   if(status === 'needsscript') return l.filmed==='E' && l.script==='H' && l.cancelled!=='E';
-  if(status === 'prepqueue') return l.prepRequested==='E' && l.script!=='E' && l.cancelled!=='E';
   if(l.cancelled === 'E' && status && status !== 'cancelled') return false;
   if(status === 'done' && l.published !== 'E') return false;
   if(status === 'pending' && (l.published === 'E' || l.filmed !== 'E')) return false;
@@ -2311,7 +2294,6 @@ function renderCards(filtered){
         <div class="fmt-tag fmt-${l.format}">${formatLabel(l.format)}</div>
       </div>
       <div class="needs-script-badge ${needsScript?'':'slot-empty'}">${t('needs_script_badge')}</div>
-      <div class="prep-badge ${(l.prepRequested==='E' && l.script!=='E')?'':'slot-empty'}">${t('prep_requested_badge')}</div>
       <div class="perm-flag ${l.permission==='E'?'':'slot-empty'}">${t('permission_pending')}</div>
       <div class="topic">${escapeHtml(l.topic||'—')}</div>
       <button class="read-more ${(topicLong||notesLong)?'':'slot-empty'}" data-detail="${l.id}">${t('read_more')} →</button>
@@ -2329,7 +2311,7 @@ function renderCards(filtered){
       <div class="card-actions">
         <input type="date" class="inline-date" data-id="${l.id}" value="${l.plannedDate||''}" title="${t('planned_date_title')}">
         <div class="card-actions-buttons">
-          ${l.plannedDate ? `<button class="icon-btn ${l.prepRequested==='E'?'trigger-active':''}" data-trigger="${l.id}">${l.prepRequested==='E'?t('btn_prep_requested'):t('btn_trigger_prep')}</button>` : ''}
+          ${''}
           <button class="icon-btn" data-cancel="${l.id}">${l.cancelled==='E'?t('btn_uncancel'):t('btn_cancel_shoot')}</button>
           <button class="icon-btn" data-pkg="${l.id}">${t('btn_package')}</button>
           <button class="icon-btn" data-edit="${l.id}">${t('btn_edit')}</button>
@@ -2376,7 +2358,7 @@ function renderRows(filtered){
         <div class="row-stamp perm-stamp ${l.permission}" data-id="${l.id}" data-field="permission" title="${t('stamp_permission')}">${statusChar(l.permission)}</div>
       </div>
       <div class="row-actions">
-        ${l.plannedDate ? `<button class="icon-btn ${l.prepRequested==='E'?'trigger-active':''}" data-trigger="${l.id}">${l.prepRequested==='E'?'⏳':'🎬'}</button>` : ''}
+        ${''}
         <button class="icon-btn" data-cancel="${l.id}">${l.cancelled==='E'?'↩':'🚫'}</button>
         <button class="icon-btn" data-pkg="${l.id}">📦</button>
         <button class="icon-btn" data-edit="${l.id}">${t('btn_edit')}</button>
@@ -2422,15 +2404,6 @@ function wireCardEvents(container){
       const loc = locations.find(x=>x.id===el.dataset.cancel);
       if(!loc) return;
       loc.cancelled = loc.cancelled === 'E' ? 'H' : 'E';
-      await persist();
-      render();
-    });
-  });
-  container.querySelectorAll('[data-trigger]').forEach(el=>{
-    el.addEventListener('click', async ()=>{
-      const loc = locations.find(x=>x.id===el.dataset.trigger);
-      if(!loc) return;
-      loc.prepRequested = loc.prepRequested === 'E' ? 'H' : 'E';
       await persist();
       render();
     });
