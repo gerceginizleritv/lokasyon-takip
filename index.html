@@ -447,8 +447,9 @@ select{
   margin-top:auto;
   padding-top:12px;
   justify-content:space-between;
+  flex-wrap:wrap;
 }
-.card-actions-buttons{display:flex;gap:8px;}
+.card-actions-buttons{display:flex;gap:8px;flex-wrap:wrap;}
 .icon-btn{
   background:none;
   border:1px solid var(--line);
@@ -1485,6 +1486,10 @@ function applyCorrections(){
 
   const rumeliHisariLoc = locations.find(l => l.name === "Rumeli Hisarı");
   if(rumeliHisariLoc){
+    if(rumeliHisariLoc.plannedDate){
+      rumeliHisariLoc.plannedDate = '';
+      changed = true;
+    }
     if(!rumeliHisariLoc.shootingCautions){
       rumeliHisariLoc.shootingCautions = "Burçlara restorasyon nedeniyle çıkılamıyor — alternatif yükseklik/manzara noktası kullanılmalı. Zincir sahada YOK, Deniz Müzesi'ne taşınmış — top/gülle yakın çekimiyle veya bilgi kartıyla telafi edilmeli. En iyi ışık gün batımına yakın (Boğaz'a bakan taraf altın saatte çok güçlü).";
       changed = true;
