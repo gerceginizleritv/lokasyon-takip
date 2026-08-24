@@ -1474,6 +1474,99 @@ function normalizeLocation(l){
 function applyCorrections(){
   let changed = false;
 
+    // Batch: real Wikimedia Commons images for well-known locations
+  {
+    const loc = locations.find(l => l.name === "Yedikule Zindanları");
+    if(loc && !loc.imageUrl){
+      loc.imageUrl = "https://commons.wikimedia.org/wiki/Special:FilePath/Istanbul asv2021-11 img61 Yedikule.jpg?width=400";
+      changed = true;
+    }
+  }
+  {
+    const loc = locations.find(l => l.name === "Yerebatan Sarnıcı");
+    if(loc && !loc.imageUrl){
+      loc.imageUrl = "https://commons.wikimedia.org/wiki/Special:FilePath/Yerebatan Sarnıcı (Basilica Cistern).jpg?width=400";
+      changed = true;
+    }
+  }
+  {
+    const loc = locations.find(l => l.name === "Kariye (Chora)");
+    if(loc && !loc.imageUrl){
+      loc.imageUrl = "https://commons.wikimedia.org/wiki/Special:FilePath/Istanbul IMG 8269 1920.jpg?width=400";
+      changed = true;
+    }
+  }
+  {
+    const loc = locations.find(l => l.name === "Süleymaniye Camii");
+    if(loc && !loc.imageUrl){
+      loc.imageUrl = "https://commons.wikimedia.org/wiki/Special:FilePath/Süleymaniye Mosque, Istanbul.jpg?width=400";
+      changed = true;
+    }
+  }
+  {
+    const loc = locations.find(l => l.name === "Yoros Kalesi");
+    if(loc && !loc.imageUrl){
+      loc.imageUrl = "https://commons.wikimedia.org/wiki/Special:FilePath/Yoros Castle, Istanbul.JPG?width=400";
+      changed = true;
+    }
+  }
+  {
+    const loc = locations.find(l => l.name === "Mihrimah Sultan Camii");
+    if(loc && !loc.imageUrl){
+      loc.imageUrl = "https://commons.wikimedia.org/wiki/Special:FilePath/Istanbul Mihrimah Sultan Mosque in distance 3934.jpg?width=400";
+      changed = true;
+    }
+  }
+  {
+    const loc = locations.find(l => l.name === "Binbirdirek Sarnıcı");
+    if(loc && !loc.imageUrl){
+      loc.imageUrl = "https://commons.wikimedia.org/wiki/Special:FilePath/Istanbul cistern Binbirdirek.jpg?width=400";
+      changed = true;
+    }
+  }
+  {
+    const loc = locations.find(l => l.name === "Zeyrek Camii");
+    if(loc && !loc.imageUrl){
+      loc.imageUrl = "https://commons.wikimedia.org/wiki/Special:FilePath/Molla Zeyrek Camii.jpg?width=400";
+      changed = true;
+    }
+  }
+  {
+    const loc = locations.find(l => l.name === "Nuruosmaniye Camii");
+    if(loc && !loc.imageUrl){
+      loc.imageUrl = "https://commons.wikimedia.org/wiki/Special:FilePath/Exterior of Nuruosmaniye Mosque.jpg?width=400";
+      changed = true;
+    }
+  }
+  {
+    const loc = locations.find(l => l.name === "Galata Kulesi");
+    if(loc && !loc.imageUrl){
+      loc.imageUrl = "https://commons.wikimedia.org/wiki/Special:FilePath/Galata Kulesi - 01.jpg?width=400";
+      changed = true;
+    }
+  }
+  {
+    const loc = locations.find(l => l.name === "Kız Kulesi");
+    if(loc && !loc.imageUrl){
+      loc.imageUrl = "https://commons.wikimedia.org/wiki/Special:FilePath/Maiden tower.JPG?width=400";
+      changed = true;
+    }
+  }
+  {
+    const loc = locations.find(l => l.name === "Dolmabahçe Sarayı");
+    if(loc && !loc.imageUrl){
+      loc.imageUrl = "https://commons.wikimedia.org/wiki/Special:FilePath/Dolmabahçe Palace.JPG?width=400";
+      changed = true;
+    }
+  }
+  {
+    const loc = locations.find(l => l.name === "Topkapı Sarayı Harem Dairesi");
+    if(loc && !loc.imageUrl){
+      loc.imageUrl = "https://commons.wikimedia.org/wiki/Special:FilePath/Topkapi Palace 01.JPG?width=400";
+      changed = true;
+    }
+  }
+
   const imrahor = locations.find(l => l.name === "İmrahor İlyas Bey Camii (Stüdyos Manastırı)");
   if(imrahor && !imrahor.imageUrl){
     imrahor.imageUrl = "https://commons.wikimedia.org/wiki/Special:FilePath/The_interior_of_the_St._John_Stoudios_(Imrahor)_Monastery.jpg?width=400";
