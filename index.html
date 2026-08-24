@@ -630,6 +630,7 @@ select{
 .cal-grid{display:grid;grid-template-columns:repeat(7,1fr);border:1px solid var(--line);background:var(--line);gap:1px;}
 .cal-dow{background:var(--ink-2);padding:9px 10px;font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:1.5px;color:var(--gold-dim);text-transform:uppercase;text-align:center;}
 .cal-day{background:var(--ink);aspect-ratio:1/1;padding:8px 7px;position:relative;overflow:hidden;}
+.cal-day.expanded{aspect-ratio:auto;overflow:visible;z-index:5;box-shadow:0 4px 16px rgba(0,0,0,0.5);}
 .cal-day.today{background:rgba(200,162,74,0.06);}
 .cal-day-num{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--parchment-dim);margin-bottom:6px;}
 .cal-day.today .cal-day-num{color:var(--gold);font-weight:700;}
@@ -651,6 +652,8 @@ select{
 .cal-chip.live .cal-chip-title{color:var(--gold);font-weight:600;}
 .cal-chip.live .cal-chip-time{color:var(--gold-dim);}
 .cal-more{font-size:9px;color:var(--gold-dim);font-family:'JetBrains Mono',monospace;padding-left:2px;}
+.cal-more-clickable{cursor:pointer;text-decoration:underline;padding:3px 2px;}
+.cal-more-clickable:hover{color:var(--gold);}
 
 .cal-table{width:100%;border-collapse:collapse;border:1px solid var(--line);table-layout:fixed;}
 .cal-table thead th{background:var(--ink-2);border:1px solid var(--line);padding:12px 10px;font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:1.5px;text-transform:uppercase;}
@@ -2179,6 +2182,7 @@ const CAL_DOW_SHORT = ["Pzt","Sal","Çar","Per","Cum","Cmt","Paz"];
 let calCurrentEvent = null; // event object being viewed/edited in the modal (null = creating new)
 let calViewMode = 'grid'; // 'grid' | 'table'
 let calNewUploadedState = false; // "Yükledim" toggle state while creating a brand-new entry (not yet saved)
+let calExpandedDays = new Set(); // day keys (YYYY-MM-DD) the user has expanded to see all entries
 
 function calPad(n){ return n<10 ? '0'+n : ''+n; }
 
@@ -2226,6 +2230,8 @@ function renderCalGrid(){
     const cell = document.createElement('div');
     cell.className = 'cal-day';
     if(d.toDateString() === today.toDateString()) cell.classList.add('today');
+    const isExpanded = calExpandedDays.has(key);
+    if(isExpanded) cell.classList.add('expanded');
 
     const num = document.createElement('div');
     num.className = 'cal-day-num';
@@ -2251,9 +2257,9 @@ function renderCalGrid(){
       used.add(i2);
     });
 
-    const shownRows = rows.slice(0,3);
+    const shownRows = isExpanded ? rows : rows.slice(0,3);
     let hiddenCount = 0;
-    rows.slice(3).forEach(r=>hiddenCount+=r.length);
+    if(!isExpanded) rows.slice(3).forEach(r=>hiddenCount+=r.length);
 
     shownRows.forEach(rowEvs=>{
       const rowDiv = document.createElement('div');
@@ -2274,9 +2280,22 @@ function renderCalGrid(){
 
     if(hiddenCount > 0){
       const more = document.createElement('div');
-      more.className = 'cal-more';
-      more.textContent = `+${hiddenCount} daha`;
+      more.className = 'cal-more cal-more-clickable';
+      more.textContent = `+${hiddenCount} daha (görmek için tıkla)`;
+      more.addEventListener('click', ()=>{
+        calExpandedDays.add(key);
+        renderCalGrid();
+      });
       cell.appendChild(more);
+    } else if(isExpanded && rows.length > 3){
+      const less = document.createElement('div');
+      less.className = 'cal-more cal-more-clickable';
+      less.textContent = `daha az göster ▲`;
+      less.addEventListener('click', ()=>{
+        calExpandedDays.delete(key);
+        renderCalGrid();
+      });
+      cell.appendChild(less);
     }
 
     grid.appendChild(cell);
