@@ -1573,6 +1573,71 @@ function applyCorrections(){
     changed = true;
   }
 
+    // Batch 2: more real Wikimedia Commons images
+  {
+    const loc = locations.find(l => l.name === "Rumeli Hisarı");
+    if(loc && !loc.imageUrl){
+      loc.imageUrl = "https://commons.wikimedia.org/wiki/Special:FilePath/Rumeli hisari.jpg?width=400";
+      changed = true;
+    }
+  }
+  {
+    const loc = locations.find(l => l.name === "İstanbul Arkeoloji Müzeleri + Çinili Köşk");
+    if(loc && !loc.imageUrl){
+      loc.imageUrl = "https://commons.wikimedia.org/wiki/Special:FilePath/Istanbul Archaeology Museums - İstanbul Arkeoloji Müzeleri - Istanbul, Turkey (10582493406).jpg?width=400";
+      changed = true;
+    }
+  }
+  {
+    const loc = locations.find(l => l.name === "Gül Camii");
+    if(loc && !loc.imageUrl){
+      loc.imageUrl = "https://commons.wikimedia.org/wiki/Special:FilePath/Hagia Theodosia Church (Gül Mosque) Ayakapı, İstanbul (14236939145).jpg?width=400";
+      changed = true;
+    }
+  }
+  {
+    const loc = locations.find(l => l.name === "Eyüp Sultan Türbesi");
+    if(loc && !loc.imageUrl){
+      loc.imageUrl = "https://commons.wikimedia.org/wiki/Special:FilePath/Eyup sultan camii Istanbul 2013 6.jpg?width=400";
+      changed = true;
+    }
+  }
+  {
+    const loc = locations.find(l => l.name === "Tekfur Sarayı");
+    if(loc && !loc.imageUrl){
+      loc.imageUrl = "https://commons.wikimedia.org/wiki/Special:FilePath/Palace of Porphyrogenitus 2007 016.jpg?width=400";
+      changed = true;
+    }
+  }
+  {
+    const loc = locations.find(l => l.name === "Sirkeci Garı");
+    if(loc && !loc.imageUrl){
+      loc.imageUrl = "https://commons.wikimedia.org/wiki/Special:FilePath/Istanbul asv2020-02 img12 Sirkeci Terminal.jpg?width=400";
+      changed = true;
+    }
+  }
+  {
+    const loc = locations.find(l => l.name === "Aya İrini");
+    if(loc && !loc.imageUrl){
+      loc.imageUrl = "https://commons.wikimedia.org/wiki/Special:FilePath/Istanbul Hagia Irene IMG 8067 1920.jpg?width=400";
+      changed = true;
+    }
+  }
+  {
+    const loc = locations.find(l => l.name === "Beylerbeyi Sarayı");
+    if(loc && !loc.imageUrl){
+      loc.imageUrl = "https://commons.wikimedia.org/wiki/Special:FilePath/Beylerbeyi Palace - wide.jpg?width=400";
+      changed = true;
+    }
+  }
+  {
+    const loc = locations.find(l => l.name === "Küçüksu Kasrı");
+    if(loc && !loc.imageUrl){
+      loc.imageUrl = "https://commons.wikimedia.org/wiki/Special:FilePath/Küçüksu Kasrı.jpg?width=400";
+      changed = true;
+    }
+  }
+
   const rumeliHisariLoc = locations.find(l => l.name === "Rumeli Hisarı");
   if(rumeliHisariLoc){
     if(rumeliHisariLoc.plannedDate){
