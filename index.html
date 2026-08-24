@@ -1475,8 +1475,8 @@ function applyCorrections(){
   let changed = false;
 
   const imrahor = locations.find(l => l.name === "İmrahor İlyas Bey Camii (Stüdyos Manastırı)");
-  if(imrahor && imrahor.imageUrl){
-    delete imrahor.imageUrl;
+  if(imrahor && !imrahor.imageUrl){
+    imrahor.imageUrl = "https://commons.wikimedia.org/wiki/Special:FilePath/The_interior_of_the_St._John_Stoudios_(Imrahor)_Monastery.jpg?width=400";
     changed = true;
   }
 
