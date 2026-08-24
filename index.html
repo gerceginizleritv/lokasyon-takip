@@ -675,6 +675,10 @@ select{
 
 .cal-edit-row{display:flex;gap:10px;margin-bottom:16px;}
 .cal-platform-checks{display:flex;gap:8px;flex-wrap:wrap;}
+.cal-format-divider{
+  font-family:'JetBrains Mono',monospace;font-size:9.5px;letter-spacing:1px;
+  color:var(--gold-dim);text-transform:uppercase;margin:10px 0 7px;
+}
 .cal-platform-check{
   display:flex;align-items:center;gap:6px;
   background:var(--ink);border:1px solid var(--line);
@@ -805,6 +809,10 @@ select{
     <span class="cal-legend-item"><span class="cal-dot" style="background:#C1447E;"></span>Instagram</span>
     <span class="cal-legend-item"><span class="cal-dot" style="background:#3FC9D1;"></span>TikTok</span>
     <span class="cal-legend-item"><span class="cal-dot" style="background:#4B7BD1;"></span>Facebook</span>
+    <span class="cal-legend-item"><span class="cal-dot" style="background:#9C4FBF;"></span>IG Carousel</span>
+    <span class="cal-legend-item"><span class="cal-dot" style="background:#5D7BC7;"></span>FB Carousel</span>
+    <span class="cal-legend-item"><span class="cal-dot" style="background:#D4A72C;"></span>Story</span>
+    <span class="cal-legend-item"><span class="cal-dot" style="background:#6B7280;"></span>Metin Postu</span>
     <span class="cal-legend-sep"></span>
     <span class="cal-mini-chip cal-planned">🕒 Planlandı</span>
     <span class="cal-mini-chip cal-ready">✓ Yüklendi</span>
@@ -823,6 +831,10 @@ select{
           <th><div class="cal-platform-head"><span class="cal-p-badge" style="background:#C1447E;">IG</span><span>INSTAGRAM</span></div></th>
           <th><div class="cal-platform-head"><span class="cal-p-badge" style="background:#4B7BD1;">FB</span><span>FACEBOOK</span></div></th>
           <th><div class="cal-platform-head"><span class="cal-p-badge" style="background:#3FC9D1;color:#0a0a0a;">TT</span><span>TIKTOK</span></div></th>
+          <th><div class="cal-platform-head"><span class="cal-p-badge" style="background:#9C4FBF;">IGC</span><span>IG CAROUSEL</span></div></th>
+          <th><div class="cal-platform-head"><span class="cal-p-badge" style="background:#5D7BC7;">FBC</span><span>FB CAROUSEL</span></div></th>
+          <th><div class="cal-platform-head"><span class="cal-p-badge" style="background:#D4A72C;color:#0a0a0a;">STR</span><span>STORY</span></div></th>
+          <th><div class="cal-platform-head"><span class="cal-p-badge" style="background:#6B7280;">TXT</span><span>METİN</span></div></th>
         </tr>
       </thead>
       <tbody id="calTbody"></tbody>
@@ -867,15 +879,26 @@ select{
         <label class="cal-platform-check" data-platform="fb"><input type="checkbox" value="fb"><span class="cal-p-badge" style="background:#4B7BD1;">FB</span>Facebook</label>
         <label class="cal-platform-check" data-platform="tt"><input type="checkbox" value="tt"><span class="cal-p-badge" style="background:#3FC9D1;color:#0a0a0a;">TT</span>TikTok</label>
       </div>
+      <div class="cal-format-divider">Diğer format türleri</div>
+      <div class="cal-platform-checks">
+        <label class="cal-platform-check" data-platform="ig_car"><input type="checkbox" value="ig_car"><span class="cal-p-badge" style="background:#9C4FBF;">IGC</span>IG Carousel</label>
+        <label class="cal-platform-check" data-platform="fb_car"><input type="checkbox" value="fb_car"><span class="cal-p-badge" style="background:#5D7BC7;">FBC</span>FB Carousel</label>
+        <label class="cal-platform-check" data-platform="story"><input type="checkbox" value="story"><span class="cal-p-badge" style="background:#D4A72C;color:#0a0a0a;">STR</span>Story</label>
+        <label class="cal-platform-check" data-platform="fb_text"><input type="checkbox" value="fb_text"><span class="cal-p-badge" style="background:#6B7280;">TXT</span>Metin Postu</label>
+      </div>
     </div>
     <div class="field" id="calPlatformSingleWrap" style="display:none;">
       <label>Platform</label>
       <select id="cal_platform">
         <option value="yt">YouTube (Uzun Video)</option>
         <option value="yts">YouTube Shorts</option>
-        <option value="ig">Instagram</option>
-        <option value="fb">Facebook</option>
+        <option value="ig">Instagram (Video/Reel)</option>
+        <option value="fb">Facebook (Video)</option>
         <option value="tt">TikTok</option>
+        <option value="ig_car">Instagram Carousel</option>
+        <option value="fb_car">Facebook Carousel</option>
+        <option value="story">Story (IG/FB)</option>
+        <option value="fb_text">Facebook Metin Postu</option>
       </select>
     </div>
     <div class="field">
@@ -2117,10 +2140,10 @@ async function persistNow(retriesLeft){
 // ============================================================
 // YAYIN TAKVİMİ (Calendar)
 // ============================================================
-const CAL_LABELS = {yt:"YT", yts:"YTS", ig:"IG", tt:"TT", fb:"FB"};
-const CAL_PLATFORM_NAMES = {yt:"YouTube (Uzun Video)", yts:"YouTube Shorts", ig:"Instagram", tt:"TikTok", fb:"Facebook"};
-const CAL_PLATFORM_COLORS = {yt:"#D64545", yts:"#E8632B", ig:"#C1447E", tt:"#3FC9D1", fb:"#4B7BD1"};
-const CAL_PLATFORM_FIELD = {yt:"captionYouTube", yts:"captionShorts", ig:"captionInstagram", fb:"captionFacebook", tt:"captionInstagram"};
+const CAL_LABELS = {yt:"YT", yts:"YTS", ig:"IG", tt:"TT", fb:"FB", ig_car:"IGC", fb_car:"FBC", story:"STR", fb_text:"TXT"};
+const CAL_PLATFORM_NAMES = {yt:"YouTube (Uzun Video)", yts:"YouTube Shorts", ig:"Instagram (Video/Reel)", tt:"TikTok", fb:"Facebook (Video)", ig_car:"Instagram Carousel", fb_car:"Facebook Carousel", story:"Story (IG/FB)", fb_text:"Facebook Metin Postu"};
+const CAL_PLATFORM_COLORS = {yt:"#D64545", yts:"#E8632B", ig:"#C1447E", tt:"#3FC9D1", fb:"#4B7BD1", ig_car:"#9C4FBF", fb_car:"#5D7BC7", story:"#D4A72C", fb_text:"#6B7280"};
+const CAL_PLATFORM_FIELD = {yt:"captionYouTube", yts:"captionShorts", ig:"captionInstagram", fb:"captionFacebook", tt:"captionInstagram", ig_car:"captionInstagram", fb_car:"captionFacebook", story:"captionInstagram", fb_text:"captionFacebook"};
 const CAL_DOW = ["PZT","SAL","ÇAR","PER","CUM","CMT","PAZ"];
 const CAL_DOW_SHORT = ["Pzt","Sal","Çar","Per","Cum","Cmt","Paz"];
 
@@ -2238,7 +2261,7 @@ function renderCalTable(){
   const start = calWindowStart();
   const today = calWindowStart();
   const totalDays = 14;
-  const platformOrder = ['yt','yts','ig','fb','tt'];
+  const platformOrder = ['yt','yts','ig','fb','tt','ig_car','fb_car','story','fb_text'];
 
   for(let i=0;i<totalDays;i++){
     const d = new Date(start);
