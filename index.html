@@ -942,6 +942,10 @@ select{
       <label data-i18n="f_fieldnotes_label">Saha Notu (Neler Anlattım)</label>
       <textarea id="f_fieldNotes" data-i18n-placeholder="f_fieldnotes_ph" placeholder="Kamerada söylediklerinin kısa özeti — script bunun üzerinden yazılacak"></textarea>
     </div>
+    <div class="field">
+      <label style="color:var(--gold);" data-i18n="f_cautions_label">⚠️ Çekim Esnasında Dikkat Edilecek Noktalar</label>
+      <textarea id="f_shootingCautions" data-i18n-placeholder="f_cautions_ph" placeholder="Örn: burçlara restorasyon nedeniyle çıkılamıyor, zincir sahada yok (Deniz Müzesi'nde), güvenlik izin istiyor, en iyi ışık öğleden sonra vs."></textarea>
+    </div>
     <div class="field-row field-row-5">
       <div class="field">
         <label data-i18n="f_script_label">Script Hazır mı?</label>
@@ -1135,6 +1139,10 @@ select{
       <label data-i18n="f_fieldnotes_label">Saha Notu (Neler Anlattım)</label>
       <div id="detailFieldNotes" class="detail-text"></div>
     </div>
+    <div class="field" id="detailCautionsWrap">
+      <label style="color:var(--gold);" data-i18n="f_cautions_label">⚠️ Çekim Esnasında Dikkat Edilecek Noktalar</label>
+      <div id="detailCautions" class="detail-text"></div>
+    </div>
     <div class="modal-actions">
       <button class="btn" id="detailCloseBtn" data-i18n="btn_close">Kapat</button>
     </div>
@@ -1162,6 +1170,7 @@ const LANG = {
     prep_requested_badge: "⏳ HAZIRLIK BEKLİYOR", btn_trigger_prep: "🎬 Hazırlığı Tetikle", btn_prep_requested: "⏳ Tetiklendi",
     pkg_section_shotlist: "🎥 Sahada Çekilmesi Gerekenler", p_shotlist_ph: "Giriş çekimi, çıkış çekimi, kapanış planı, özellikle vurgulanacak detay çekimleri vs. — maddeler halinde",
     f_fieldnotes_label: "Saha Notu (Neler Anlattım)", f_fieldnotes_ph: "Kamerada söylediklerinin kısa özeti — script bunun üzerinden yazılacak",
+    f_cautions_label: "⚠️ Çekim Esnasında Dikkat Edilecek Noktalar", f_cautions_ph: "Örn: burçlara restorasyon nedeniyle çıkılamıyor, zincir sahada yok (Deniz Müzesi'nde), güvenlik izin istiyor, en iyi ışık öğleden sonra vs.",
     sort_default: "Sıra: Varsayılan", sort_date: "Sıra: Planlanan Tarihe Göre",
     view_card: "🗂 Kart Görünümü", view_row: "☰ Liste Görünümü",
     add_new: "+ Yeni Lokasyon",
@@ -1209,6 +1218,7 @@ const LANG = {
     prep_requested_badge: "⏳ PREP REQUESTED", btn_trigger_prep: "🎬 Trigger Prep", btn_prep_requested: "⏳ Triggered",
     pkg_section_shotlist: "🎥 On-Location Shot List", p_shotlist_ph: "Opening shot, closing shot, wrap-up, detail cutaways to emphasize, etc. — as a list",
     f_fieldnotes_label: "Field Notes (What I Said)", f_fieldnotes_ph: "Short summary of what you said on camera — the script will be based on this",
+    f_cautions_label: "⚠️ Important Points to Watch During Filming", f_cautions_ph: "e.g.: towers closed for restoration, chain not on-site (in Naval Museum), security requires permit, best light in the afternoon etc.",
     sort_default: "Sort: Default", sort_date: "Sort: Planned Date",
     view_card: "🗂 Card View", view_row: "☰ List View",
     add_new: "+ New Location",
@@ -1256,6 +1266,7 @@ const LANG = {
     prep_requested_badge: "⏳ ЗАПРОШЕНА ПОДГОТОВКА", btn_trigger_prep: "🎬 Запросить подготовку", btn_prep_requested: "⏳ Запрошено",
     pkg_section_shotlist: "🎥 Что снять на месте", p_shotlist_ph: "Начальный план, финальный план, закадровые вставки, детали для акцента и т.д. — списком",
     f_fieldnotes_label: "Заметки со съёмки (что я рассказал)", f_fieldnotes_ph: "Краткое содержание того, что ты сказал на камеру — сценарий будет основан на этом",
+    f_cautions_label: "⚠️ Важные моменты при съёмке", f_cautions_ph: "Напр.: башни закрыты на реставрацию, цепь не на месте (в Морском музее), нужен пропуск от охраны, лучший свет после обеда и т.д.",
     sort_default: "Сортировка: по умолчанию", sort_date: "Сортировка: по дате съёмки",
     view_card: "🗂 Вид карточек", view_row: "☰ Вид списка",
     add_new: "+ Новая локация",
@@ -1474,6 +1485,10 @@ function applyCorrections(){
 
   const rumeliHisariLoc = locations.find(l => l.name === "Rumeli Hisarı");
   if(rumeliHisariLoc){
+    if(!rumeliHisariLoc.shootingCautions){
+      rumeliHisariLoc.shootingCautions = "Burçlara restorasyon nedeniyle çıkılamıyor — alternatif yükseklik/manzara noktası kullanılmalı. Zincir sahada YOK, Deniz Müzesi'ne taşınmış — top/gülle yakın çekimiyle veya bilgi kartıyla telafi edilmeli. En iyi ışık gün batımına yakın (Boğaz'a bakan taraf altın saatte çok güçlü).";
+      changed = true;
+    }
     const hasYtEntry = calendarEvents.some(e => e.locationId === rumeliHisariLoc.id && e.platform === 'yt' && e.date === '2026-08-28');
     if(!hasYtEntry){
       calendarEvents.push({
@@ -2436,6 +2451,13 @@ function openDetail(id){
   }else{
     fieldNotesWrap.style.display = 'none';
   }
+  const cautionsWrap = document.getElementById('detailCautionsWrap');
+  if(l.shootingCautions){
+    cautionsWrap.style.display = '';
+    document.getElementById('detailCautions').textContent = l.shootingCautions;
+  }else{
+    cautionsWrap.style.display = 'none';
+  }
   document.getElementById('detailOverlay').classList.add('open');
 }
 document.getElementById('detailCloseBtn').addEventListener('click', ()=>{
@@ -2487,6 +2509,7 @@ function openModal(id){
     document.getElementById('f_permission').value = l.permission;
     document.getElementById('f_topic').value = l.topic;
     document.getElementById('f_fieldNotes').value = l.fieldNotes || '';
+    document.getElementById('f_shootingCautions').value = l.shootingCautions || '';
     document.getElementById('f_script').value = l.script || 'H';
     document.getElementById('f_scriptLink').value = l.scriptLink || '';
     document.getElementById('f_driveFolderLink').value = l.driveFolderLink || '';
@@ -2498,7 +2521,7 @@ function openModal(id){
     document.getElementById('deleteBtn').style.display = 'inline-block';
   }else{
     document.getElementById('modalTitle').textContent = t('modal_new');
-    ['f_name','f_district','f_address','f_topic','f_notes','f_scriptLink','f_mapsLink','f_fieldNotes','f_driveFolderLink'].forEach(f=>document.getElementById(f).value='');
+    ['f_name','f_district','f_address','f_topic','f_notes','f_scriptLink','f_mapsLink','f_fieldNotes','f_shootingCautions','f_driveFolderLink'].forEach(f=>document.getElementById(f).value='');
     document.getElementById('f_city').value = 'İstanbul';
     document.getElementById('f_format').value = 'Saha';
     document.getElementById('f_permission').value = 'H';
@@ -2534,6 +2557,7 @@ document.getElementById('saveBtn').addEventListener('click', async ()=>{
     permission: document.getElementById('f_permission').value,
     topic: document.getElementById('f_topic').value.trim(),
     fieldNotes: document.getElementById('f_fieldNotes').value.trim(),
+    shootingCautions: document.getElementById('f_shootingCautions').value.trim(),
     script: document.getElementById('f_script').value,
     scriptLink: document.getElementById('f_scriptLink').value.trim(),
     driveFolderLink: document.getElementById('f_driveFolderLink').value.trim(),
