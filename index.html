@@ -616,6 +616,29 @@ select{
   /* Package section titles wrap cleanly, JSON-paste box stays usable */
   .pkg-section-title{font-size:9.5px;}
   #p_jsonPaste{min-height:70px;}
+
+  /* Calendar (Dikey/Ay) grid: 7 columns is unusable on a phone — collapse
+     to a single-column agenda list instead, one full-width row per day. */
+  .cal-grid{grid-template-columns:1fr;}
+  .cal-dow{display:none;}
+  .cal-day{
+    aspect-ratio:auto;
+    overflow:visible;
+    padding:12px 14px;
+    min-height:0;
+  }
+  .cal-day-num{font-size:13px;margin-bottom:8px;}
+  .cal-chip-row{margin-bottom:6px;}
+  .cal-chip{padding:8px 10px;}
+  .cal-badge{width:30px;height:30px;font-size:10px;}
+  .cal-chip-time{font-size:10.5px;}
+  .cal-chip-mid{overflow:visible;}
+  .cal-chip-title{font-size:12px;white-space:normal;overflow:visible;text-overflow:clip;}
+  .cal-more-clickable{padding:8px 4px;font-size:11px;}
+
+  /* Yatay (Tablo) view: horizontal scroll instead of squeezing 9 columns */
+  .cal-table{table-layout:auto;min-width:820px;}
+  #calTableView{overflow-x:auto;-webkit-overflow-scrolling:touch;}
 }
 .backup-row{
   display:flex;
@@ -2278,7 +2301,8 @@ function renderCalGrid(){
 
     const num = document.createElement('div');
     num.className = 'cal-day-num';
-    num.textContent = `${d.getDate()} ${d.toLocaleString('tr-TR',{month:'short'})}`;
+    const dowLabel = CAL_DOW[(d.getDay()+6)%7];
+    num.textContent = `${d.getDate()} ${d.toLocaleString('tr-TR',{month:'short'})} · ${dowLabel}`;
     cell.appendChild(num);
 
     let dayEvents = calendarEvents.filter(e=>e.date===key).sort((a,b)=>(a.time||'').localeCompare(b.time||''));
