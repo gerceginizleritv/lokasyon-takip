@@ -1701,13 +1701,22 @@ function applyCorrections(){
         changed = true;
       }
     });
+  }
+
+  // TEMİZLİK (25 Ağustos 2026): Ahrida Sinagogu hiç çekilmedi (filmed:"H") —
+  // "Geceleri O Kuyudan Ses Geliyor" ve "Tavanda Devekuşu Yumurtası" takvim
+  // girişleri ile bunlara dayanan anketler yanlışlıkla (eski test/demo
+  // verisine dayanarak) oluşturulmuştu. Hepsini kaldır.
+  {
     const ahrida = locations.find(l => l.name === "Ahrida Sinagogu");
-    if(ahrida && ahrida.package && ahrida.package.pollCaptionFacebook && !ahrida.package.pollCaptionFacebook.includes('ANKET SEÇENEKLERİ')){
-      ahrida.package.pollCaptionFacebook =
-        "Ahrida Sinagogu'nun avlusundaki kuyudan geceleri ses geldiğini anlatanlar var. Yerel halk arasında yıllardır dolaşan bir söylenti bu — ama hiçbir kayıtta somut bir açıklama yok. #belgesel #tarih #ahridasinagogu #balat\n\n--- ANKET SEÇENEKLERİ ---\nA) Evet, bu hikayeyi duymuştum\nB) Hayır, ilk defa duyuyorum" +
-        "\n\n═══════════════\n\n" +
-        "Ahrida Sinagogu'nun tavanında neden bir devekuşu yumurtası asılı? Halk arasında \"örümcekleri uzak tutar\" denilir — bu inanış, Osmanlı döneminde birçok cami, kilise ve sinagogda gerçekten uygulanmış. #belgesel #tarih #ahridasinagogu #balat\n\n--- ANKET SEÇENEKLERİ ---\nA) Batıl inanç, işlevi yok\nB) Gerçekten işe yarayan bir yöntem";
-      changed = true;
+    if(ahrida){
+      const before = calendarEvents.length;
+      calendarEvents = calendarEvents.filter(e => e.locationId !== ahrida.id || e.platform !== 'fb_poll');
+      if(calendarEvents.length !== before) changed = true;
+      if(ahrida.package && ahrida.package.pollCaptionFacebook){
+        ahrida.package.pollCaptionFacebook = '';
+        changed = true;
+      }
     }
   }
 
@@ -1717,19 +1726,9 @@ function applyCorrections(){
     '2026-08-26', '13:00', 'Zeyrek — Halının Altında Ne Var? Anketi'
   );
   ensurePoll(
-    "Ahrida Sinagogu",
-    "Ahrida Sinagogu'nun avlusundaki kuyudan geceleri ses geldiğini anlatanlar var. Yerel halk arasında yıllardır dolaşan bir söylenti bu — ama hiçbir kayıtta somut bir açıklama yok. #belgesel #tarih #ahridasinagogu #balat\n\n--- ANKET SEÇENEKLERİ ---\nA) Evet, bu hikayeyi duymuştum\nB) Hayır, ilk defa duyuyorum",
-    '2026-08-30', '13:00', 'Ahrida — Geceleri O Kuyudan Ses Geliyor Anketi'
-  );
-  ensurePoll(
     "Süleymaniye Camii",
     "Süleymaniye Camii'nin duvarlarında gizlenmiş yüzlerce toprak küp var — rastgele değil, sesi güçlendirmek için özenle yerleştirilmiş. Mimar Sinan'ın akustik ustalığının en somut kanıtlarından biri bu. #belgesel #tarih #süleymaniyecamii #mimarsinan\n\n--- ANKET SEÇENEKLERİ ---\nA) Evet, bu küplerden birini fark etmiştim\nB) Hayır, hiç bilmiyordum",
     '2026-09-02', '13:00', 'Süleymaniye — Gizli Küpler Anketi'
-  );
-  ensurePoll(
-    "Ahrida Sinagogu",
-    "Ahrida Sinagogu'nun tavanında neden bir devekuşu yumurtası asılı? Halk arasında \"örümcekleri uzak tutar\" denilir — bu inanış, Osmanlı döneminde birçok cami, kilise ve sinagogda gerçekten uygulanmış. #belgesel #tarih #ahridasinagogu #balat\n\n--- ANKET SEÇENEKLERİ ---\nA) Batıl inanç, işlevi yok\nB) Gerçekten işe yarayan bir yöntem",
-    '2026-09-03', '13:00', 'Ahrida — Devekuşu Yumurtası Anketi'
   );
   ensurePoll(
     "Yedikule Zindanları",
