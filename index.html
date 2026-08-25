@@ -1209,6 +1209,24 @@ select{
     </div>
 
     <div class="pkg-section">
+      <div class="pkg-section-title" style="color:#9C4FBF;">🖼️ Carousel Caption'ları (video değil, görsel post içindir)</div>
+      <div class="field">
+        <div class="field-header">
+          <label>Instagram Carousel</label>
+          <button type="button" class="copy-btn" data-copy-target="p_carouselCaptionInstagram">📋 Kopyala</button>
+        </div>
+        <textarea id="p_carouselCaptionInstagram"></textarea>
+      </div>
+      <div class="field">
+        <div class="field-header">
+          <label>Facebook Carousel</label>
+          <button type="button" class="copy-btn" data-copy-target="p_carouselCaptionFacebook">📋 Kopyala</button>
+        </div>
+        <textarea id="p_carouselCaptionFacebook"></textarea>
+      </div>
+    </div>
+
+    <div class="pkg-section">
       <div class="pkg-section-title">📘 Facebook Native Yükleme</div>
       <div class="field">
         <div class="field-header">
@@ -1560,6 +1578,7 @@ function defaultPackage(){
     reelsCount:"", reelsTitles:"", reelsThumbPrompts:"",
     hashtags:"", tags:"", shortsTags:"", keywordNotes:"",
     captionShorts:"", captionYouTube:"", captionInstagram:"", captionFacebook:"",
+    carouselCaptionInstagram:"", carouselCaptionFacebook:"",
     fbTags:"", fbCoverPrompt:"",
     shotList:""
   };
@@ -1591,16 +1610,32 @@ function applyCorrections(){
 
   {
     const rh = locations.find(l => l.name === "Rumeli Hisarı");
-    if(rh && !calendarEvents.some(e => e.locationId === rh.id && e.date === '2026-08-27' && (e.platform === 'ig_car' || e.platform === 'fb_car'))){
-      ['ig_car','fb_car'].forEach((platform,i)=>{
-        calendarEvents.push({
-          id: 'cal_'+Date.now()+'_rh_car_'+i,
-          locationId: rh.id, platform,
-          title: 'Rumeli Hisarı — Öküz Derisi Rivayeti (Carousel)',
-          date: '2026-08-27', time: '20:00', uploaded: false
-        });
+    if(rh){
+      const hasIgCar = calendarEvents.some(e => e.locationId === rh.id && e.date === '2026-08-27' && e.platform === 'ig_car');
+      const hasFbCar = calendarEvents.some(e => e.locationId === rh.id && e.date === '2026-08-27' && e.platform === 'fb_car');
+      if(!hasIgCar){
+        calendarEvents.push({ id:'cal_'+Date.now()+'_rh_car_ig', locationId: rh.id, platform:'ig_car', title:'Rumeli Hisarı — Öküz Derisi Rivayeti (Carousel)', date:'2026-08-27', time:'21:00', uploaded:false });
+        changed = true;
+      }
+      if(!hasFbCar){
+        calendarEvents.push({ id:'cal_'+Date.now()+'_rh_car_fb', locationId: rh.id, platform:'fb_car', title:'Rumeli Hisarı — Öküz Derisi Rivayeti (Carousel)', date:'2026-08-27', time:'22:00', uploaded:false });
+        changed = true;
+      }
+      // Correct the time on these two specific entries if they were created
+      // earlier with the wrong (identical) 20:00 slot for both platforms.
+      calendarEvents.forEach(e=>{
+        if(e.locationId===rh.id && e.date==='2026-08-27' && e.platform==='ig_car' && e.time!=='21:00'){ e.time='21:00'; changed=true; }
+        if(e.locationId===rh.id && e.date==='2026-08-27' && e.platform==='fb_car' && e.time!=='22:00'){ e.time='22:00'; changed=true; }
       });
-      changed = true;
+      if(!rh.package) rh.package = defaultPackage();
+      if(!rh.package.carouselCaptionInstagram){
+        rh.package.carouselCaptionInstagram = "Bir imparatorun 4 ayda inşa ettirdiği bir kale var — ve bu kale, bir fetihten çok daha fazlasını anlatıyor.\n\n1452'de Fatih Sultan Mehmed, henüz tahta yeni çıkmış genç bir padişahken, Boğaz'ın en dar noktasına bu kaleyi kurdurdu. Karşı kıyıdaki Anadolu Hisarı ile birlikte, İstanbul'a deniz yoluyla gelecek her türlü yardımı kesmek için. İsmi bile bir tehdit: Boğazkesen.\n\nKalenin inşasını üç ayrı vezire, üç ayrı kuleyi paylaştırarak bölüştürdüğü, aralarında bir yarış yarattığı anlatılır — bu yüzden kaleyi gezerken üç farklı mimari üslup fark edebilirsiniz.\n\nPeki toprağı nasıl aldı? Rivayete göre Bizans'tan sadece \"bir öküz derisi kadar\" yer istemiş, sonra deriyi ince şeritler halinde kesip koca bir alanı çevirmiş. Bu kesin bir kayıt mı, yoksa sonradan süslenmiş bir efsane mi — kanalımızda hep dediğimiz gibi, ikisini birbirinden ayırmaya çalışıyoruz.\n\nYarın akşam 20:00'de, Rumeli Hisarı'nın tam hikayesi kanalımızda. 👇\n\nRivayet değil, kayıt.\n\n#belgesel #tarih #istanbul #rumelihisarı #tarihidedektif #fatihsultanmehmet #osmanlıtarihi #boğazkesen #istanbulfethi #istanbultarihi #konstantinopolis #istanbulgezi #tarihmerakı #gizemlitarih #unutulmuştarih #istanbulboğazı #keşifgezisi #rivayetdeğilkayıt #gerceginizleritv";
+        changed = true;
+      }
+      if(!rh.package.carouselCaptionFacebook){
+        rh.package.carouselCaptionFacebook = "Bir imparatorun 4 ayda inşa ettirdiği bir kale var — ve bu kale, bir fetihten çok daha fazlasını anlatıyor.\n\n1452'de Fatih Sultan Mehmed, henüz tahta yeni çıkmış genç bir padişahken, Boğaz'ın en dar noktasına bu kaleyi kurdurdu. İsmi bile bir tehdit: Boğazkesen.\n\nKalenin inşasını üç ayrı vezire, üç ayrı kuleyi paylaştırarak bölüştürdüğü, aralarında bir yarış yarattığı anlatılır. Peki toprağı nasıl aldı? Rivayete göre Bizans'tan sadece \"bir öküz derisi kadar\" yer istemiş, sonra deriyi ince şeritler halinde kesip koca bir alanı çevirmiş.\n\nBu kesin bir kayıt mı, yoksa sonradan süslenmiş bir efsane mi? Yarın akşam 20:00'de tam hikaye kanalımızda.\n\nİzlemek isteyenler için: [YouTube video linki — yarın akşam 20:00'da yayında]\n\nBu gizemi ilk kez duyan bir arkadaşın varsa, onu da etiketle.\n\n#belgesel #tarih";
+        changed = true;
+      }
     }
   }
   {
@@ -2241,7 +2276,7 @@ async function persistNow(retriesLeft){
 const CAL_LABELS = {yt:"YT", yts:"YTS", ig:"IG", tt:"TT", fb:"FB", ig_car:"IGC", fb_car:"FBC", story:"STR", fb_text:"TXT"};
 const CAL_PLATFORM_NAMES = {yt:"YouTube (Uzun Video)", yts:"YouTube Shorts", ig:"Instagram (Video/Reel)", tt:"TikTok", fb:"Facebook (Video)", ig_car:"Instagram Carousel", fb_car:"Facebook Carousel", story:"Story (IG/FB)", fb_text:"Facebook Metin Postu"};
 const CAL_PLATFORM_COLORS = {yt:"#D64545", yts:"#E8632B", ig:"#C1447E", tt:"#3FC9D1", fb:"#4B7BD1", ig_car:"#9C4FBF", fb_car:"#5D7BC7", story:"#D4A72C", fb_text:"#6B7280"};
-const CAL_PLATFORM_FIELD = {yt:"captionYouTube", yts:"captionShorts", ig:"captionInstagram", fb:"captionFacebook", tt:"captionInstagram", ig_car:"captionInstagram", fb_car:"captionFacebook", story:"captionInstagram", fb_text:"captionFacebook"};
+const CAL_PLATFORM_FIELD = {yt:"captionYouTube", yts:"captionShorts", ig:"captionInstagram", fb:"captionFacebook", tt:"captionInstagram", ig_car:"carouselCaptionInstagram", fb_car:"carouselCaptionFacebook", story:"captionInstagram", fb_text:"captionFacebook"};
 const CAL_DOW = ["PZT","SAL","ÇAR","PER","CUM","CMT","PAZ"];
 const CAL_DOW_SHORT = ["Pzt","Sal","Çar","Per","Cum","Cmt","Paz"];
 
@@ -3117,6 +3152,8 @@ function openPkgModal(id){
   document.getElementById('p_captionYouTube').value = l.package.captionYouTube;
   document.getElementById('p_captionInstagram').value = l.package.captionInstagram;
   document.getElementById('p_captionFacebook').value = l.package.captionFacebook;
+  document.getElementById('p_carouselCaptionInstagram').value = l.package.carouselCaptionInstagram || '';
+  document.getElementById('p_carouselCaptionFacebook').value = l.package.carouselCaptionFacebook || '';
   document.getElementById('p_fbTags').value = l.package.fbTags;
   document.getElementById('p_fbCoverPrompt').value = l.package.fbCoverPrompt;
   document.getElementById('pkgOverlay').classList.add('open');
@@ -3144,6 +3181,7 @@ document.getElementById('pkgFillFromJsonBtn').addEventListener('click', ()=>{
     hashtags:'p_hashtags', tags:'p_tags', shortsTags:'p_shortsTags', keywordNotes:'p_keywordNotes',
     captionShorts:'p_captionShorts', captionYouTube:'p_captionYouTube',
     captionInstagram:'p_captionInstagram', captionFacebook:'p_captionFacebook',
+    carouselCaptionInstagram:'p_carouselCaptionInstagram', carouselCaptionFacebook:'p_carouselCaptionFacebook',
     fbTags:'p_fbTags', fbCoverPrompt:'p_fbCoverPrompt'
   };
   let filled = 0;
@@ -3176,6 +3214,8 @@ document.getElementById('pkgSaveBtn').addEventListener('click', async ()=>{
     captionYouTube: document.getElementById('p_captionYouTube').value,
     captionInstagram: document.getElementById('p_captionInstagram').value,
     captionFacebook: document.getElementById('p_captionFacebook').value,
+    carouselCaptionInstagram: document.getElementById('p_carouselCaptionInstagram').value,
+    carouselCaptionFacebook: document.getElementById('p_carouselCaptionFacebook').value,
     fbTags: document.getElementById('p_fbTags').value,
     fbCoverPrompt: document.getElementById('p_fbCoverPrompt').value
   };
