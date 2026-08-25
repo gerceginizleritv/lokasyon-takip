@@ -1640,16 +1640,30 @@ function applyCorrections(){
   }
   {
     const kariye = locations.find(l => l.name === "Kariye (Chora)");
-    if(kariye && !calendarEvents.some(e => e.locationId === kariye.id && e.date === '2026-08-29' && (e.platform === 'ig_car' || e.platform === 'fb_car'))){
-      ['ig_car','fb_car'].forEach((platform,i)=>{
-        calendarEvents.push({
-          id: 'cal_'+Date.now()+'_kariye_car_'+i,
-          locationId: kariye.id, platform,
-          title: 'Kariye — Bu Haftanın Mozaik Gizemleri (Carousel)',
-          date: '2026-08-29', time: '20:00', uploaded: false
-        });
+    if(kariye){
+      const hasIgCar = calendarEvents.some(e => e.locationId === kariye.id && e.date === '2026-08-29' && e.platform === 'ig_car');
+      const hasFbCar = calendarEvents.some(e => e.locationId === kariye.id && e.date === '2026-08-29' && e.platform === 'fb_car');
+      if(!hasIgCar){
+        calendarEvents.push({ id:'cal_'+Date.now()+'_kariye_car_ig', locationId: kariye.id, platform:'ig_car', title:'Kariye — Bu Haftanın Mozaik Gizemleri (Carousel)', date:'2026-08-29', time:'21:00', uploaded:false });
+        changed = true;
+      }
+      if(!hasFbCar){
+        calendarEvents.push({ id:'cal_'+Date.now()+'_kariye_car_fb', locationId: kariye.id, platform:'fb_car', title:'Kariye — Bu Haftanın Mozaik Gizemleri (Carousel)', date:'2026-08-29', time:'22:00', uploaded:false });
+        changed = true;
+      }
+      calendarEvents.forEach(e=>{
+        if(e.locationId===kariye.id && e.date==='2026-08-29' && e.platform==='ig_car' && e.time!=='21:00'){ e.time='21:00'; changed=true; }
+        if(e.locationId===kariye.id && e.date==='2026-08-29' && e.platform==='fb_car' && e.time!=='22:00'){ e.time='22:00'; changed=true; }
       });
-      changed = true;
+      if(!kariye.package) kariye.package = defaultPackage();
+      if(!kariye.package.carouselCaptionInstagram){
+        kariye.package.carouselCaptionInstagram = "14. yüzyılda yeniden inşa edilen Kariye'nin (Chora Manastırı) duvarlarında, Bizans döneminin en zengin mozaik ve fresk programı saklı.\n\nBu hafta kanalımızda Kariye'nin üç farklı gizemini ayrı ayrı anlatıyoruz: farklı dini geleneklerde de tekrar eden \"tanıdık\" bir sahne, Moğol sarayına gönderildiği düşünülen hüzünlü bir Bizans prensesinin portresi, ve kırılan kapılarla düşen zincirleri betimleyen çarpıcı bir sahne.\n\nHiçbiri kesin bir kimlik taşımıyor — mozaiklerin çoğunda isim yazan bir kitabe yok, sanat tarihçileri hala tartışıyor. Biz de bunları kesinlik iddia etmeden, birer olasılık olarak sunuyoruz.\n\nSizce bu hafta hangi mozaik en çok dikkatinizi çekecek? 👇\n\nRivayet değil, kayıt.\n\n#belgesel #tarih #istanbul #kariye #chora #tarihidedektif #bizanstarihi #mozaik #istanbultarihi #fatih #osmanlıtarihi #konstantinopolis #istanbulgezi #tarihmerakı #gizemlitarih #unutulmuştarih #istanbulsirlari #keşifgezisi #rivayetdeğilkayıt #gerceginizleritv";
+        changed = true;
+      }
+      if(!kariye.package.carouselCaptionFacebook){
+        kariye.package.carouselCaptionFacebook = "14. yüzyılda yeniden inşa edilen Kariye'nin (Chora Manastırı) duvarlarında, Bizans döneminin en zengin mozaik ve fresk programı saklı.\n\nBu hafta kanalımızda Kariye'nin üç farklı gizemini ayrı ayrı anlatıyoruz: farklı dini geleneklerde de tekrar eden \"tanıdık\" bir sahne, Moğol sarayına gönderildiği düşünülen hüzünlü bir Bizans prensesinin portresi, ve kırılan kapılarla düşen zincirleri betimleyen çarpıcı bir sahne.\n\nHiçbiri kesin bir kimlik taşımıyor — sanat tarihçileri hala tartışıyor. Biz de bunları kesinlik iddia etmeden sunuyoruz.\n\nSizce bu hafta hangi mozaik en çok dikkatinizi çekecek? Yorumlarda buluşalım.\n\nBu gizemi ilk kez duyan bir arkadaşın varsa, onu da etiketle.\n\n#belgesel #tarih";
+        changed = true;
+      }
     }
   }
 
