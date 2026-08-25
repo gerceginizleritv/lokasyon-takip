@@ -1679,34 +1679,61 @@ function applyCorrections(){
     }
   }
 
+  // FIX (25 Ağustos 2026): ilk üretilen 5 anketin gerçek A/B şıkları yoktu,
+  // sadece soru cümlesi vardı. "ANKET SEÇENEKLERİ" işareti yoksa tam metni
+  // düzeltilmiş haliyle değiştir. Ahrida iki anket içerdiği için ayrı ele alınır.
+  {
+    const fixes = [
+      { name: "Zeyrek Camii", text: "Zeyrek Camii'nin halısının altında ne olduğunu hiç merak ettiniz mi? Yüzyıllar önce döşenmiş orijinal Doğu Roma (Bizans literatüründeki adıyla) taban süslemeleri, bugün ziyaretçilerin ayakları altında, halının hemen altında duruyor. #belgesel #tarih #zeyrekcamii\n\n--- ANKET SEÇENEKLERİ ---\nA) Evet, halının altına baktım/gördüm\nB) Hayır, hiç fark etmemiştim" },
+      { name: "Süleymaniye Camii", text: "Süleymaniye Camii'nin duvarlarında gizlenmiş yüzlerce toprak küp var — rastgele değil, sesi güçlendirmek için özenle yerleştirilmiş. Mimar Sinan'ın akustik ustalığının en somut kanıtlarından biri bu. #belgesel #tarih #süleymaniyecamii #mimarsinan\n\n--- ANKET SEÇENEKLERİ ---\nA) Evet, bu küplerden birini fark etmiştim\nB) Hayır, hiç bilmiyordum" },
+      { name: "Yedikule Zindanları", text: "Yedikule Zindanları'nda bir Mısır mumyası olduğu iddiası internette dolaşıyor — ama biz bu iddianın belgeli bir kaynağına ulaşamadık. Kaynağı olan varsa yorumlarda paylaşsın. #belgesel #tarih #yedikule\n\n--- ANKET SEÇENEKLERİ ---\nA) Gerçek, belgeli bir olay\nB) Sonradan uydurulmuş bir efsane" },
+      { name: "Kariye (Chora)", text: "Kariye'deki en çarpıcı sahnelerden biri: kırılan kapılar, düşen zincirler. Doğu Roma (Bizans literatüründeki adıyla) sanatında bu genelde bir kurtuluş anını simgeler. #belgesel #tarih #kariye #chora\n\n--- ANKET SEÇENEKLERİ ---\nA) Etkilendim, uzun süre baktım\nB) Fark etmeden geçmiştim" },
+    ];
+    fixes.forEach(f=>{
+      const loc = locations.find(l => l.name === f.name);
+      if(loc && loc.package && loc.package.pollCaptionFacebook && !loc.package.pollCaptionFacebook.includes('ANKET SEÇENEKLERİ')){
+        loc.package.pollCaptionFacebook = f.text;
+        changed = true;
+      }
+    });
+    const ahrida = locations.find(l => l.name === "Ahrida Sinagogu");
+    if(ahrida && ahrida.package && ahrida.package.pollCaptionFacebook && !ahrida.package.pollCaptionFacebook.includes('ANKET SEÇENEKLERİ')){
+      ahrida.package.pollCaptionFacebook =
+        "Ahrida Sinagogu'nun avlusundaki kuyudan geceleri ses geldiğini anlatanlar var. Yerel halk arasında yıllardır dolaşan bir söylenti bu — ama hiçbir kayıtta somut bir açıklama yok. #belgesel #tarih #ahridasinagogu #balat\n\n--- ANKET SEÇENEKLERİ ---\nA) Evet, bu hikayeyi duymuştum\nB) Hayır, ilk defa duyuyorum" +
+        "\n\n═══════════════\n\n" +
+        "Ahrida Sinagogu'nun tavanında neden bir devekuşu yumurtası asılı? Halk arasında \"örümcekleri uzak tutar\" denilir — bu inanış, Osmanlı döneminde birçok cami, kilise ve sinagogda gerçekten uygulanmış. #belgesel #tarih #ahridasinagogu #balat\n\n--- ANKET SEÇENEKLERİ ---\nA) Batıl inanç, işlevi yok\nB) Gerçekten işe yarayan bir yöntem";
+      changed = true;
+    }
+  }
+
   ensurePoll(
     "Zeyrek Camii",
-    "Zeyrek Camii'nin halısının altında ne olduğunu hiç merak ettiniz mi? Yüzyıllar önce döşenmiş orijinal Doğu Roma (Bizans literatüründeki adıyla) taban süslemeleri, bugün ziyaretçilerin ayakları altında, halının hemen altında duruyor. Siz halının altına hiç bakabildiniz mi? #belgesel #tarih #zeyrekcamii",
+    "Zeyrek Camii'nin halısının altında ne olduğunu hiç merak ettiniz mi? Yüzyıllar önce döşenmiş orijinal Doğu Roma (Bizans literatüründeki adıyla) taban süslemeleri, bugün ziyaretçilerin ayakları altında, halının hemen altında duruyor. #belgesel #tarih #zeyrekcamii\n\n--- ANKET SEÇENEKLERİ ---\nA) Evet, halının altına baktım/gördüm\nB) Hayır, hiç fark etmemiştim",
     '2026-08-26', '13:00', 'Zeyrek — Halının Altında Ne Var? Anketi'
   );
   ensurePoll(
     "Ahrida Sinagogu",
-    "Ahrida Sinagogu'nun avlusundaki kuyudan geceleri ses geldiğini anlatanlar var. Yerel halk arasında yıllardır dolaşan bir söylenti bu — ama hiçbir kayıtta, hiçbir tanıklıkta somut bir açıklama yok. Siz böyle bir hikaye duydunuz mu? #belgesel #tarih #ahridasinagogu #balat",
+    "Ahrida Sinagogu'nun avlusundaki kuyudan geceleri ses geldiğini anlatanlar var. Yerel halk arasında yıllardır dolaşan bir söylenti bu — ama hiçbir kayıtta somut bir açıklama yok. #belgesel #tarih #ahridasinagogu #balat\n\n--- ANKET SEÇENEKLERİ ---\nA) Evet, bu hikayeyi duymuştum\nB) Hayır, ilk defa duyuyorum",
     '2026-08-30', '13:00', 'Ahrida — Geceleri O Kuyudan Ses Geliyor Anketi'
   );
   ensurePoll(
     "Süleymaniye Camii",
-    "Süleymaniye Camii'nin duvarlarında gizlenmiş yüzlerce toprak küp var — rastgele değil, sesi güçlendirmek için özenle yerleştirilmiş. Mimar Sinan'ın akustik ustalığının en somut kanıtlarından biri bu. Siz Süleymaniye'de bu küplerden birini fark ettiniz mi? #belgesel #tarih #süleymaniyecamii #mimarsinan",
+    "Süleymaniye Camii'nin duvarlarında gizlenmiş yüzlerce toprak küp var — rastgele değil, sesi güçlendirmek için özenle yerleştirilmiş. Mimar Sinan'ın akustik ustalığının en somut kanıtlarından biri bu. #belgesel #tarih #süleymaniyecamii #mimarsinan\n\n--- ANKET SEÇENEKLERİ ---\nA) Evet, bu küplerden birini fark etmiştim\nB) Hayır, hiç bilmiyordum",
     '2026-09-02', '13:00', 'Süleymaniye — Gizli Küpler Anketi'
   );
   ensurePoll(
     "Ahrida Sinagogu",
-    "Ahrida Sinagogu'nun tavanında neden bir devekuşu yumurtası asılı? Halk arasında \"örümcekleri uzak tutar\" denilir — bu inanış, Osmanlı döneminde birçok cami, kilise ve sinagogda gerçekten uygulanmış. Peki bu sadece bir batıl inanç mı, yoksa işe yarayan bir yöntem mi? #belgesel #tarih #ahridasinagogu #balat",
+    "Ahrida Sinagogu'nun tavanında neden bir devekuşu yumurtası asılı? Halk arasında \"örümcekleri uzak tutar\" denilir — bu inanış, Osmanlı döneminde birçok cami, kilise ve sinagogda gerçekten uygulanmış. #belgesel #tarih #ahridasinagogu #balat\n\n--- ANKET SEÇENEKLERİ ---\nA) Batıl inanç, işlevi yok\nB) Gerçekten işe yarayan bir yöntem",
     '2026-09-03', '13:00', 'Ahrida — Devekuşu Yumurtası Anketi'
   );
   ensurePoll(
     "Yedikule Zindanları",
-    "Yedikule Zindanları'nda bir Mısır mumyası olduğu iddiası internette dolaşıyor — ama biz bu iddianın belgeli bir kaynağına ulaşamadık. Siz böyle bir şey duydunuz mu, yoksa bu da mı sonradan uydurulmuş bir efsane? Kaynağı olan varsa yorumlarda paylaşsın. #belgesel #tarih #yedikule",
+    "Yedikule Zindanları'nda bir Mısır mumyası olduğu iddiası internette dolaşıyor — ama biz bu iddianın belgeli bir kaynağına ulaşamadık. Kaynağı olan varsa yorumlarda paylaşsın. #belgesel #tarih #yedikule\n\n--- ANKET SEÇENEKLERİ ---\nA) Gerçek, belgeli bir olay\nB) Sonradan uydurulmuş bir efsane",
     '2026-09-05', '13:00', 'Yedikule — Mısır Mumyası Anketi'
   );
   ensurePoll(
     "Kariye (Chora)",
-    "Kariye'deki en çarpıcı sahnelerden biri: kırılan kapılar, düşen zincirler. Doğu Roma (Bizans literatüründeki adıyla) sanatında bu genelde bir kurtuluş anını simgeler. Siz bu sahneyi ilk gördüğünüzde ne hissettiniz? #belgesel #tarih #kariye #chora",
+    "Kariye'deki en çarpıcı sahnelerden biri: kırılan kapılar, düşen zincirler. Doğu Roma (Bizans literatüründeki adıyla) sanatında bu genelde bir kurtuluş anını simgeler. #belgesel #tarih #kariye #chora\n\n--- ANKET SEÇENEKLERİ ---\nA) Etkilendim, uzun süre baktım\nB) Fark etmeden geçmiştim",
     '2026-09-06', '13:00', 'Kariye — Kırılan Kapılar Anketi'
   );
 
