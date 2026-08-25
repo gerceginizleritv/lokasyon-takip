@@ -1277,6 +1277,18 @@ select{
     </div>
 
     <div class="pkg-section">
+      <div class="pkg-section-title" style="color:#D4A72C;">🎬 "Bunu Biliyor Muydunuz?" Story</div>
+      <div class="pkg-hint">Story'lerde caption yok — bu alan ekran metni + sinematik video üretim prompt'unu birlikte içerir.</div>
+      <div class="field">
+        <div class="field-header">
+          <label>Ekran Metni + Video Prompt</label>
+          <button type="button" class="copy-btn" data-copy-target="p_storyKnowledgeText">📋 Kopyala</button>
+        </div>
+        <textarea id="p_storyKnowledgeText" placeholder="BUNU BİLİYOR MUYDUNUZ? ... + VİDEO PROMPT'U"></textarea>
+      </div>
+    </div>
+
+    <div class="pkg-section">
       <div class="pkg-section-title">📘 Facebook Native Yükleme</div>
       <div class="field">
         <div class="field-header">
@@ -1630,6 +1642,7 @@ function defaultPackage(){
     captionShorts:"", captionYouTube:"", captionInstagram:"", captionFacebook:"",
     carouselCaptionInstagram:"", carouselCaptionFacebook:"",
     pollCaptionFacebook:"",
+    storyKnowledgeText:"",
     fbTags:"", fbCoverPrompt:"",
     shotList:""
   };
@@ -1683,6 +1696,86 @@ function applyCorrections(){
       changed = true;
     }
   }
+
+  // "Bunu Biliyor Muydunuz?" Story serisi (25 Ağustos 2026'dan itibaren,
+  // Pzt/Çar/Cum 10:00 ritmi) — her lokasyon için ekran metni + sinematik
+  // video üretim prompt'u tek alanda (storyKnowledgeText) birlikte tutulur.
+  function ensureStory(locName, screenText, videoPrompt, date, time, calendarTitle){
+    const loc = locations.find(l => l.name === locName);
+    if(!loc) return;
+    if(!loc.package) loc.package = defaultPackage();
+    const fullText = "EKRAN METNİ:\n" + screenText + "\n\n--- VİDEO PROMPT'U ---\n" + videoPrompt;
+    if(!loc.package.storyKnowledgeText || !loc.package.storyKnowledgeText.includes(screenText.slice(0,25))){
+      loc.package.storyKnowledgeText = fullText;
+      changed = true;
+    }
+    const existing = calendarEvents.filter(e => e.locationId === loc.id && e.platform === 'story' && e.date === date);
+    if(existing.length === 0){
+      calendarEvents.push({ id:'cal_'+Date.now()+'_story_'+Math.random().toString(36).slice(2,8), locationId: loc.id, platform:'story', title: calendarTitle, date, time, uploaded:false });
+      changed = true;
+    } else if(existing.length > 1){
+      for(let i=1;i<existing.length;i++){
+        const idx = calendarEvents.indexOf(existing[i]);
+        if(idx !== -1) calendarEvents.splice(idx,1);
+      }
+      changed = true;
+    }
+  }
+
+  ensureStory(
+    "Süleymaniye Camii",
+    "BUNU BİLİYOR MUYDUNUZ?\nSüleymaniye Camii'nde Mimar Sinan'ın işlediği bir baykuş figürü var — ve ilginç bir tesadüf: Mimar Sinan Üniversitesi'nin logosu da bir baykuş.",
+    "Cinematic slow push-in shot exploring Süleymaniye Mosque's carved stone architectural details and dome interior. Warm golden interior light, fine dust particles visible in light shafts, soft atmospheric haze. Slow, deliberate camera movement — no sudden motion. Rich warm tones, shallow depth of field on ornamental details. Documentary-style cinematic realism, 9:16 vertical aspect ratio, no text, no lettering.",
+    '2026-08-31', '10:00', 'Süleymaniye — Baykuş Figürü Story'
+  );
+  ensureStory(
+    "Rumeli Hisarı",
+    "BUNU BİLİYOR MUYDUNUZ?\nRumeli Hisarı'nın üç kulesi, aralarında bir yarış yaratmak için üç ayrı vezire paylaştırılmış.",
+    "Cinematic slow aerial-style pan across Rumeli Hisarı's three towers rising above the Bosphorus, golden hour lighting, dramatic shadows shifting slowly across the stone walls. Smooth, gliding camera movement. Warm golden highlights against deep charcoal stone. Cinematic documentary realism, 9:16 vertical aspect ratio, no text, no lettering.",
+    '2026-09-02', '10:00', 'Rumeli Hisarı — Üç Kule Story'
+  );
+  ensureStory(
+    "Yerebatan Sarnıcı",
+    "BUNU BİLİYOR MUYDUNUZ?\nYerebatan Sarnıcı'ndaki ünlü Medusa başlarından biri neden ters duruyor, hâlâ tam olarak bilinmiyor.",
+    "Cinematic slow dolly shot moving toward a weathered ancient stone Medusa head column base partially submerged in still water, dim atmospheric underground lighting, soft reflections rippling on the water surface. Moody, mysterious atmosphere, deep shadows. Slow, deliberate pacing. Cinematic documentary realism, 9:16 vertical aspect ratio, no text, no lettering.",
+    '2026-09-04', '10:00', 'Yerebatan — Medusa Başı Story'
+  );
+  ensureStory(
+    "Binbirdirek Sarnıcı",
+    "BUNU BİLİYOR MUYDUNUZ?\nBinbirdirek Sarnıcı'nda 224 sütun var — ama yıllarca \"ters duran bir haç\" rivayeti daha çok konuşuldu.",
+    "Cinematic slow tracking shot moving through a forest of ancient stone columns in a dim underground cistern, moody atmospheric lighting from below, soft haze drifting through the space. Deep shadows, warm pinpoint highlights on column capitals. Slow, deliberate camera movement. Cinematic documentary realism, 9:16 vertical aspect ratio, no text, no lettering.",
+    '2026-09-07', '10:00', 'Binbirdirek — 224 Sütun Story'
+  );
+  ensureStory(
+    "Yedikule Zindanları",
+    "BUNU BİLİYOR MUYDUNUZ?\nYedikule'nin altın kaplı kapısı, fetihten sonra taşlarla örülüp tamamen kapatıldı.",
+    "Cinematic slow push-in on an ancient weathered stone gate section that has been visibly walled up with different, rougher masonry, dramatic late-afternoon side lighting casting long shadows across the texture. Slow, deliberate camera movement emphasizing the contrast in stonework. Cinematic documentary realism, 9:16 vertical aspect ratio, no text, no lettering.",
+    '2026-09-09', '10:00', 'Yedikule — Örülü Altın Kapı Story'
+  );
+  ensureStory(
+    "Kariye (Chora)",
+    "BUNU BİLİYOR MUYDUNUZ?\nKariye'deki mozaiklerin çoğunda kim olduğu yazılı değil — sanat tarihçileri hâlâ tartışıyor.",
+    "Cinematic slow pan across an ornate golden Byzantine mosaic ceiling with intricate geometric and figurative patterns, soft ambient interior light, gentle shimmer on the gold tesserae. Slow, reverent camera movement. Warm golden tones, atmospheric depth. Cinematic documentary realism, 9:16 vertical aspect ratio, no text, no lettering.",
+    '2026-09-11', '10:00', 'Kariye — İsimsiz Mozaikler Story'
+  );
+  ensureStory(
+    "Zeyrek Camii",
+    "BUNU BİLİYOR MUYDUNUZ?\nZeyrek Camii aslında tek yapı değil — üç ayrı kilisenin birleşiminden oluşuyor.",
+    "Cinematic slow wide reveal shot moving through the connected sections of an ancient Byzantine brick-and-stone building complex, warm afternoon light raking across the weathered exterior walls. Smooth, gliding camera movement revealing the structure's layered architecture. Cinematic documentary realism, 9:16 vertical aspect ratio, no text, no lettering.",
+    '2026-09-14', '10:00', 'Zeyrek — Üç Kilise Story'
+  );
+  ensureStory(
+    "Yoros Kalesi",
+    "BUNU BİLİYOR MUYDUNUZ?\nYoros Kalesi'nin bulunduğu tepe, antik Argonotlar efsanesinde de geçiyor.",
+    "Cinematic slow sweeping aerial-style shot over an ancient hilltop fortress overlooking the Bosphorus strait, dramatic golden-hour sky with scattered clouds, ships passing in the distance below. Smooth, majestic camera movement. Cinematic documentary realism, 9:16 vertical aspect ratio, no text, no lettering.",
+    '2026-09-16', '10:00', 'Yoros Kalesi — Argonotlar Story'
+  );
+  ensureStory(
+    "Mihrimah Sultan Camii",
+    "BUNU BİLİYOR MUYDUNUZ?\nMihrimah Sultan Camii'nin iki minaresinin, yılda iki kez ekinoks güneşiyle hizalandığı rivayet ediliyor.",
+    "Cinematic slow upward tilt shot starting from the mosque's stone base and rising along a single slender minaret against a warm golden sunset sky. Smooth, deliberate vertical camera movement. Rich warm tones, dramatic silhouette. Cinematic documentary realism, 9:16 vertical aspect ratio, no text, no lettering.",
+    '2026-09-18', '10:00', 'Mihrimah Sultan — Ekinoks Story'
+  );
 
   // FIX (25 Ağustos 2026): ilk üretilen 5 anketin gerçek A/B şıkları yoktu,
   // sadece soru cümlesi vardı. "ANKET SEÇENEKLERİ" işareti yoksa tam metni
@@ -2487,7 +2580,7 @@ async function persistNow(retriesLeft){
 const CAL_LABELS = {yt:"YT", yts:"YTS", ig:"IG", tt:"TT", fb:"FB", ig_car:"IGC", fb_car:"FBC", story:"STR", fb_text:"TXT", fb_poll:"ANK"};
 const CAL_PLATFORM_NAMES = {yt:"YouTube (Uzun Video)", yts:"YouTube Shorts", ig:"Instagram (Video/Reel)", tt:"TikTok", fb:"Facebook (Video)", ig_car:"Instagram Carousel", fb_car:"Facebook Carousel", story:"Story (IG/FB)", fb_text:"Facebook Metin Postu", fb_poll:"Facebook Anketi"};
 const CAL_PLATFORM_COLORS = {yt:"#D64545", yts:"#E8632B", ig:"#C1447E", tt:"#3FC9D1", fb:"#4B7BD1", ig_car:"#9C4FBF", fb_car:"#5D7BC7", story:"#D4A72C", fb_text:"#6B7280", fb_poll:"#2FA36B"};
-const CAL_PLATFORM_FIELD = {yt:"captionYouTube", yts:"captionShorts", ig:"captionInstagram", fb:"captionFacebook", tt:"captionInstagram", ig_car:"carouselCaptionInstagram", fb_car:"carouselCaptionFacebook", story:"captionInstagram", fb_text:"captionFacebook", fb_poll:"pollCaptionFacebook"};
+const CAL_PLATFORM_FIELD = {yt:"captionYouTube", yts:"captionShorts", ig:"captionInstagram", fb:"captionFacebook", tt:"captionInstagram", ig_car:"carouselCaptionInstagram", fb_car:"carouselCaptionFacebook", story:"storyKnowledgeText", fb_text:"captionFacebook", fb_poll:"pollCaptionFacebook"};
 const CAL_DOW = ["PZT","SAL","ÇAR","PER","CUM","CMT","PAZ"];
 const CAL_DOW_SHORT = ["Pzt","Sal","Çar","Per","Cum","Cmt","Paz"];
 
@@ -3429,6 +3522,7 @@ function openPkgModal(id){
   document.getElementById('p_carouselCaptionInstagram').value = l.package.carouselCaptionInstagram || '';
   document.getElementById('p_carouselCaptionFacebook').value = l.package.carouselCaptionFacebook || '';
   document.getElementById('p_pollCaptionFacebook').value = l.package.pollCaptionFacebook || '';
+  document.getElementById('p_storyKnowledgeText').value = l.package.storyKnowledgeText || '';
   document.getElementById('p_fbTags').value = l.package.fbTags;
   document.getElementById('p_fbCoverPrompt').value = l.package.fbCoverPrompt;
   document.getElementById('pkgOverlay').classList.add('open');
@@ -3458,6 +3552,7 @@ document.getElementById('pkgFillFromJsonBtn').addEventListener('click', ()=>{
     captionInstagram:'p_captionInstagram', captionFacebook:'p_captionFacebook',
     carouselCaptionInstagram:'p_carouselCaptionInstagram', carouselCaptionFacebook:'p_carouselCaptionFacebook',
     pollCaptionFacebook:'p_pollCaptionFacebook',
+    storyKnowledgeText:'p_storyKnowledgeText',
     fbTags:'p_fbTags', fbCoverPrompt:'p_fbCoverPrompt'
   };
   let filled = 0;
@@ -3493,6 +3588,7 @@ document.getElementById('pkgSaveBtn').addEventListener('click', async ()=>{
     carouselCaptionInstagram: document.getElementById('p_carouselCaptionInstagram').value,
     carouselCaptionFacebook: document.getElementById('p_carouselCaptionFacebook').value,
     pollCaptionFacebook: document.getElementById('p_pollCaptionFacebook').value,
+    storyKnowledgeText: document.getElementById('p_storyKnowledgeText').value,
     fbTags: document.getElementById('p_fbTags').value,
     fbCoverPrompt: document.getElementById('p_fbCoverPrompt').value
   };
