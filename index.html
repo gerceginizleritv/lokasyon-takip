@@ -1692,11 +1692,14 @@ function applyCorrections(){
       { name: "Zeyrek Camii", text: "Zeyrek Camii'nin halısının altında ne olduğunu hiç merak ettiniz mi? Yüzyıllar önce döşenmiş orijinal Doğu Roma (Bizans literatüründeki adıyla) taban süslemeleri, bugün ziyaretçilerin ayakları altında, halının hemen altında duruyor. #belgesel #tarih #zeyrekcamii\n\n--- ANKET SEÇENEKLERİ ---\nA) Evet, halının altına baktım/gördüm\nB) Hayır, hiç fark etmemiştim" },
       { name: "Süleymaniye Camii", text: "Süleymaniye Camii'nin duvarlarında gizlenmiş yüzlerce toprak küp var — rastgele değil, sesi güçlendirmek için özenle yerleştirilmiş. Mimar Sinan'ın akustik ustalığının en somut kanıtlarından biri bu. #belgesel #tarih #süleymaniyecamii #mimarsinan\n\n--- ANKET SEÇENEKLERİ ---\nA) Evet, bu küplerden birini fark etmiştim\nB) Hayır, hiç bilmiyordum" },
       { name: "Yedikule Zindanları", text: "Yedikule Zindanları'nda bir Mısır mumyası olduğu iddiası internette dolaşıyor — ama biz bu iddianın belgeli bir kaynağına ulaşamadık. Kaynağı olan varsa yorumlarda paylaşsın. #belgesel #tarih #yedikule\n\n--- ANKET SEÇENEKLERİ ---\nA) Gerçek, belgeli bir olay\nB) Sonradan uydurulmuş bir efsane" },
-      { name: "Kariye (Chora)", text: "Kariye'deki en çarpıcı sahnelerden biri: kırılan kapılar, düşen zincirler. Doğu Roma (Bizans literatüründeki adıyla) sanatında bu genelde bir kurtuluş anını simgeler. #belgesel #tarih #kariye #chora\n\n--- ANKET SEÇENEKLERİ ---\nA) Etkilendim, uzun süre baktım\nB) Fark etmeden geçmiştim" },
+      { name: "Kariye (Chora)", text: "Kariye'deki bu sahnede tasvir edilen olay sizce nedir? Doğu Roma (Bizans literatüründeki adıyla) sanatının en bilinen kompozisyonlarından biri. #belgesel #tarih #kariye #chora\n\n--- ANKET SEÇENEKLERİ ---\nA) Ölümün yenilgiye uğratılması, ruhların özgürleşmesi\nB) Bir savaş ya da fetih anı" },
     ];
     fixes.forEach(f=>{
       const loc = locations.find(l => l.name === f.name);
-      if(loc && loc.package && loc.package.pollCaptionFacebook && !loc.package.pollCaptionFacebook.includes('ANKET SEÇENEKLERİ')){
+      if(!loc || !loc.package || !loc.package.pollCaptionFacebook) return;
+      const needsGenericFix = !loc.package.pollCaptionFacebook.includes('ANKET SEÇENEKLERİ');
+      const isOldKariyeWording = f.name === "Kariye (Chora)" && loc.package.pollCaptionFacebook.includes('Etkilendim, uzun süre baktım');
+      if(needsGenericFix || isOldKariyeWording){
         loc.package.pollCaptionFacebook = f.text;
         changed = true;
       }
@@ -1737,7 +1740,7 @@ function applyCorrections(){
   );
   ensurePoll(
     "Kariye (Chora)",
-    "Kariye'deki en çarpıcı sahnelerden biri: kırılan kapılar, düşen zincirler. Doğu Roma (Bizans literatüründeki adıyla) sanatında bu genelde bir kurtuluş anını simgeler. #belgesel #tarih #kariye #chora\n\n--- ANKET SEÇENEKLERİ ---\nA) Etkilendim, uzun süre baktım\nB) Fark etmeden geçmiştim",
+    "Kariye'deki bu sahnede tasvir edilen olay sizce nedir? Doğu Roma (Bizans literatüründeki adıyla) sanatının en bilinen kompozisyonlarından biri. #belgesel #tarih #kariye #chora\n\n--- ANKET SEÇENEKLERİ ---\nA) Ölümün yenilgiye uğratılması, ruhların özgürleşmesi\nB) Bir savaş ya da fetih anı",
     '2026-09-06', '13:00', 'Kariye — Kırılan Kapılar Anketi'
   );
 
