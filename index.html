@@ -704,16 +704,19 @@ select{
 }
 .cal-toggle-btn:last-child{border-right:none;}
 .cal-toggle-btn.active{background:rgba(200,162,74,0.12);color:var(--gold);}
-.cal-legend{display:flex;gap:14px;margin-bottom:16px;flex-wrap:wrap;align-items:center;}
+.cal-legend{display:flex;gap:14px;margin-bottom:8px;flex-wrap:wrap;align-items:center;}
+.cal-legend.cal-status-row{margin-bottom:16px;}
 .cal-legend-item{display:flex;align-items:center;gap:6px;font-size:11px;color:var(--parchment-dim);font-family:'JetBrains Mono',monospace;cursor:pointer;padding:3px 6px;border:1px solid transparent;transition:all .12s;user-select:none;}
 .cal-legend-item:hover{border-color:var(--line);}
 .cal-legend-item.cal-filter-inactive{opacity:0.3;}
 .cal-legend-item.cal-filter-active-only{border-color:var(--gold);background:rgba(200,162,74,0.08);color:var(--parchment);}
 .cal-legend-reset{
-  font-size:10px;font-family:'JetBrains Mono',monospace;color:var(--gold-dim);
-  cursor:pointer;text-decoration:underline;padding:3px 6px;display:none;
+  font-size:10px;font-family:'JetBrains Mono',monospace;color:var(--line);
+  cursor:default;padding:3px 6px;text-decoration:none;
+  transition:all .12s;
 }
-.cal-legend-reset.cal-filter-on{display:inline-block;}
+.cal-legend-reset.cal-filter-on{color:var(--gold-dim);cursor:pointer;text-decoration:underline;}
+.cal-legend-reset.cal-filter-on:hover{color:var(--gold);}
 .cal-dot{width:9px;height:9px;border-radius:50%;display:inline-block;}
 .cal-legend-sep{width:1px;height:14px;background:var(--line);}
 .cal-mini-chip{display:inline-flex;align-items:center;gap:4px;padding:2px 7px;font-size:10px;font-family:'JetBrains Mono',monospace;}
@@ -911,8 +914,10 @@ select{
     <span class="cal-legend-item" data-platform="story"><span class="cal-dot" style="background:#D4A72C;"></span>Story</span>
     <span class="cal-legend-item" data-platform="fb_text"><span class="cal-dot" style="background:#6B7280;"></span>Metin Postu</span>
     <span class="cal-legend-item" data-platform="fb_poll"><span class="cal-dot" style="background:#2FA36B;"></span>Anket</span>
-    <span class="cal-legend-reset" id="calLegendReset">Tümünü Göster</span>
     <span class="cal-legend-sep"></span>
+    <span class="cal-legend-reset" id="calLegendReset">Tümünü Göster</span>
+  </div>
+  <div class="cal-legend cal-status-row">
     <span class="cal-mini-chip cal-planned">🕒 Planlandı</span>
     <span class="cal-mini-chip cal-ready">✓ Yüklendi</span>
     <span class="cal-mini-chip cal-live">● Yayında</span>
@@ -2893,6 +2898,7 @@ document.querySelectorAll('#calLegend .cal-legend-item').forEach(el=>{
   });
 });
 document.getElementById('calLegendReset').addEventListener('click', ()=>{
+  if(calActiveFilters.size === 0) return; // nothing to reset
   calActiveFilters.clear();
   updateLegendVisualState();
   renderCal();
