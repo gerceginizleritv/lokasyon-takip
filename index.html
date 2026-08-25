@@ -1705,7 +1705,10 @@ function applyCorrections(){
     if(!loc) return;
     if(!loc.package) loc.package = defaultPackage();
     const fullText = "EKRAN METNİ:\n" + screenText + "\n\n--- VİDEO PROMPT'U ---\n" + videoPrompt;
-    if(!loc.package.storyKnowledgeText || !loc.package.storyKnowledgeText.includes(screenText.slice(0,25))){
+    const missing = !loc.package.storyKnowledgeText || !loc.package.storyKnowledgeText.includes(screenText.slice(0,25));
+    // Prompt metni güncellendiyse (ekran metni aynı kalsa bile) eskiyi değiştir.
+    const promptOutdated = loc.package.storyKnowledgeText && !loc.package.storyKnowledgeText.includes(videoPrompt.slice(0,40));
+    if(missing || promptOutdated){
       loc.package.storyKnowledgeText = fullText;
       changed = true;
     }
@@ -1725,7 +1728,7 @@ function applyCorrections(){
   ensureStory(
     "Süleymaniye Camii",
     "BUNU BİLİYOR MUYDUNUZ?\nSüleymaniye Camii'nde Mimar Sinan'ın işlediği bir baykuş figürü var — ve ilginç bir tesadüf: Mimar Sinan Üniversitesi'nin logosu da bir baykuş.",
-    "Cinematic slow push-in shot exploring Süleymaniye Mosque's carved stone architectural details and dome interior. Warm golden interior light, fine dust particles visible in light shafts, soft atmospheric haze. Slow, deliberate camera movement — no sudden motion. Rich warm tones, shallow depth of field on ornamental details. Documentary-style cinematic realism, 9:16 vertical aspect ratio, no text, no lettering.",
+    "[EĞER GERÇEK BAYKUŞ OYMASININ FOTOĞRAFI VARSA, o görseli referans olarak Gemini'ye ekleyip aşağıdaki hareket/atmosfer talimatını kullan — düz metinden üretim, gerçek detayı birebir yakalamayabilir.]\n\nCinematic slow push-in shot revealing a carved stone owl-shaped architectural motif on a mosque wall — two round symmetrical eye-like carved circles above a triangular beak-like protrusion, classic stylized owl silhouette worked into Ottoman stone relief. Warm golden interior light grazing across the carved texture, fine dust particles visible in a light shaft, soft atmospheric haze. Slow, deliberate camera movement — no sudden motion. Rich warm tones, shallow depth of field. Documentary-style cinematic realism, 9:16 vertical aspect ratio, no text, no lettering.",
     '2026-08-31', '10:00', 'Süleymaniye — Baykuş Figürü Story'
   );
   ensureStory(
