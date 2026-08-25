@@ -1688,16 +1688,29 @@ function applyCorrections(){
         rh.package.pollCaptionFacebook = "Rumeli Hisarı'nın toprakları nasıl alındı?\n\nRivayete göre Fatih Sultan Mehmed, Bizans'tan sadece \"bir öküz derisi kadar\" yer istemiş — sonra deriyi ince şeritler halinde kesip koca bir alanı çevirmiş. Bu hikaye yüzyıllardır anlatılıyor, ama hiçbir dönemin resmi kaydında geçmiyor.\n\nSiz ne düşünüyorsunuz?\n\nRivayet değil, kayıt — ama bazen rivayetin kendisi de tarihin bir parçası oluyor. 👇\n\n#belgesel #tarih #rumelihisarı #fatihsultanmehmet\n\n--- ANKET SEÇENEKLERİ ---\nA) Gerçek bir diplomatik pazarlık hikayesi\nB) Sonradan süslenmiş bir halk efsanesi";
         changed = true;
       }
-      if(!calendarEvents.some(e => e.locationId === rh.id && e.date === '2026-08-31' && e.platform === 'fb_poll')){
+      // Fix: earlier logic could create a duplicate (new 08-31 entry PLUS
+      // moving the old 09-04 entry to 08-31 too). Collapse down to exactly
+      // one fb_poll entry for this location, correctly dated/timed.
+      const pollEvents = calendarEvents.filter(e => e.locationId === rh.id && e.platform === 'fb_poll');
+      if(pollEvents.length > 1){
+        // keep the first, drop the rest
+        for(let i=1;i<pollEvents.length;i++){
+          const idx = calendarEvents.indexOf(pollEvents[i]);
+          if(idx !== -1) calendarEvents.splice(idx,1);
+        }
+        changed = true;
+      }
+      const survivingPoll = calendarEvents.find(e => e.locationId === rh.id && e.platform === 'fb_poll');
+      if(survivingPoll){
+        if(survivingPoll.date !== '2026-08-31' || survivingPoll.time !== '13:00'){
+          survivingPoll.date = '2026-08-31';
+          survivingPoll.time = '13:00';
+          changed = true;
+        }
+      } else {
         calendarEvents.push({ id:'cal_'+Date.now()+'_rh_poll', locationId: rh.id, platform:'fb_poll', title:'Rumeli Hisarı — Öküz Derisi Rivayeti Anketi', date:'2026-08-31', time:'13:00', uploaded:false });
         changed = true;
       }
-      // Move the poll if it was already created on the old (too-late) date
-      calendarEvents.forEach(e=>{
-        if(e.locationId===rh.id && e.platform==='fb_poll' && e.date==='2026-09-04'){
-          e.date = '2026-08-31'; e.time = '13:00'; changed = true;
-        }
-      });
     }
   }
   {
