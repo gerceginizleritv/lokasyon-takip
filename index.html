@@ -1644,6 +1644,62 @@ function normalizeLocation(l){
 function applyCorrections(){
   let changed = false;
 
+  // Reusable helper: ensure a location has a poll caption + exactly one
+  // calendar entry for it on the given date/time (dedupes if run twice).
+  function ensurePoll(locName, captionText, date, time, calendarTitle){
+    const loc = locations.find(l => l.name === locName);
+    if(!loc) return;
+    if(!loc.package) loc.package = defaultPackage();
+    if(!loc.package.pollCaptionFacebook || !loc.package.pollCaptionFacebook.includes(captionText.slice(0,30))){
+      loc.package.pollCaptionFacebook = loc.package.pollCaptionFacebook
+        ? loc.package.pollCaptionFacebook + '\n\n═══════════════\n\n' + captionText
+        : captionText;
+      changed = true;
+    }
+    const existing = calendarEvents.filter(e => e.locationId === loc.id && e.platform === 'fb_poll' && e.date === date);
+    if(existing.length === 0){
+      calendarEvents.push({ id:'cal_'+Date.now()+'_poll_'+Math.random().toString(36).slice(2,8), locationId: loc.id, platform:'fb_poll', title: calendarTitle, date, time, uploaded:false });
+      changed = true;
+    } else if(existing.length > 1){
+      for(let i=1;i<existing.length;i++){
+        const idx = calendarEvents.indexOf(existing[i]);
+        if(idx !== -1) calendarEvents.splice(idx,1);
+      }
+      changed = true;
+    }
+  }
+
+  ensurePoll(
+    "Zeyrek Camii",
+    "Zeyrek Camii'nin halısının altında ne olduğunu hiç merak ettiniz mi? Yüzyıllar önce döşenmiş orijinal Doğu Roma (Bizans literatüründeki adıyla) taban süslemeleri, bugün ziyaretçilerin ayakları altında, halının hemen altında duruyor. Siz halının altına hiç bakabildiniz mi? #belgesel #tarih #zeyrekcamii",
+    '2026-08-26', '13:00', 'Zeyrek — Halının Altında Ne Var? Anketi'
+  );
+  ensurePoll(
+    "Ahrida Sinagogu",
+    "Ahrida Sinagogu'nun avlusundaki kuyudan geceleri ses geldiğini anlatanlar var. Yerel halk arasında yıllardır dolaşan bir söylenti bu — ama hiçbir kayıtta, hiçbir tanıklıkta somut bir açıklama yok. Siz böyle bir hikaye duydunuz mu? #belgesel #tarih #ahridasinagogu #balat",
+    '2026-08-30', '13:00', 'Ahrida — Geceleri O Kuyudan Ses Geliyor Anketi'
+  );
+  ensurePoll(
+    "Süleymaniye Camii",
+    "Süleymaniye Camii'nin duvarlarında gizlenmiş yüzlerce toprak küp var — rastgele değil, sesi güçlendirmek için özenle yerleştirilmiş. Mimar Sinan'ın akustik ustalığının en somut kanıtlarından biri bu. Siz Süleymaniye'de bu küplerden birini fark ettiniz mi? #belgesel #tarih #süleymaniyecamii #mimarsinan",
+    '2026-09-02', '13:00', 'Süleymaniye — Gizli Küpler Anketi'
+  );
+  ensurePoll(
+    "Ahrida Sinagogu",
+    "Ahrida Sinagogu'nun tavanında neden bir devekuşu yumurtası asılı? Halk arasında \"örümcekleri uzak tutar\" denilir — bu inanış, Osmanlı döneminde birçok cami, kilise ve sinagogda gerçekten uygulanmış. Peki bu sadece bir batıl inanç mı, yoksa işe yarayan bir yöntem mi? #belgesel #tarih #ahridasinagogu #balat",
+    '2026-09-03', '13:00', 'Ahrida — Devekuşu Yumurtası Anketi'
+  );
+  ensurePoll(
+    "Yedikule Zindanları",
+    "Yedikule Zindanları'nda bir Mısır mumyası olduğu iddiası internette dolaşıyor — ama biz bu iddianın belgeli bir kaynağına ulaşamadık. Siz böyle bir şey duydunuz mu, yoksa bu da mı sonradan uydurulmuş bir efsane? Kaynağı olan varsa yorumlarda paylaşsın. #belgesel #tarih #yedikule",
+    '2026-09-05', '13:00', 'Yedikule — Mısır Mumyası Anketi'
+  );
+  ensurePoll(
+    "Kariye (Chora)",
+    "Kariye'deki en çarpıcı sahnelerden biri: kırılan kapılar, düşen zincirler. Doğu Roma (Bizans literatüründeki adıyla) sanatında bu genelde bir kurtuluş anını simgeler. Siz bu sahneyi ilk gördüğünüzde ne hissettiniz? #belgesel #tarih #kariye #chora",
+    '2026-09-06', '13:00', 'Kariye — Kırılan Kapılar Anketi'
+  );
+
   {
     const suleymaniye = locations.find(l => l.name === "Süleymaniye Camii");
     const pierreLoti = locations.find(l => l.name === "Pierre Loti Tepesi");
