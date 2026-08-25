@@ -1778,6 +1778,23 @@ function applyCorrections(){
         changed = true;
       }
     });
+
+    // Diğer milli günler — placeholder olarak takvime şimdiden eklenir.
+    // Yaklaştıkça (gün öncesinden) tam caption + görsel prompt paketi
+    // hazırlanıp bu placeholder'ların üzerine işlenecek; kural: her zaman
+    // o günün MEVCUT planına EK, asla üzerine yazılmadan.
+    const milliGunler = [
+      { date:'2026-10-29', label:'29 Ekim Cumhuriyet Bayramı' },
+      { date:'2027-04-23', label:'23 Nisan Ulusal Egemenlik ve Çocuk Bayramı' },
+      { date:'2027-05-19', label:'19 Mayıs Atatürk\'ü Anma Gençlik ve Spor Bayramı' },
+      { date:'2027-07-15', label:'15 Temmuz Demokrasi ve Milli Birlik Günü' },
+    ];
+    milliGunler.forEach(mg=>{
+      if(!calendarEvents.some(e => e.locationId === ozelGunler.id && e.date === mg.date && e.platform === 'ig')){
+        calendarEvents.push({ id:'cal_'+Date.now()+'_milli_'+mg.date, locationId: ozelGunler.id, platform:'ig', title: mg.label + ' — İçerik Hazırlanacak (mevcut plana ek)', date: mg.date, time:'09:00', uploaded:false });
+        changed = true;
+      }
+    });
   }
 
   // "Bunu Biliyor Muydunuz?" Story serisi (25 Ağustos 2026'dan itibaren,
