@@ -1629,6 +1629,18 @@ function applyCorrections(){
   let changed = false;
 
   {
+    const suleymaniye = locations.find(l => l.name === "Süleymaniye Camii");
+    const pierreLoti = locations.find(l => l.name === "Pierre Loti Tepesi");
+    if(suleymaniye && pierreLoti){
+      const wrongEv = calendarEvents.find(e => e.date === '2026-08-26' && e.platform === 'tt' && e.locationId === pierreLoti.id);
+      if(wrongEv){
+        wrongEv.locationId = suleymaniye.id;
+        changed = true;
+      }
+    }
+  }
+
+  {
     const rh = locations.find(l => l.name === "Rumeli Hisarı");
     if(rh){
       const hasIgCar = calendarEvents.some(e => e.locationId === rh.id && e.date === '2026-08-27' && e.platform === 'ig_car');
