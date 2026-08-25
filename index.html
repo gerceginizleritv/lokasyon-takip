@@ -534,6 +534,26 @@ select{
   margin-bottom:10px;
 }
 .pkg-hint{font-size:10.5px;color:var(--parchment-dim);margin-top:-6px;margin-bottom:10px;font-style:italic;}
+.pkg-field{
+  border:1px solid var(--line);
+  background:var(--ink);
+  padding:12px 14px;
+  margin-bottom:12px;
+}
+.pkg-field .field-header{margin-bottom:8px;}
+.pkg-label{
+  font-family:'JetBrains Mono',monospace;
+  font-size:9.5px;
+  letter-spacing:1px;
+  text-transform:uppercase;
+  color:var(--gold-dim);
+}
+.pkg-value{
+  font-size:13px;
+  line-height:1.55;
+  color:var(--parchment);
+  white-space:pre-wrap;
+}
 .field-header{
   display:flex;
   align-items:center;
@@ -2560,15 +2580,48 @@ function refreshCalPkgFields(){
   const hashtagVal = platform === 'fb' ? (pkg.fbTags || '') : (platform === 'yt' ? (pkg.tags||'') : (platform === 'yts' ? (pkg.shortsTags||'') : (pkg.hashtags||'')));
   fields.innerHTML = `
     <div class="pkg-field">
-      <div class="pkg-label">İlgili Caption (${CAL_PLATFORM_NAMES[platform]})</div>
+      <div class="field-header">
+        <div class="pkg-label">İlgili Caption (${CAL_PLATFORM_NAMES[platform]})</div>
+        <button type="button" class="copy-btn" data-copy-target="calPreviewCaptionText">📋 Kopyala</button>
+      </div>
       <div class="pkg-value">${escapeHtml(caption)}</div>
+      <textarea id="calPreviewCaptionText" style="display:none;">${escapeHtml(caption)}</textarea>
     </div>
     ${hashtagVal ? `<div class="pkg-field">
-      <div class="pkg-label">Hashtag / Etiket</div>
+      <div class="field-header">
+        <div class="pkg-label">Hashtag / Etiket</div>
+        <button type="button" class="copy-btn" data-copy-target="calPreviewHashtagText">📋 Kopyala</button>
+      </div>
       <div class="pkg-value">${escapeHtml(hashtagVal)}</div>
+      <textarea id="calPreviewHashtagText" style="display:none;">${escapeHtml(hashtagVal)}</textarea>
     </div>` : ''}
   `;
 }
+
+// Copy buttons inside the calendar entry preview (İlgili Caption / Hashtag) —
+// same click-to-copy behavior as the Yayın Paketi modal, just scoped to the
+// calendar overlay since that pkg preview lives outside #pkgOverlay.
+document.getElementById('calOverlay').addEventListener('click', (e)=>{
+  const btn = e.target.closest('.copy-btn');
+  if(!btn) return;
+  const targetId = btn.dataset.copyTarget;
+  const el = document.getElementById(targetId);
+  if(!el) return;
+  const text = el.value || '';
+  const showCopied = ()=>{
+    const original = btn.textContent;
+    btn.textContent = '✓ Kopyalandı';
+    btn.classList.add('copied');
+    setTimeout(()=>{ btn.textContent = original; btn.classList.remove('copied'); }, 1400);
+  };
+  if(navigator.clipboard && navigator.clipboard.writeText){
+    navigator.clipboard.writeText(text).then(showCopied).catch(()=>{
+      el.style.display='block'; el.select(); document.execCommand('copy'); el.style.display='none'; showCopied();
+    });
+  } else {
+    el.style.display='block'; el.select(); document.execCommand('copy'); el.style.display='none'; showCopied();
+  }
+});
 
 document.getElementById('cal_locationId').addEventListener('change', refreshCalPkgFields);
 document.getElementById('cal_platform').addEventListener('change', ()=>{
