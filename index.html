@@ -1692,18 +1692,31 @@ function applyCorrections(){
       { name: "Zeyrek Camii", text: "Zeyrek Camii'nin halısının altında ne olduğunu hiç merak ettiniz mi? Yüzyıllar önce döşenmiş orijinal Doğu Roma (Bizans literatüründeki adıyla) taban süslemeleri, bugün ziyaretçilerin ayakları altında, halının hemen altında duruyor. #belgesel #tarih #zeyrekcamii\n\n--- ANKET SEÇENEKLERİ ---\nA) Evet, halının altına baktım/gördüm\nB) Hayır, hiç fark etmemiştim" },
       { name: "Süleymaniye Camii", text: "Süleymaniye Camii'nin duvarlarında gizlenmiş yüzlerce toprak küp var — rastgele değil, sesi güçlendirmek için özenle yerleştirilmiş. Mimar Sinan'ın akustik ustalığının en somut kanıtlarından biri bu. #belgesel #tarih #süleymaniyecamii #mimarsinan\n\n--- ANKET SEÇENEKLERİ ---\nA) Evet, bu küplerden birini fark etmiştim\nB) Hayır, hiç bilmiyordum" },
       { name: "Yedikule Zindanları", text: "Yedikule Zindanları'nda bir Mısır mumyası olduğu iddiası internette dolaşıyor — ama biz bu iddianın belgeli bir kaynağına ulaşamadık. Kaynağı olan varsa yorumlarda paylaşsın. #belgesel #tarih #yedikule\n\n--- ANKET SEÇENEKLERİ ---\nA) Gerçek, belgeli bir olay\nB) Sonradan uydurulmuş bir efsane" },
-      { name: "Kariye (Chora)", text: "Kariye'deki bu sahnede tasvir edilen olay sizce nedir? Doğu Roma (Bizans literatüründeki adıyla) sanatının en bilinen kompozisyonlarından biri. #belgesel #tarih #kariye #chora\n\n--- ANKET SEÇENEKLERİ ---\nA) Ölümün yenilgiye uğratılması, ruhların özgürleşmesi\nB) Bir savaş ya da fetih anı" },
+      { name: "Yedikule Zindanları", text: "Yedikule Zindanları'nda bir Mısır mumyası olduğu iddiası internette dolaşıyor — ama biz bu iddianın belgeli bir kaynağına ulaşamadık. Kaynağı olan varsa yorumlarda paylaşsın. #belgesel #tarih #yedikule\n\n--- ANKET SEÇENEKLERİ ---\nA) Gerçek, belgeli bir olay\nB) Sonradan uydurulmuş bir efsane" },
     ];
     fixes.forEach(f=>{
       const loc = locations.find(l => l.name === f.name);
-      if(!loc || !loc.package || !loc.package.pollCaptionFacebook) return;
-      const needsGenericFix = !loc.package.pollCaptionFacebook.includes('ANKET SEÇENEKLERİ');
-      const isOldKariyeWording = f.name === "Kariye (Chora)" && loc.package.pollCaptionFacebook.includes('Etkilendim, uzun süre baktım');
-      if(needsGenericFix || isOldKariyeWording){
+      if(loc && loc.package && loc.package.pollCaptionFacebook && !loc.package.pollCaptionFacebook.includes('ANKET SEÇENEKLERİ')){
         loc.package.pollCaptionFacebook = f.text;
         changed = true;
       }
     });
+  }
+
+  // Kariye anketi kullanıcı tarafından beğenilmedi (25 Ağustos 2026) — hem
+  // paketten hem takvimden tamamen kaldırıldı, yerine Binbirdirek + Yerebatan
+  // anketleri eklendi.
+  {
+    const kariye = locations.find(l => l.name === "Kariye (Chora)");
+    if(kariye){
+      if(kariye.package && kariye.package.pollCaptionFacebook){
+        kariye.package.pollCaptionFacebook = '';
+        changed = true;
+      }
+      const before = calendarEvents.length;
+      calendarEvents = calendarEvents.filter(e => !(e.locationId === kariye.id && e.platform === 'fb_poll'));
+      if(calendarEvents.length !== before) changed = true;
+    }
   }
 
   // TEMİZLİK (25 Ağustos 2026): Ahrida Sinagogu hiç çekilmedi (filmed:"H") —
@@ -1739,9 +1752,14 @@ function applyCorrections(){
     '2026-09-05', '13:00', 'Yedikule — Mısır Mumyası Anketi'
   );
   ensurePoll(
-    "Kariye (Chora)",
-    "Kariye'deki bu sahnede tasvir edilen olay sizce nedir? Doğu Roma (Bizans literatüründeki adıyla) sanatının en bilinen kompozisyonlarından biri. #belgesel #tarih #kariye #chora\n\n--- ANKET SEÇENEKLERİ ---\nA) Ölümün yenilgiye uğratılması, ruhların özgürleşmesi\nB) Bir savaş ya da fetih anı",
-    '2026-09-06', '13:00', 'Kariye — Kırılan Kapılar Anketi'
+    "Binbirdirek Sarnıcı",
+    "Binbirdirek Sarnıcı'nda ters duran bir haç kalıntısı olduğu iddia edilirdi — ama bu iddia sahada doğrulanamadı, yalanlandı. Peki sarnıçta gerçekte kaç sütun olduğunu biliyor musunuz? #belgesel #tarih #binbirdirek\n\n--- ANKET SEÇENEKLERİ ---\nA) 100'den az\nB) 200'den fazla",
+    '2026-09-06', '13:00', 'Binbirdirek — Sütun Sayısı Anketi'
+  );
+  ensurePoll(
+    "Yerebatan Sarnıcı",
+    "Yerebatan Sarnıcı'nın ünlü Medusa başlarından biri ters, diğeri yan duruyor. Sizce bu tesadüf mü, yoksa bilinçli bir tercih mi? #belgesel #tarih #yerebatansarnıcı\n\n--- ANKET SEÇENEKLERİ ---\nA) Bilinçli bir sanatsal/dini tercih\nB) Sadece rastgele kullanılmış yapı taşı",
+    '2026-09-07', '13:00', 'Yerebatan — Medusa Başları Anketi'
   );
 
   {
