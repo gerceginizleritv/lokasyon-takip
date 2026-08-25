@@ -1671,6 +1671,10 @@ function applyCorrections(){
         calendarEvents.push({ id:'cal_'+Date.now()+'_kariye_car_fb', locationId: kariye.id, platform:'fb_car', title:'Kariye — Bu Haftanın Mozaik Gizemleri (Carousel)', date:'2026-08-29', time:'22:00', uploaded:false });
         changed = true;
       }
+      if(!calendarEvents.some(e => e.locationId === kariye.id && e.date === '2026-08-29' && e.platform === 'story')){
+        calendarEvents.push({ id:'cal_'+Date.now()+'_kariye_story', locationId: kariye.id, platform:'story', title:'Kariye — İstanbul Sokaklarında Saklı (S/B Video Story)', date:'2026-08-29', time:'20:30', uploaded:false });
+        changed = true;
+      }
       calendarEvents.forEach(e=>{
         if(e.locationId===kariye.id && e.date==='2026-08-29' && e.platform==='ig_car' && e.time!=='21:00'){ e.time='21:00'; changed=true; }
         if(e.locationId===kariye.id && e.date==='2026-08-29' && e.platform==='fb_car' && e.time!=='22:00'){ e.time='22:00'; changed=true; }
