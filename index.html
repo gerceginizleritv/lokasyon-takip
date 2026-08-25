@@ -902,6 +902,7 @@ select{
     <span class="cal-legend-item"><span class="cal-dot" style="background:#5D7BC7;"></span>FB Carousel</span>
     <span class="cal-legend-item"><span class="cal-dot" style="background:#D4A72C;"></span>Story</span>
     <span class="cal-legend-item"><span class="cal-dot" style="background:#6B7280;"></span>Metin Postu</span>
+    <span class="cal-legend-item"><span class="cal-dot" style="background:#2FA36B;"></span>Anket</span>
     <span class="cal-legend-sep"></span>
     <span class="cal-mini-chip cal-planned">🕒 Planlandı</span>
     <span class="cal-mini-chip cal-ready">✓ Yüklendi</span>
@@ -924,6 +925,7 @@ select{
           <th><div class="cal-platform-head"><span class="cal-p-badge" style="background:#5D7BC7;">FBC</span><span>FB CAROUSEL</span></div></th>
           <th><div class="cal-platform-head"><span class="cal-p-badge" style="background:#D4A72C;color:#0a0a0a;">STR</span><span>STORY</span></div></th>
           <th><div class="cal-platform-head"><span class="cal-p-badge" style="background:#6B7280;">TXT</span><span>METİN</span></div></th>
+          <th><div class="cal-platform-head"><span class="cal-p-badge" style="background:#2FA36B;">ANK</span><span>ANKET</span></div></th>
         </tr>
       </thead>
       <tbody id="calTbody"></tbody>
@@ -974,6 +976,7 @@ select{
         <label class="cal-platform-check" data-platform="fb_car"><input type="checkbox" value="fb_car"><span class="cal-p-badge" style="background:#5D7BC7;">FBC</span>FB Carousel</label>
         <label class="cal-platform-check" data-platform="story"><input type="checkbox" value="story"><span class="cal-p-badge" style="background:#D4A72C;color:#0a0a0a;">STR</span>Story</label>
         <label class="cal-platform-check" data-platform="fb_text"><input type="checkbox" value="fb_text"><span class="cal-p-badge" style="background:#6B7280;">TXT</span>Metin Postu</label>
+        <label class="cal-platform-check" data-platform="fb_poll"><input type="checkbox" value="fb_poll"><span class="cal-p-badge" style="background:#2FA36B;">ANK</span>Anket</label>
       </div>
     </div>
     <div class="field" id="calPlatformSingleWrap" style="display:none;">
@@ -988,6 +991,7 @@ select{
         <option value="fb_car">Facebook Carousel</option>
         <option value="story">Story (IG/FB)</option>
         <option value="fb_text">Facebook Metin Postu</option>
+        <option value="fb_poll">Facebook Anketi</option>
       </select>
     </div>
     <div class="field">
@@ -1243,6 +1247,17 @@ select{
           <button type="button" class="copy-btn" data-copy-target="p_carouselCaptionFacebook">📋 Kopyala</button>
         </div>
         <textarea id="p_carouselCaptionFacebook"></textarea>
+      </div>
+    </div>
+
+    <div class="pkg-section">
+      <div class="pkg-section-title" style="color:#2FA36B;">📊 Facebook Anketi</div>
+      <div class="field">
+        <div class="field-header">
+          <label>Anket Metni + Seçenekler</label>
+          <button type="button" class="copy-btn" data-copy-target="p_pollCaptionFacebook">📋 Kopyala</button>
+        </div>
+        <textarea id="p_pollCaptionFacebook" placeholder="Soru metni + A/B seçenekleri"></textarea>
       </div>
     </div>
 
@@ -1599,6 +1614,7 @@ function defaultPackage(){
     hashtags:"", tags:"", shortsTags:"", keywordNotes:"",
     captionShorts:"", captionYouTube:"", captionInstagram:"", captionFacebook:"",
     carouselCaptionInstagram:"", carouselCaptionFacebook:"",
+    pollCaptionFacebook:"",
     fbTags:"", fbCoverPrompt:"",
     shotList:""
   };
@@ -1666,6 +1682,14 @@ function applyCorrections(){
       }
       if(!rh.package.carouselCaptionFacebook){
         rh.package.carouselCaptionFacebook = "Bir imparatorun 4 ayda inşa ettirdiği bir kale var — ve bu kale, bir fetihten çok daha fazlasını anlatıyor.\n\n1452'de Fatih Sultan Mehmed, henüz tahta yeni çıkmış genç bir padişahken, Boğaz'ın en dar noktasına bu kaleyi kurdurdu. İsmi bile bir tehdit: Boğazkesen.\n\nKalenin inşasını üç ayrı vezire, üç ayrı kuleyi paylaştırarak bölüştürdüğü, aralarında bir yarış yarattığı anlatılır. Peki toprağı nasıl aldı? Rivayete göre Bizans'tan sadece \"bir öküz derisi kadar\" yer istemiş, sonra deriyi ince şeritler halinde kesip koca bir alanı çevirmiş.\n\nBu kesin bir kayıt mı, yoksa sonradan süslenmiş bir efsane mi? Yarın akşam 20:00'de tam hikaye kanalımızda.\n\nİzlemek isteyenler için: [YouTube video linki — yarın akşam 20:00'da yayında]\n\nBu gizemi ilk kez duyan bir arkadaşın varsa, onu da etiketle.\n\n#belgesel #tarih";
+        changed = true;
+      }
+      if(!rh.package.pollCaptionFacebook){
+        rh.package.pollCaptionFacebook = "Rumeli Hisarı'nın toprakları nasıl alındı?\n\nRivayete göre Fatih Sultan Mehmed, Bizans'tan sadece \"bir öküz derisi kadar\" yer istemiş — sonra deriyi ince şeritler halinde kesip koca bir alanı çevirmiş. Bu hikaye yüzyıllardır anlatılıyor, ama hiçbir dönemin resmi kaydında geçmiyor.\n\nSiz ne düşünüyorsunuz?\n\nRivayet değil, kayıt — ama bazen rivayetin kendisi de tarihin bir parçası oluyor. 👇\n\n#belgesel #tarih #rumelihisarı #fatihsultanmehmet\n\n--- ANKET SEÇENEKLERİ ---\nA) Gerçek bir diplomatik pazarlık hikayesi\nB) Sonradan süslenmiş bir halk efsanesi";
+        changed = true;
+      }
+      if(!calendarEvents.some(e => e.locationId === rh.id && e.date === '2026-09-04' && e.platform === 'fb_poll')){
+        calendarEvents.push({ id:'cal_'+Date.now()+'_rh_poll', locationId: rh.id, platform:'fb_poll', title:'Rumeli Hisarı — Öküz Derisi Rivayeti Anketi', date:'2026-09-04', time:'20:00', uploaded:false });
         changed = true;
       }
     }
@@ -2323,10 +2347,10 @@ async function persistNow(retriesLeft){
 // ============================================================
 // YAYIN TAKVİMİ (Calendar)
 // ============================================================
-const CAL_LABELS = {yt:"YT", yts:"YTS", ig:"IG", tt:"TT", fb:"FB", ig_car:"IGC", fb_car:"FBC", story:"STR", fb_text:"TXT"};
-const CAL_PLATFORM_NAMES = {yt:"YouTube (Uzun Video)", yts:"YouTube Shorts", ig:"Instagram (Video/Reel)", tt:"TikTok", fb:"Facebook (Video)", ig_car:"Instagram Carousel", fb_car:"Facebook Carousel", story:"Story (IG/FB)", fb_text:"Facebook Metin Postu"};
-const CAL_PLATFORM_COLORS = {yt:"#D64545", yts:"#E8632B", ig:"#C1447E", tt:"#3FC9D1", fb:"#4B7BD1", ig_car:"#9C4FBF", fb_car:"#5D7BC7", story:"#D4A72C", fb_text:"#6B7280"};
-const CAL_PLATFORM_FIELD = {yt:"captionYouTube", yts:"captionShorts", ig:"captionInstagram", fb:"captionFacebook", tt:"captionInstagram", ig_car:"carouselCaptionInstagram", fb_car:"carouselCaptionFacebook", story:"captionInstagram", fb_text:"captionFacebook"};
+const CAL_LABELS = {yt:"YT", yts:"YTS", ig:"IG", tt:"TT", fb:"FB", ig_car:"IGC", fb_car:"FBC", story:"STR", fb_text:"TXT", fb_poll:"ANK"};
+const CAL_PLATFORM_NAMES = {yt:"YouTube (Uzun Video)", yts:"YouTube Shorts", ig:"Instagram (Video/Reel)", tt:"TikTok", fb:"Facebook (Video)", ig_car:"Instagram Carousel", fb_car:"Facebook Carousel", story:"Story (IG/FB)", fb_text:"Facebook Metin Postu", fb_poll:"Facebook Anketi"};
+const CAL_PLATFORM_COLORS = {yt:"#D64545", yts:"#E8632B", ig:"#C1447E", tt:"#3FC9D1", fb:"#4B7BD1", ig_car:"#9C4FBF", fb_car:"#5D7BC7", story:"#D4A72C", fb_text:"#6B7280", fb_poll:"#2FA36B"};
+const CAL_PLATFORM_FIELD = {yt:"captionYouTube", yts:"captionShorts", ig:"captionInstagram", fb:"captionFacebook", tt:"captionInstagram", ig_car:"carouselCaptionInstagram", fb_car:"carouselCaptionFacebook", story:"captionInstagram", fb_text:"captionFacebook", fb_poll:"pollCaptionFacebook"};
 const CAL_DOW = ["PZT","SAL","ÇAR","PER","CUM","CMT","PAZ"];
 const CAL_DOW_SHORT = ["Pzt","Sal","Çar","Per","Cum","Cmt","Paz"];
 
@@ -2461,7 +2485,7 @@ function renderCalTable(){
   const start = calWindowStart();
   const today = calWindowStart();
   const totalDays = 14;
-  const platformOrder = ['yt','yts','ig','fb','tt','ig_car','fb_car','story','fb_text'];
+  const platformOrder = ['yt','yts','ig','fb','tt','ig_car','fb_car','story','fb_text','fb_poll'];
 
   for(let i=0;i<totalDays;i++){
     const d = new Date(start);
@@ -3237,6 +3261,7 @@ function openPkgModal(id){
   document.getElementById('p_captionFacebook').value = l.package.captionFacebook;
   document.getElementById('p_carouselCaptionInstagram').value = l.package.carouselCaptionInstagram || '';
   document.getElementById('p_carouselCaptionFacebook').value = l.package.carouselCaptionFacebook || '';
+  document.getElementById('p_pollCaptionFacebook').value = l.package.pollCaptionFacebook || '';
   document.getElementById('p_fbTags').value = l.package.fbTags;
   document.getElementById('p_fbCoverPrompt').value = l.package.fbCoverPrompt;
   document.getElementById('pkgOverlay').classList.add('open');
@@ -3265,6 +3290,7 @@ document.getElementById('pkgFillFromJsonBtn').addEventListener('click', ()=>{
     captionShorts:'p_captionShorts', captionYouTube:'p_captionYouTube',
     captionInstagram:'p_captionInstagram', captionFacebook:'p_captionFacebook',
     carouselCaptionInstagram:'p_carouselCaptionInstagram', carouselCaptionFacebook:'p_carouselCaptionFacebook',
+    pollCaptionFacebook:'p_pollCaptionFacebook',
     fbTags:'p_fbTags', fbCoverPrompt:'p_fbCoverPrompt'
   };
   let filled = 0;
@@ -3299,6 +3325,7 @@ document.getElementById('pkgSaveBtn').addEventListener('click', async ()=>{
     captionFacebook: document.getElementById('p_captionFacebook').value,
     carouselCaptionInstagram: document.getElementById('p_carouselCaptionInstagram').value,
     carouselCaptionFacebook: document.getElementById('p_carouselCaptionFacebook').value,
+    pollCaptionFacebook: document.getElementById('p_pollCaptionFacebook').value,
     fbTags: document.getElementById('p_fbTags').value,
     fbCoverPrompt: document.getElementById('p_fbCoverPrompt').value
   };
