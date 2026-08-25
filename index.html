@@ -735,6 +735,15 @@ select{
 .cal-mini-chip.cal-planned{border-left:3px solid var(--gold-dim);background:var(--ink-3);color:var(--parchment-dim);}
 .cal-mini-chip.cal-ready{border-left:3px solid var(--gold);background:var(--ink-3);color:var(--parchment);}
 .cal-mini-chip.cal-live{border-left:3px solid var(--gold);background:rgba(200,162,74,0.14);color:var(--gold);}
+.cal-pending-toggle{
+  background:var(--ink);border:1px solid var(--line);color:var(--parchment-dim);
+  padding:4px 10px;font-family:'JetBrains Mono',monospace;font-size:10.5px;
+  cursor:pointer;transition:all .12s;
+}
+.cal-pending-toggle:hover{border-color:var(--gold-dim);color:var(--parchment);}
+.cal-pending-toggle.cal-pending-active{
+  border-color:var(--gold);background:rgba(200,162,74,0.1);color:var(--gold);
+}
 
 .cal-grid{display:grid;grid-template-columns:repeat(7,1fr);border:1px solid var(--line);background:var(--line);gap:1px;}
 .cal-dow{background:var(--ink-2);padding:9px 10px;font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:1.5px;color:var(--gold-dim);text-transform:uppercase;text-align:center;}
@@ -939,6 +948,8 @@ select{
     <span class="cal-mini-chip cal-planned">🕒 Planlandı</span>
     <span class="cal-mini-chip cal-ready">✓ Yüklendi</span>
     <span class="cal-mini-chip cal-live">● Yayında</span>
+    <span class="cal-legend-sep"></span>
+    <button class="cal-pending-toggle" id="calPendingToggle">☐ Sadece Yüklenmemişleri Göster</button>
   </div>
   <div class="pkg-hint" style="margin-top:-6px;">💡 Yukarıdaki formatlardan birine (veya birkaçına) tıklayarak takvimi filtreleyebilirsin — tekrar tıklayınca kaldırılır, "Tümünü Göster" ile sıfırlanır.</div>
   <div id="calGridView">
@@ -2623,6 +2634,7 @@ let calViewMode = 'grid'; // 'grid' | 'table'
 let calNewUploadedState = false; // "Yükledim" toggle state while creating a brand-new entry (not yet saved)
 let calExpandedDays = new Set(); // day keys (YYYY-MM-DD) the user has expanded to see all entries
 let calActiveFilters = new Set(); // empty = show all platforms (default); non-empty = show only these
+let calShowOnlyPending = false; // true = hide entries already marked "Yükledim"
 
 function calPad(n){ return n<10 ? '0'+n : ''+n; }
 
@@ -2684,7 +2696,7 @@ function renderCalGrid(){
     num.textContent = `${d.getDate()} ${d.toLocaleString('tr-TR',{month:'short'})} · ${dowLabel}`;
     cell.appendChild(num);
 
-    let dayEvents = calendarEvents.filter(e=>e.date===key && (calActiveFilters.size===0 || calActiveFilters.has(e.platform))).sort((a,b)=>(a.time||'').localeCompare(b.time||''));
+    let dayEvents = calendarEvents.filter(e=>e.date===key && (calActiveFilters.size===0 || calActiveFilters.has(e.platform)) && (!calShowOnlyPending || !e.uploaded)).sort((a,b)=>(a.time||'').localeCompare(b.time||''));
 
     // Pair up IG+FB entries sharing the same time (same native Meta upload)
     const rows = [];
@@ -2772,7 +2784,7 @@ function renderCalTable(){
 
     platformOrder.forEach(p=>{
       const td = document.createElement('td');
-      const dayPlatformEvents = calendarEvents.filter(e=>e.date===key && e.platform===p && (calActiveFilters.size===0 || calActiveFilters.has(e.platform))).sort((a,b)=>(a.time||'').localeCompare(b.time||''));
+      const dayPlatformEvents = calendarEvents.filter(e=>e.date===key && e.platform===p && (calActiveFilters.size===0 || calActiveFilters.has(e.platform)) && (!calShowOnlyPending || !e.uploaded)).sort((a,b)=>(a.time||'').localeCompare(b.time||''));
       if(dayPlatformEvents.length === 0){
         td.innerHTML = '<div class="cal-empty-dash">—</div>';
       } else {
@@ -3079,6 +3091,14 @@ document.getElementById('calLegendReset').addEventListener('click', ()=>{
   if(calActiveFilters.size === 0) return; // nothing to reset
   calActiveFilters.clear();
   updateLegendVisualState();
+  renderCal();
+});
+
+document.getElementById('calPendingToggle').addEventListener('click', ()=>{
+  calShowOnlyPending = !calShowOnlyPending;
+  const btn = document.getElementById('calPendingToggle');
+  btn.classList.toggle('cal-pending-active', calShowOnlyPending);
+  btn.textContent = calShowOnlyPending ? '☑ Sadece Yüklenmemişleri Göster' : '☐ Sadece Yüklenmemişleri Göster';
   renderCal();
 });
 
