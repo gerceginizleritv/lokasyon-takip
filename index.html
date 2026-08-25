@@ -696,6 +696,18 @@ select{
 
 /* ===== Calendar ===== */
 .cal-toolbar{display:flex;align-items:center;justify-content:space-between;margin:16px 0 14px;flex-wrap:wrap;gap:10px;}
+.cal-nav{display:flex;align-items:center;gap:8px;}
+.cal-nav-btn{
+  background:var(--ink-2);border:1px solid var(--line);color:var(--parchment-dim);
+  padding:8px 14px;font-family:'JetBrains Mono',monospace;font-size:11px;
+  letter-spacing:0.5px;cursor:pointer;transition:all .12s;
+}
+.cal-nav-btn:hover{border-color:var(--gold-dim);color:var(--parchment);}
+.cal-nav-today{color:var(--gold);}
+.cal-nav-range{
+  font-family:'JetBrains Mono',monospace;font-size:10.5px;color:var(--gold-dim);
+  padding:0 4px;white-space:nowrap;
+}
 .cal-view-toggle{display:flex;border:1px solid var(--line);}
 .cal-toggle-btn{
   background:var(--ink-2);border:none;color:var(--parchment-dim);
@@ -900,6 +912,12 @@ select{
     <div class="cal-view-toggle">
       <button class="cal-toggle-btn active" id="calBtnGrid">📅 Dikey (Ay)</button>
       <button class="cal-toggle-btn" id="calBtnTable">📋 Yatay (Tablo)</button>
+    </div>
+    <div class="cal-nav">
+      <button class="cal-nav-btn" id="calNavPrev">◀ Önceki</button>
+      <button class="cal-nav-btn cal-nav-today" id="calNavToday">Bugün</button>
+      <span class="cal-nav-range" id="calNavRange"></span>
+      <button class="cal-nav-btn" id="calNavNext">Sonraki ▶</button>
     </div>
     <button class="btn" id="calAddBtn">+ Yeni Yayın Girişi</button>
   </div>
@@ -2616,15 +2634,20 @@ function calEventStatus(ev){
   return 'planned';
 }
 
+let calWindowOffset = 0; // days offset from today, moved by nav buttons
+
 function calWindowStart(){
-  // Rolling 21-day window starting from today (grid) — always current, no
-  // hardcoded reference date.
+  // Rolling window starting from today + offset — lets the user page
+  // forward/backward through the calendar instead of being stuck on a
+  // fixed today-relative range.
   const d = new Date();
   d.setHours(0,0,0,0);
+  d.setDate(d.getDate() + calWindowOffset);
   return d;
 }
 
 function renderCal(){
+  updateCalNavRange();
   renderCalGrid();
   renderCalTable();
 }
@@ -2641,7 +2664,7 @@ function renderCalGrid(){
   });
 
   const start = calWindowStart();
-  const today = calWindowStart();
+  const today = new Date(); today.setHours(0,0,0,0);
   const totalDays = 21;
 
   for(let i=0;i<totalDays;i++){
@@ -2730,7 +2753,7 @@ function renderCalTable(){
   if(!tbody) return;
   tbody.innerHTML = '';
   const start = calWindowStart();
-  const today = calWindowStart();
+  const today = new Date(); today.setHours(0,0,0,0);
   const totalDays = 14;
   const platformOrder = ['yt','yts','ig','fb','tt','ig_car','fb_car','story','fb_text','fb_poll'];
 
@@ -2989,6 +3012,32 @@ document.getElementById('calOverlay').addEventListener('click', (e)=>{
 document.getElementById('calAddBtn').addEventListener('click', ()=> openCalDetail(null));
 
 // Grid/Table toggle within the calendar tab
+function updateCalNavRange(){
+  const el = document.getElementById('calNavRange');
+  if(!el) return;
+  const start = calWindowStart();
+  const end = new Date(start);
+  end.setDate(end.getDate() + (calViewMode === 'table' ? 13 : 20));
+  const fmt = (d)=> `${d.getDate()} ${d.toLocaleString('tr-TR',{month:'short'})}`;
+  el.textContent = `${fmt(start)} — ${fmt(end)}`;
+}
+
+document.getElementById('calNavPrev').addEventListener('click', ()=>{
+  calWindowOffset -= 7;
+  updateCalNavRange();
+  renderCal();
+});
+document.getElementById('calNavNext').addEventListener('click', ()=>{
+  calWindowOffset += 7;
+  updateCalNavRange();
+  renderCal();
+});
+document.getElementById('calNavToday').addEventListener('click', ()=>{
+  calWindowOffset = 0;
+  updateCalNavRange();
+  renderCal();
+});
+
 document.getElementById('calBtnGrid').addEventListener('click', ()=>{
   calViewMode = 'grid';
   document.getElementById('calGridView').style.display = '';
