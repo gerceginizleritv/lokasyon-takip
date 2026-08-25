@@ -705,7 +705,15 @@ select{
 .cal-toggle-btn:last-child{border-right:none;}
 .cal-toggle-btn.active{background:rgba(200,162,74,0.12);color:var(--gold);}
 .cal-legend{display:flex;gap:14px;margin-bottom:16px;flex-wrap:wrap;align-items:center;}
-.cal-legend-item{display:flex;align-items:center;gap:6px;font-size:11px;color:var(--parchment-dim);font-family:'JetBrains Mono',monospace;}
+.cal-legend-item{display:flex;align-items:center;gap:6px;font-size:11px;color:var(--parchment-dim);font-family:'JetBrains Mono',monospace;cursor:pointer;padding:3px 6px;border:1px solid transparent;transition:all .12s;user-select:none;}
+.cal-legend-item:hover{border-color:var(--line);}
+.cal-legend-item.cal-filter-inactive{opacity:0.3;}
+.cal-legend-item.cal-filter-active-only{border-color:var(--gold);background:rgba(200,162,74,0.08);color:var(--parchment);}
+.cal-legend-reset{
+  font-size:10px;font-family:'JetBrains Mono',monospace;color:var(--gold-dim);
+  cursor:pointer;text-decoration:underline;padding:3px 6px;display:none;
+}
+.cal-legend-reset.cal-filter-on{display:inline-block;}
 .cal-dot{width:9px;height:9px;border-radius:50%;display:inline-block;}
 .cal-legend-sep{width:1px;height:14px;background:var(--line);}
 .cal-mini-chip{display:inline-flex;align-items:center;gap:4px;padding:2px 7px;font-size:10px;font-family:'JetBrains Mono',monospace;}
@@ -892,22 +900,24 @@ select{
     </div>
     <button class="btn" id="calAddBtn">+ Yeni Yayın Girişi</button>
   </div>
-  <div class="cal-legend">
-    <span class="cal-legend-item"><span class="cal-dot" style="background:#D64545;"></span>YouTube</span>
-    <span class="cal-legend-item"><span class="cal-dot" style="background:#E8632B;"></span>YT Shorts</span>
-    <span class="cal-legend-item"><span class="cal-dot" style="background:#C1447E;"></span>Instagram</span>
-    <span class="cal-legend-item"><span class="cal-dot" style="background:#3FC9D1;"></span>TikTok</span>
-    <span class="cal-legend-item"><span class="cal-dot" style="background:#4B7BD1;"></span>Facebook</span>
-    <span class="cal-legend-item"><span class="cal-dot" style="background:#9C4FBF;"></span>IG Carousel</span>
-    <span class="cal-legend-item"><span class="cal-dot" style="background:#5D7BC7;"></span>FB Carousel</span>
-    <span class="cal-legend-item"><span class="cal-dot" style="background:#D4A72C;"></span>Story</span>
-    <span class="cal-legend-item"><span class="cal-dot" style="background:#6B7280;"></span>Metin Postu</span>
-    <span class="cal-legend-item"><span class="cal-dot" style="background:#2FA36B;"></span>Anket</span>
+  <div class="cal-legend" id="calLegend">
+    <span class="cal-legend-item" data-platform="yt"><span class="cal-dot" style="background:#D64545;"></span>YouTube</span>
+    <span class="cal-legend-item" data-platform="yts"><span class="cal-dot" style="background:#E8632B;"></span>YT Shorts</span>
+    <span class="cal-legend-item" data-platform="ig"><span class="cal-dot" style="background:#C1447E;"></span>Instagram</span>
+    <span class="cal-legend-item" data-platform="tt"><span class="cal-dot" style="background:#3FC9D1;"></span>TikTok</span>
+    <span class="cal-legend-item" data-platform="fb"><span class="cal-dot" style="background:#4B7BD1;"></span>Facebook</span>
+    <span class="cal-legend-item" data-platform="ig_car"><span class="cal-dot" style="background:#9C4FBF;"></span>IG Carousel</span>
+    <span class="cal-legend-item" data-platform="fb_car"><span class="cal-dot" style="background:#5D7BC7;"></span>FB Carousel</span>
+    <span class="cal-legend-item" data-platform="story"><span class="cal-dot" style="background:#D4A72C;"></span>Story</span>
+    <span class="cal-legend-item" data-platform="fb_text"><span class="cal-dot" style="background:#6B7280;"></span>Metin Postu</span>
+    <span class="cal-legend-item" data-platform="fb_poll"><span class="cal-dot" style="background:#2FA36B;"></span>Anket</span>
+    <span class="cal-legend-reset" id="calLegendReset">Tümünü Göster</span>
     <span class="cal-legend-sep"></span>
     <span class="cal-mini-chip cal-planned">🕒 Planlandı</span>
     <span class="cal-mini-chip cal-ready">✓ Yüklendi</span>
     <span class="cal-mini-chip cal-live">● Yayında</span>
   </div>
+  <div class="pkg-hint" style="margin-top:-6px;">💡 Yukarıdaki formatlardan birine (veya birkaçına) tıklayarak takvimi filtreleyebilirsin — tekrar tıklayınca kaldırılır, "Tümünü Göster" ile sıfırlanır.</div>
   <div id="calGridView">
     <div class="cal-grid" id="calGrid"></div>
   </div>
@@ -2433,6 +2443,7 @@ let calCurrentEvent = null; // event object being viewed/edited in the modal (nu
 let calViewMode = 'grid'; // 'grid' | 'table'
 let calNewUploadedState = false; // "Yükledim" toggle state while creating a brand-new entry (not yet saved)
 let calExpandedDays = new Set(); // day keys (YYYY-MM-DD) the user has expanded to see all entries
+let calActiveFilters = new Set(); // empty = show all platforms (default); non-empty = show only these
 
 function calPad(n){ return n<10 ? '0'+n : ''+n; }
 
@@ -2489,7 +2500,7 @@ function renderCalGrid(){
     num.textContent = `${d.getDate()} ${d.toLocaleString('tr-TR',{month:'short'})} · ${dowLabel}`;
     cell.appendChild(num);
 
-    let dayEvents = calendarEvents.filter(e=>e.date===key).sort((a,b)=>(a.time||'').localeCompare(b.time||''));
+    let dayEvents = calendarEvents.filter(e=>e.date===key && (calActiveFilters.size===0 || calActiveFilters.has(e.platform))).sort((a,b)=>(a.time||'').localeCompare(b.time||''));
 
     // Pair up IG+FB entries sharing the same time (same native Meta upload)
     const rows = [];
@@ -2577,7 +2588,7 @@ function renderCalTable(){
 
     platformOrder.forEach(p=>{
       const td = document.createElement('td');
-      const dayPlatformEvents = calendarEvents.filter(e=>e.date===key && e.platform===p).sort((a,b)=>(a.time||'').localeCompare(b.time||''));
+      const dayPlatformEvents = calendarEvents.filter(e=>e.date===key && e.platform===p && (calActiveFilters.size===0 || calActiveFilters.has(e.platform))).sort((a,b)=>(a.time||'').localeCompare(b.time||''));
       if(dayPlatformEvents.length === 0){
         td.innerHTML = '<div class="cal-empty-dash">—</div>';
       } else {
@@ -2830,6 +2841,34 @@ document.getElementById('calBtnTable').addEventListener('click', ()=>{
   document.getElementById('calTableView').style.display = '';
   document.getElementById('calBtnTable').classList.add('active');
   document.getElementById('calBtnGrid').classList.remove('active');
+});
+
+// ===== Yayın Takvimi format filtresi =====
+// Clicking a legend item toggles that platform in/out of the active filter
+// set. Empty set = show everything (default). Re-renders whichever view
+// (grid/table) is currently visible.
+function updateLegendVisualState(){
+  const filtering = calActiveFilters.size > 0;
+  document.querySelectorAll('#calLegend .cal-legend-item').forEach(el=>{
+    const p = el.dataset.platform;
+    el.classList.toggle('cal-filter-active-only', filtering && calActiveFilters.has(p));
+    el.classList.toggle('cal-filter-inactive', filtering && !calActiveFilters.has(p));
+  });
+  document.getElementById('calLegendReset').classList.toggle('cal-filter-on', filtering);
+}
+document.querySelectorAll('#calLegend .cal-legend-item').forEach(el=>{
+  el.addEventListener('click', ()=>{
+    const p = el.dataset.platform;
+    if(calActiveFilters.has(p)) calActiveFilters.delete(p);
+    else calActiveFilters.add(p);
+    updateLegendVisualState();
+    renderCal();
+  });
+});
+document.getElementById('calLegendReset').addEventListener('click', ()=>{
+  calActiveFilters.clear();
+  updateLegendVisualState();
+  renderCal();
 });
 
 // Main Lokasyonlar / Takvim / Kayıt tab switch
