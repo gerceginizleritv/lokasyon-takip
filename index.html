@@ -857,6 +857,7 @@ select{
     <div class="backup-row">
       <button class="btn btn-ghost btn-small" id="exportBtn">💾 Yedek İndir</button>
       <button class="btn btn-ghost btn-small" id="importBtn">📤 Yedekten Geri Yükle</button>
+      <button class="btn btn-ghost btn-small" id="dataSizeBtn">📊 Veri Alanı</button>
       <input type="file" id="importFile" accept="application/json" style="display:none;">
       <div class="main-tabs">
         <button class="main-tab active" id="tabLocations">📋 Lokasyonlar</button>
@@ -989,6 +990,16 @@ select{
   </div>
   <div id="logList"></div>
   <div class="empty" id="logEmpty" style="display:none;">Henüz bir değişiklik kaydı yok.</div>
+</div>
+
+<div class="overlay" id="dataSizeOverlay">
+  <div class="modal" style="max-width:480px;">
+    <div class="modal-top" style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:10px;">
+      <h2 style="margin:0;font-size:17px;">📊 Veri Alanı Kullanımı</h2>
+      <button class="btn btn-ghost" id="dataSizeCloseBtn">Kapat</button>
+    </div>
+    <div id="dataSizeBody" style="font-size:14px;line-height:1.6;"></div>
+  </div>
 </div>
 
 <div class="overlay" id="calOverlay">
@@ -3779,6 +3790,57 @@ document.getElementById('exportBtn').addEventListener('click', ()=>{
   document.body.removeChild(a);
   URL.revokeObjectURL(url);
   showToast('Yedek indirildi ✓');
+});
+
+// ===== Data size indicator: shows how close we are to JSONBin's ~100KB per-bin limit =====
+function updateDataSizeDisplay(){
+  // This mirrors exactly what persist() sends to JSONBin — locations + calendarEvents only
+  // (activityLog is intentionally excluded, it lives in localStorage only).
+  const payload = JSON.stringify({ locations: locations, calendarEvents: calendarEvents });
+  const bytes = new Blob([payload]).size;
+  const kb = bytes / 1024;
+  const LIMIT_KB = 100; // JSONBin free-tier per-bin size limit
+  const pct = Math.min(100, (kb / LIMIT_KB) * 100);
+
+  let barColor = '#3FA34D'; // green
+  let statusText = 'Rahat — henüz hiç sorun yok.';
+  if(pct >= 85){ barColor = '#D64545'; statusText = 'Kritik — yakında sınıra çarpabiliriz, büyük metin bloklarını gözden geçirmeliyiz.'; }
+  else if(pct >= 60){ barColor = '#E8A23A'; statusText = 'Orta — takip etmeye devam edelim, henüz acil değil.'; }
+
+  const byLocSizes = locations.map(l => ({
+    name: l.name,
+    size: new Blob([JSON.stringify(l)]).size
+  })).sort((a,b)=>b.size-a.size).slice(0,5);
+
+  const body = document.getElementById('dataSizeBody');
+  body.innerHTML = `
+    <div style="margin-bottom:12px;">
+      <div style="display:flex;justify-content:space-between;font-weight:600;margin-bottom:4px;">
+        <span>${kb.toFixed(1)} KB / ~${LIMIT_KB} KB</span>
+        <span>%${pct.toFixed(0)}</span>
+      </div>
+      <div style="background:#2a2a2a;border-radius:6px;height:10px;overflow:hidden;">
+        <div style="background:${barColor};height:100%;width:${pct}%;transition:width .3s;"></div>
+      </div>
+      <div style="margin-top:6px;color:${barColor};font-weight:600;">${statusText}</div>
+    </div>
+    <div style="margin-bottom:10px;">📋 Lokasyon sayısı: <b>${locations.length}</b> · 📅 Takvim girişi: <b>${calendarEvents.length}</b></div>
+    <div style="font-size:12px;opacity:.8;margin-bottom:6px;">En çok yer kaplayan 5 lokasyon (metin/caption/prompt hacmi):</div>
+    <div style="font-size:13px;">
+      ${byLocSizes.map(x => `<div style="display:flex;justify-content:space-between;padding:2px 0;"><span>${x.name}</span><span style="opacity:.7;">${(x.size/1024).toFixed(1)} KB</span></div>`).join('')}
+    </div>
+    <div style="margin-top:12px;font-size:12px;opacity:.75;border-top:1px solid #333;padding-top:10px;">
+      Not: Görseller dosya olarak değil sadece link olarak tutulduğu için yer kaplamıyor. Asıl büyüyen şey caption/prompt/not metinleri. Sınıra yaklaşırsak, activityLog'da yaptığımız gibi (localStorage'a taşıma) bir çözüm uygularız.
+    </div>
+  `;
+}
+
+document.getElementById('dataSizeBtn').addEventListener('click', ()=>{
+  updateDataSizeDisplay();
+  document.getElementById('dataSizeOverlay').classList.add('open');
+});
+document.getElementById('dataSizeCloseBtn').addEventListener('click', ()=>{
+  document.getElementById('dataSizeOverlay').classList.remove('open');
 });
 
 // ===== Backup: restore from a previously downloaded JSON file =====
