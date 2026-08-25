@@ -1688,10 +1688,16 @@ function applyCorrections(){
         rh.package.pollCaptionFacebook = "Rumeli Hisarı'nın toprakları nasıl alındı?\n\nRivayete göre Fatih Sultan Mehmed, Bizans'tan sadece \"bir öküz derisi kadar\" yer istemiş — sonra deriyi ince şeritler halinde kesip koca bir alanı çevirmiş. Bu hikaye yüzyıllardır anlatılıyor, ama hiçbir dönemin resmi kaydında geçmiyor.\n\nSiz ne düşünüyorsunuz?\n\nRivayet değil, kayıt — ama bazen rivayetin kendisi de tarihin bir parçası oluyor. 👇\n\n#belgesel #tarih #rumelihisarı #fatihsultanmehmet\n\n--- ANKET SEÇENEKLERİ ---\nA) Gerçek bir diplomatik pazarlık hikayesi\nB) Sonradan süslenmiş bir halk efsanesi";
         changed = true;
       }
-      if(!calendarEvents.some(e => e.locationId === rh.id && e.date === '2026-09-04' && e.platform === 'fb_poll')){
-        calendarEvents.push({ id:'cal_'+Date.now()+'_rh_poll', locationId: rh.id, platform:'fb_poll', title:'Rumeli Hisarı — Öküz Derisi Rivayeti Anketi', date:'2026-09-04', time:'20:00', uploaded:false });
+      if(!calendarEvents.some(e => e.locationId === rh.id && e.date === '2026-08-31' && e.platform === 'fb_poll')){
+        calendarEvents.push({ id:'cal_'+Date.now()+'_rh_poll', locationId: rh.id, platform:'fb_poll', title:'Rumeli Hisarı — Öküz Derisi Rivayeti Anketi', date:'2026-08-31', time:'13:00', uploaded:false });
         changed = true;
       }
+      // Move the poll if it was already created on the old (too-late) date
+      calendarEvents.forEach(e=>{
+        if(e.locationId===rh.id && e.platform==='fb_poll' && e.date==='2026-09-04'){
+          e.date = '2026-08-31'; e.time = '13:00'; changed = true;
+        }
+      });
     }
   }
   {
