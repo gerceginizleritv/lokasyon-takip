@@ -2519,7 +2519,14 @@ async function loadData(){
     const record = json && json.record ? json.record : {};
     locations = Array.isArray(record.locations) ? record.locations : [];
     calendarEvents = Array.isArray(record.calendarEvents) ? record.calendarEvents : [];
-    activityLog = Array.isArray(record.activityLog) ? record.activityLog : [];
+    // activityLog artık JSONBin'e gönderilmiyor (100KB sınırını zorluyordu) —
+    // sadece bu tarayıcıda, localStorage'da tutuluyor.
+    try{
+      const localLog = localStorage.getItem('gerceginizleri_activity_log');
+      activityLog = localLog ? JSON.parse(localLog) : [];
+    }catch(e){
+      activityLog = [];
+    }
     if(locations.length === 0){
       locations = seedData.map((l,i)=>({...l, id: 'loc_'+Date.now()+'_'+i}));
       await persistNow();
@@ -2554,7 +2561,7 @@ async function persistNow(retriesLeft){
         'Content-Type': 'application/json',
         'X-Master-Key': JSONBIN_MASTER_KEY
       },
-      body: JSON.stringify({ locations: locations, calendarEvents: calendarEvents, activityLog: activityLog })
+      body: JSON.stringify({ locations: locations, calendarEvents: calendarEvents })
     });
     if(!res.ok) throw new Error('HTTP ' + res.status);
     hideToast();
@@ -3045,6 +3052,7 @@ function logActivity(message){
   const stamp = `${calPad(now.getDate())}.${calPad(now.getMonth()+1)} ${calPad(now.getHours())}:${calPad(now.getMinutes())}`;
   activityLog.unshift({ time: stamp, message: message });
   if(activityLog.length > 200) activityLog.length = 200;
+  try{ localStorage.setItem('gerceginizleri_activity_log', JSON.stringify(activityLog)); }catch(e){ /* non-critical */ }
 }
 
 function renderLog(){
@@ -3077,7 +3085,7 @@ document.getElementById('logCopyBtn').addEventListener('click', ()=>{
 document.getElementById('logClearBtn').addEventListener('click', async ()=>{
   if(!confirm('Tüm değişiklik kaydını temizlemek istediğine emin misin? (Bunu genelde Claude\'a gönderdikten sonra yaparsın.)')) return;
   activityLog = [];
-  await persist();
+  try{ localStorage.removeItem('gerceginizleri_activity_log'); }catch(e){ /* non-critical */ }
   renderLog();
 });
 
