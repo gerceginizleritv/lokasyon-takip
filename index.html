@@ -589,77 +589,6 @@ select{
   border:1px dashed var(--line);
 }
 
-@media(max-width:600px){
-  h1{font-size:21px;}
-  .stats-row{gap:8px;}
-  .stat{border-right:none;padding:0;min-width:80px;}
-
-  /* Modal: use nearly the full screen on phones, less wasted padding */
-  .overlay{padding:8px;align-items:flex-start;}
-  .modal, .modal-wide{
-    max-width:100%;
-    max-height:94vh;
-    padding:16px 14px;
-    margin-top:8px;
-  }
-
-  /* Field label + Kopyala button: stack instead of squeezing side-by-side,
-     and make the button a full-width, easy-to-tap row of its own. */
-  .field-header{
-    flex-direction:column;
-    align-items:stretch;
-    gap:6px;
-  }
-  .copy-btn{
-    width:100%;
-    padding:9px 9px;
-    font-size:12.5px;
-    text-align:center;
-  }
-
-  /* Stamps (Script/Çekim/Ses/Kurgu/Yayın/İzin): bigger touch targets,
-     3-per-row instead of cramming 6 into one line. */
-  .stamp{
-    flex:1 1 30%;
-    min-width:0;
-    padding:10px 2px;
-  }
-  .stamp .v{font-size:15px;}
-
-  /* Calendar platform picker checkboxes: full-width rows, easier to tap */
-  .cal-platform-checks{gap:6px;}
-  .cal-platform-check{
-    flex:1 1 100%;
-    padding:10px 12px;
-  }
-
-  /* Package section titles wrap cleanly, JSON-paste box stays usable */
-  .pkg-section-title{font-size:9.5px;}
-  #p_jsonPaste{min-height:70px;}
-
-  /* Calendar (Dikey/Ay) grid: 7 columns is unusable on a phone — collapse
-     to a single-column agenda list instead, one full-width row per day. */
-  .cal-grid{grid-template-columns:1fr;}
-  .cal-dow{display:none;}
-  .cal-day{
-    aspect-ratio:auto;
-    overflow:visible;
-    padding:12px 14px;
-    min-height:0;
-  }
-  .cal-day-num{font-size:13px;margin-bottom:8px;}
-  .cal-chip-row{margin-bottom:6px;}
-  .cal-chip{padding:8px 10px;}
-  .cal-badge{width:30px;height:30px;font-size:10px;}
-  .cal-chip-time{font-size:10.5px;}
-  .cal-chip-mid{overflow:visible;}
-  .cal-chip-title{font-size:12px;white-space:normal;overflow:visible;text-overflow:clip;}
-  .cal-more-clickable{padding:8px 4px;font-size:11px;}
-
-  /* Yatay (Tablo) view: horizontal scroll instead of squeezing 9 columns */
-  .cal-table{table-layout:auto;min-width:820px;}
-  #calTableView{overflow-x:auto;-webkit-overflow-scrolling:touch;}
-}
 .backup-row{
   display:flex;
   gap:6px;
@@ -839,6 +768,85 @@ select{
 .log-item:hover{background:var(--ink-2);}
 .log-time{font-family:'JetBrains Mono',monospace;font-size:10.5px;color:var(--gold-dim);flex-shrink:0;white-space:nowrap;}
 .log-msg{color:var(--parchment-dim);}
+
+/* Moved to end of stylesheet so these mobile overrides always win the
+   cascade over same-specificity base rules declared later in the file
+   (e.g. .cal-grid/.cal-day/.cal-table) — CSS source order previously put
+   this block BEFORE those base rules, so on phones the media query never
+   actually took effect and the calendar rendered as a tiny unreadable
+   7-column desktop grid. */
+@media(max-width:600px){
+  h1{font-size:21px;}
+  .stats-row{gap:8px;}
+  .stat{border-right:none;padding:0;min-width:80px;}
+
+  /* Modal: use nearly the full screen on phones, less wasted padding */
+  .overlay{padding:8px;align-items:flex-start;}
+  .modal, .modal-wide{
+    max-width:100%;
+    max-height:94vh;
+    padding:16px 14px;
+    margin-top:8px;
+  }
+
+  /* Field label + Kopyala button: stack instead of squeezing side-by-side,
+     and make the button a full-width, easy-to-tap row of its own. */
+  .field-header{
+    flex-direction:column;
+    align-items:stretch;
+    gap:6px;
+  }
+  .copy-btn{
+    width:100%;
+    padding:9px 9px;
+    font-size:12.5px;
+    text-align:center;
+  }
+
+  /* Stamps (Script/Çekim/Ses/Kurgu/Yayın/İzin): bigger touch targets,
+     3-per-row instead of cramming 6 into one line. */
+  .stamp{
+    flex:1 1 30%;
+    min-width:0;
+    padding:10px 2px;
+  }
+  .stamp .v{font-size:15px;}
+
+  /* Calendar platform picker checkboxes: full-width rows, easier to tap */
+  .cal-platform-checks{gap:6px;}
+  .cal-platform-check{
+    flex:1 1 100%;
+    padding:10px 12px;
+  }
+
+  /* Package section titles wrap cleanly, JSON-paste box stays usable */
+  .pkg-section-title{font-size:9.5px;}
+  #p_jsonPaste{min-height:70px;}
+
+  /* Calendar (Dikey/Ay) grid: 7 columns is unusable on a phone — collapse
+     to a single-column agenda list instead, one full-width row per day. */
+  .cal-grid{grid-template-columns:1fr;}
+  .cal-dow{display:none;}
+  .cal-day{
+    aspect-ratio:auto;
+    overflow:visible;
+    padding:12px 14px;
+    min-height:0;
+  }
+  .cal-day-num{font-size:13px;margin-bottom:8px;}
+  .cal-chip-row{margin-bottom:6px;}
+  .cal-chip{padding:8px 10px;}
+  .cal-badge{width:30px;height:30px;font-size:10px;}
+  .cal-chip-time{font-size:10.5px;}
+  .cal-chip-mid{overflow:visible;}
+  .cal-chip-title{font-size:12px;white-space:normal;overflow:visible;text-overflow:clip;}
+  .cal-more-clickable{padding:8px 4px;font-size:11px;}
+
+  /* Yatay (Tablo) view: horizontal scroll instead of squeezing 9 columns */
+  .cal-table{table-layout:auto;min-width:820px;}
+  #calTableView{overflow-x:auto;-webkit-overflow-scrolling:touch;}
+}
+
 </style>
 </head>
 <body>
