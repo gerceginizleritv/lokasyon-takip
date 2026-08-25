@@ -1786,9 +1786,9 @@ function applyCorrections(){
   );
   ensureStory(
     "Kariye (Chora)",
-    "BUNU BİLİYOR MUYDUNUZ?\nKariye'deki mozaiklerin çoğunda kim olduğu yazılı değil — sanat tarihçileri hâlâ tartışıyor.",
-    "@Görsel: [Altın mozaik detayının gerçek fotoğrafını yükle]\n\n@Video: A slow, reverent pan across an intricate golden Byzantine mosaic ceiling, the camera moving at the unhurried pace of someone genuinely looking up in wonder rather than filming for content. Soft, warm ambient light catches the countless individual gold tesserae at slightly different angles as the camera moves, producing a gentle, living shimmer across the surface — as if the mosaic itself is breathing. Fine architectural shadow lines from the vaulting fall softly across the gold, adding depth and rhythm to the composition. No abrupt movement; the camera glides as if floating. Rich golden-amber color grade, cinematic documentary realism, hushed and contemplative mood, 9:16 vertical, no text, no logos.",
-    '2026-09-11', '10:00', 'Kariye — İsimsiz Mozaikler Story'
+    "BUNU BİLİYOR MUYDUNUZ?\nKariye'deki bir portrenin, Moğol sarayına gelin gönderilen hüzünlü bir Bizans prensesini betimlediği düşünülüyor.",
+    "Using the uploaded reference image as the exact visual basis, animate it into a slow, cinematic video. Do NOT alter, redesign, reinterpret, or regenerate the mosaic or fresco itself in any way — its exact details, colors, and proportions must remain identical to the reference photo throughout the entire video. Only add camera movement, lighting, and atmosphere; the artwork itself must stay completely static and unchanged.\n\nA slow, contemplative dolly-in toward the Byzantine portrait, warm ambient light gently catching the gold and muted pigment surface, fine architectural shadow lines falling softly across the image. The camera moves with quiet, respectful pacing, as if lingering on a face whose full story is only half-known. No sudden movement, no cuts.\n\nCinematic documentary realism, rich golden-amber tones, hushed and melancholic mood, 9:16 vertical, no text, no logos, no overlays.",
+    '2026-09-11', '10:00', 'Kariye — Moğol Prensesi Story'
   );
   ensureStory(
     "Zeyrek Camii",
@@ -1979,6 +1979,13 @@ function applyCorrections(){
         calendarEvents.push({ id:'cal_'+Date.now()+'_kariye_story', locationId: kariye.id, platform:'story', title:'Kariye — İstanbul Sokaklarında Saklı (S/B Video Story)', date:'2026-08-29', time:'20:30', uploaded:false });
         changed = true;
       }
+      // 29 Ağustos story'si gerçekten yayınlandı (25 Ağustos'ta üretilip
+      // paylaşıldı) — Yükledim olarak işaretle.
+      calendarEvents.forEach(e=>{
+        if(e.locationId===kariye.id && e.date==='2026-08-29' && e.platform==='story' && !e.uploaded){
+          e.uploaded = true; changed = true;
+        }
+      });
       calendarEvents.forEach(e=>{
         if(e.locationId===kariye.id && e.date==='2026-08-29' && e.platform==='ig_car' && e.time!=='21:00'){ e.time='21:00'; changed=true; }
         if(e.locationId===kariye.id && e.date==='2026-08-29' && e.platform==='fb_car' && e.time!=='22:00'){ e.time='22:00'; changed=true; }
