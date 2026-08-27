@@ -1206,8 +1206,22 @@ select{
 
 <div class="overlay" id="pkgOverlay">
   <div class="modal modal-wide">
-    <h2 id="pkgTitle">Yayın Paketi</h2>
+    <h2 id="pkgTitle">Script / Prodüksiyon Notu</h2>
     <input type="hidden" id="pkgId">
+    <div class="pkg-hint" style="background:rgba(200,162,74,0.08);border:1px solid var(--gold-dim);padding:10px 12px;margin-bottom:14px;">
+      📌 <b>Mimari değişti (28 Ağustos 2026):</b> Caption, hashtag, kapak/thumbnail prompt ve carousel slaytları artık burada değil — <b>Yayın Takvimi'ndeki ilgili kayıt üzerinde</b> tutuluyor (her kayda tıklayınca düzenlenebiliyor). Burada sadece bu lokasyonla ilgili <b>script / sahada çekilmesi gereken notlar</b> kalıyor.
+    </div>
+
+    <div class="pkg-section" style="border-top:none;margin-top:0;padding-top:0;">
+      <div class="pkg-section-title" style="color:#E8912D;" data-i18n="pkg_section_shotlist">🎥 Sahada Çekilmesi Gerekenler</div>
+      <div class="field">
+        <textarea id="p_shotList" data-i18n-placeholder="p_shotlist_ph" placeholder="Giriş çekimi, çıkış çekimi, kapanış planı, özellikle vurgulanacak detay çekimleri vs. — maddeler halinde"></textarea>
+      </div>
+    </div>
+
+    <details style="margin-top:18px;border-top:1px solid var(--line);padding-top:12px;">
+      <summary style="cursor:pointer;color:var(--parchment-dim);font-size:12.5px;user-select:none;">🗄️ Eski içerik alanları (artık kullanılmıyor — sadece geçmiş referans için, göstermek için tıkla)</summary>
+      <div style="margin-top:12px;">
 
     <div class="pkg-section" style="border-top:none;margin-top:0;padding-top:0;">
       <div class="pkg-section-title" style="color:var(--gold);">📥 Claude'dan Yapıştır (tek seferde tüm alanları doldurur)</div>
@@ -1216,13 +1230,6 @@ select{
         <textarea id="p_jsonPaste" placeholder='{"captionYouTube": "...", "captionInstagram": "...", ...}' style="min-height:80px;font-family:'JetBrains Mono',monospace;font-size:11px;"></textarea>
       </div>
       <button type="button" class="btn btn-ghost btn-small" id="pkgFillFromJsonBtn">⬇ Alanları Doldur</button>
-    </div>
-
-    <div class="pkg-section" style="border-top:none;margin-top:0;padding-top:0;">
-      <div class="pkg-section-title" style="color:#E8912D;" data-i18n="pkg_section_shotlist">🎥 Sahada Çekilmesi Gerekenler</div>
-      <div class="field">
-        <textarea id="p_shotList" data-i18n-placeholder="p_shotlist_ph" placeholder="Giriş çekimi, çıkış çekimi, kapanış planı, özellikle vurgulanacak detay çekimleri vs. — maddeler halinde"></textarea>
-      </div>
     </div>
 
     <div class="pkg-section">
@@ -1487,6 +1494,9 @@ select{
       </div>
     </div>
 
+      </div>
+    </details>
+
     <div class="modal-actions">
       <button class="btn btn-ghost" id="pkgCancelBtn" data-i18n="btn_cancel">Vazgeç</button>
       <button class="btn" id="pkgSaveBtn" data-i18n="btn_save">Kaydet</button>
@@ -1567,7 +1577,7 @@ const LANG = {
     script_open: "📄 Script'i Drive'da Aç →", script_short: "📄 Script",
     maps_open: "🗺️ Haritada Aç →", f_mapslink_label: "Google Maps Linki (opsiyonel)",
     drive_folder_open: "📁 Drive Klasörünü Aç →",
-    btn_package: "📦 Yayın Paketi", btn_edit: "Düzenle",
+    btn_package: "🎬 Script Notu", btn_edit: "Düzenle",
     stamp_script: "Script", stamp_filmed: "Çekim", stamp_audio: "Ses", stamp_edited: "Kurgu", stamp_published: "Yayın", stamp_permission: "İzin",
     modal_new: "Yeni Lokasyon Dosyası", modal_edit: "Dosyayı Düzenle",
     f_name_label: "Yer Adı", f_name_ph: "Örn: Gül Camii",
@@ -1577,7 +1587,7 @@ const LANG = {
     f_script_label: "Script Hazır mı?", f_filmed_label: "Çekildi mi?", f_audio_label: "Ses Kaydı", f_edited_label: "Kurgu", f_published_label: "Yayınlandı",
     f_scriptlink_label: "Script Drive Linki", f_drivefolder_label: "Drive Klasörü Linki", f_notes_label: "Notlar", f_notes_ph: "Ek notlar, script durumu vs.",
     btn_delete: "Sil", btn_cancel: "Vazgeç", btn_save: "Kaydet",
-    pkg_title: "Yayın Paketi",
+    pkg_title: "Script / Prodüksiyon Notu",
     pkg_section_youtube: "YouTube (Uzun Video)", pkg_section_reels: "Reels / Shorts", pkg_section_seo: "SEO — Hashtag / Tag / Arama Hacmi", pkg_section_captions: "Platform Bazlı Caption'lar",
     p_ytitles_label: "Başlık Seçenekleri (satır satır)", p_ytthumb_label: "Thumbnail Görsel Prompt'u",
     p_thumb_hint: "Görseli ben üretemiyorum (Gemini'ye doğrudan bağlantım yok) — bu metni Flow'a yapıştırman yeterli.",
@@ -3311,39 +3321,79 @@ function refreshCalModalStatus(){
 
 function refreshCalPkgFields(){
   const fields = document.getElementById('calPkgFields');
-  const locId = document.getElementById('cal_locationId').value;
   const type = currentPreviewType();
   const platform = currentPreviewPlatform();
-  const loc = locations.find(l=>l.id===locId);
-  if(!loc || !loc.package){ fields.innerHTML = ''; return; }
-  const pkg = loc.package;
-  // Per-event override: lets a calendar entry point at a specific package
-  // field (e.g. reel1CaptionInstagram) instead of the type+platform's
-  // shared default field, so a location can have multiple Reels/posts of
-  // the same type+platform without them overwriting each other's caption.
-  const fieldKey = (calCurrentEvent && calCurrentEvent.captionFieldOverride)
-    || (CAL_TYPE_PLATFORM_FIELD[type] && CAL_TYPE_PLATFORM_FIELD[type][platform])
-    || 'captionInstagram';
-  const caption = pkg[fieldKey] || '(bu lokasyon için henüz bu içerik tipine ait caption girilmemiş — Yayın Paketi'+"'"+'nden doldurabilirsin)';
-  const hashtagVal = platform === 'facebook' ? (pkg.fbTags || '') : (type === 'video' && platform === 'youtube' ? (pkg.tags||'') : (type === 'shorts' ? (pkg.shortsTags||'') : (pkg.hashtags||'')));
-  fields.innerHTML = `
+  const ev = calCurrentEvent;
+
+  // Yeni mimari: içerik (caption/hashtag/kapak prompt/carousel slaytları)
+  // artık doğrudan takvim kaydının ÜZERİNDE (ev.content) tutuluyor — lokasyonun
+  // paylaşılan paketine bağımlı değil. ev.content yoksa (eski/legacy kayıt
+  // veya yeni giriş), eski lokasyon-paketi mekanizmasından TEK SEFERLİK
+  // okunur ve ekranda gösterilir; Kaydet'e basıldığında ev.content olarak
+  // kalıcı hale gelir, böylece aynı sorun bir daha yaşanmaz.
+  let content = (ev && ev.content) ? ev.content : null;
+  if(!content){
+    const locId = document.getElementById('cal_locationId').value;
+    const loc = locations.find(l=>l.id===locId);
+    const pkg = (loc && loc.package) ? loc.package : {};
+    const fieldKey = (ev && ev.captionFieldOverride)
+      || (CAL_TYPE_PLATFORM_FIELD[type] && CAL_TYPE_PLATFORM_FIELD[type][platform])
+      || 'captionInstagram';
+    const hashtagVal = platform === 'facebook' ? (pkg.fbTags || '') : (type === 'video' && platform === 'youtube' ? (pkg.tags||'') : (type === 'shorts' ? (pkg.shortsTags||'') : (pkg.hashtags||'')));
+    let thumbPrompt = '';
+    if(type === 'carousel'){ /* handled below via slidePrompts */ }
+    else if(platform === 'facebook' && (type==='video')) thumbPrompt = pkg.fbCoverPrompt || '';
+    else thumbPrompt = pkg.youtubeThumbPrompt || pkg.reel1ThumbPrompt || pkg.reel2ThumbPrompt || '';
+    const slidePrompts = [];
+    if(type === 'carousel'){
+      for(let i=1;i<=9;i++) slidePrompts.push(pkg['carouselSlidePrompt'+i] || '');
+    }
+    content = { caption: pkg[fieldKey] || '', hashtags: hashtagVal || '', thumbPrompt, slidePrompts };
+  }
+
+  let html = `
     <div class="pkg-field">
       <div class="field-header">
-        <div class="pkg-label">İlgili Caption (${CAL_TYPE_NAMES[type]} · ${CAL_SM_NAMES[platform]})</div>
-        <button type="button" class="copy-btn" data-copy-target="calPreviewCaptionText">📋 Kopyala</button>
+        <label>Caption (${CAL_TYPE_NAMES[type]} · ${CAL_SM_NAMES[platform]})</label>
+        <button type="button" class="copy-btn" data-copy-target="calEditCaption">📋 Kopyala</button>
       </div>
-      <div class="pkg-value">${escapeHtml(caption)}</div>
-      <textarea id="calPreviewCaptionText" style="display:none;">${escapeHtml(caption)}</textarea>
+      <textarea id="calEditCaption">${escapeHtml(content.caption||'')}</textarea>
     </div>
-    ${hashtagVal ? `<div class="pkg-field">
+    <div class="pkg-field">
       <div class="field-header">
-        <div class="pkg-label">Hashtag / Etiket</div>
-        <button type="button" class="copy-btn" data-copy-target="calPreviewHashtagText">📋 Kopyala</button>
+        <label>Hashtag / Etiket (virgüllü, # olmadan)</label>
+        <button type="button" class="copy-btn" data-copy-target="calEditHashtags">📋 Kopyala</button>
       </div>
-      <div class="pkg-value">${escapeHtml(hashtagVal)}</div>
-      <textarea id="calPreviewHashtagText" style="display:none;">${escapeHtml(hashtagVal)}</textarea>
-    </div>` : ''}
-  `;
+      <textarea id="calEditHashtags">${escapeHtml(content.hashtags||'')}</textarea>
+    </div>`;
+
+  if(type === 'video' || type === 'shorts' || type === 'reels'){
+    html += `
+    <div class="pkg-field">
+      <div class="field-header">
+        <label>Kapak / Thumbnail Görsel Prompt'u</label>
+        <button type="button" class="copy-btn" data-copy-target="calEditThumbPrompt">📋 Kopyala</button>
+      </div>
+      <textarea id="calEditThumbPrompt">${escapeHtml(content.thumbPrompt||'')}</textarea>
+    </div>`;
+  }
+
+  if(type === 'carousel'){
+    const slides = (content.slidePrompts && content.slidePrompts.length) ? content.slidePrompts : Array(9).fill('');
+    html += `<div class="pkg-section-title" style="margin-top:10px;color:#9C4FBF;">🖼️ Carousel Slayt Prompt'ları (9)</div>`;
+    for(let i=0;i<9;i++){
+      html += `
+      <div class="pkg-field">
+        <div class="field-header">
+          <label>Slayt ${i+1}</label>
+          <button type="button" class="copy-btn" data-copy-target="calEditSlide${i+1}">📋 Kopyala</button>
+        </div>
+        <textarea id="calEditSlide${i+1}">${escapeHtml(slides[i]||'')}</textarea>
+      </div>`;
+    }
+  }
+
+  fields.innerHTML = html;
 }
 
 // Copy buttons inside the calendar entry preview (İlgili Caption / Hashtag) —
@@ -3402,6 +3452,22 @@ document.getElementById('calUploadToggle').addEventListener('click', ()=>{
   renderCal();
 });
 
+function collectCalContentFromForm(type){
+  const content = {
+    caption: document.getElementById('calEditCaption') ? document.getElementById('calEditCaption').value : '',
+    hashtags: document.getElementById('calEditHashtags') ? document.getElementById('calEditHashtags').value : '',
+    thumbPrompt: document.getElementById('calEditThumbPrompt') ? document.getElementById('calEditThumbPrompt').value : '',
+    slidePrompts: []
+  };
+  if(type === 'carousel'){
+    for(let i=1;i<=9;i++){
+      const el = document.getElementById('calEditSlide'+i);
+      content.slidePrompts.push(el ? el.value : '');
+    }
+  }
+  return content;
+}
+
 document.getElementById('calSaveBtn').addEventListener('click', async ()=>{
   const locationId = document.getElementById('cal_locationId').value;
   const title = document.getElementById('cal_title').value.trim();
@@ -3428,16 +3494,21 @@ document.getElementById('calSaveBtn').addEventListener('click', async ()=>{
     calCurrentEvent.title = title;
     calCurrentEvent.date = date;
     calCurrentEvent.time = time;
+    // İçerik (caption/hashtag/kapak prompt/carousel slaytları) artık
+    // doğrudan bu kayıt üzerinde saklanıyor — lokasyon paketine bağımlı değil.
+    calCurrentEvent.content = collectCalContentFromForm(type);
     logActivity(`Takvim girişi güncellendi: "${title}" (${CAL_TYPE_NAMES[type]} · ${CAL_SM_NAMES[platform]}, ${date} ${time}).`);
   } else {
     const type = document.getElementById('cal_type').value;
     const platforms = getSelectedNewPlatforms();
     if(platforms.length === 0){ alert('En az bir SM hesabı seç.'); return; }
+    const content = collectCalContentFromForm(type);
     platforms.forEach((platform, i)=>{
       calendarEvents.push({
         id: 'cal_'+Date.now()+'_'+i,
         locationId, type, platform, title, date, time,
-        uploaded: calNewUploadedState
+        uploaded: calNewUploadedState,
+        content: JSON.parse(JSON.stringify(content))
       });
     });
     const platformNames = platforms.map(p=>CAL_SM_NAMES[p]).join(', ');
