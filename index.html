@@ -1351,6 +1351,13 @@ select{
       </div>
       <div class="field">
         <div class="field-header">
+          <label>Reels #1 — Dikey Kapak Prompt'u (9:16)</label>
+          <button type="button" class="copy-btn" data-copy-target="p_reel1ThumbPrompt">📋 Kopyala</button>
+        </div>
+        <textarea id="p_reel1ThumbPrompt"></textarea>
+      </div>
+      <div class="field">
+        <div class="field-header">
           <label>Reels #2 — Instagram</label>
           <button type="button" class="copy-btn" data-copy-target="p_reel2CaptionInstagram">📋 Kopyala</button>
         </div>
@@ -1362,6 +1369,13 @@ select{
           <button type="button" class="copy-btn" data-copy-target="p_reel2CaptionFacebook">📋 Kopyala</button>
         </div>
         <textarea id="p_reel2CaptionFacebook"></textarea>
+      </div>
+      <div class="field">
+        <div class="field-header">
+          <label>Reels #2 — Dikey Kapak Prompt'u (9:16)</label>
+          <button type="button" class="copy-btn" data-copy-target="p_reel2ThumbPrompt">📋 Kopyala</button>
+        </div>
+        <textarea id="p_reel2ThumbPrompt"></textarea>
       </div>
     </div>
 
@@ -1758,6 +1772,7 @@ function defaultPackage(){
     captionShorts:"", captionYouTube:"", captionInstagram:"", captionFacebook:"",
     carouselCaptionInstagram:"", carouselCaptionFacebook:"",
     reel1CaptionInstagram:"", reel1CaptionFacebook:"", reel2CaptionInstagram:"", reel2CaptionFacebook:"",
+    reel1ThumbPrompt:"", reel2ThumbPrompt:"",
     pollCaptionFacebook:"",
     storyKnowledgeText:"",
     fbTags:"", fbCoverPrompt:"",
@@ -1910,6 +1925,14 @@ function applyCorrections(){
       }
       if(!rh2.package.reel2CaptionFacebook){
         rh2.package.reel2CaptionFacebook = "Bu bir kale inşaatı değildi, bir savaş öncesi seferberlikti. ⚔️\n\nRumeli Hisarı sadece dört ayda tamamlandı. Üç yüz usta, yedi-sekiz yüz işçi, iki yüz arabacı ve kayıkçı — hepsi aynı anda çalışmış. Kereste İznik'ten, kireç Çubuklu'dan, demir Kavak ve Büyükada'dan, taş İstinye'den taşınmış.\n\nRivayet değil, kayıt.\n\n#belgesel #tarih";
+        changed = true;
+      }
+      if(!rh2.package.reel1ThumbPrompt){
+        rh2.package.reel1ThumbPrompt = "Vertical 9:16 Reels cover photo. A man in full motorcycle riding gear stands in the lower-third of frame at Rumeli Hisarı, half-turned toward camera with an intrigued, storytelling expression (mouth slightly open as if mid-sentence, eyebrows raised — NOT shocked, more like sharing a secret). Reference photo for face/identity — follow it exactly, do not redesign or restyle the face. Behind him, the fortress's three stone towers rise dramatically at golden hour, warm amber light raking across the weathered stone, deep long shadows. He gestures subtly toward the walls with one hand, as if pointing out the ox-hide legend. Cinematic documentary color grade, shallow depth of field keeping him sharp against a slightly softened fortress background. Generous empty negative space in the upper two-thirds of frame for a bold title overlay to be added later — no text baked in. Rich amber-gold and deep charcoal palette, no logos.";
+        changed = true;
+      }
+      if(!rh2.package.reel2ThumbPrompt){
+        rh2.package.reel2ThumbPrompt = "Vertical 9:16 Reels cover photo. A man in full motorcycle riding gear stands close to Rumeli Hisarı's massive stone wall, in the lower-third of frame, one hand resting on the weathered stonework as if inspecting the construction himself. His expression is thoughtful and impressed — studying the scale of the masonry, not smiling, a quiet 'look at the size of this' intensity. Reference photo for face/identity — follow it exactly, do not redesign or restyle the face. The stone blocks and mortar lines of the fortress wall fill much of the frame beside him, textured and imposing, catching late golden-hour light at a raking angle that emphasizes their rough-hewn scale. Cinematic documentary color grade, shallow depth of field. Generous empty negative space in the upper two-thirds of frame for a bold title overlay to be added later — no text baked in. Rich amber-gold and deep charcoal palette, no logos.";
         changed = true;
       }
 
@@ -3989,8 +4012,10 @@ function openPkgModal(id){
   document.getElementById('p_carouselCaptionFacebook').value = l.package.carouselCaptionFacebook || '';
   document.getElementById('p_reel1CaptionInstagram').value = l.package.reel1CaptionInstagram || '';
   document.getElementById('p_reel1CaptionFacebook').value = l.package.reel1CaptionFacebook || '';
+  document.getElementById('p_reel1ThumbPrompt').value = l.package.reel1ThumbPrompt || '';
   document.getElementById('p_reel2CaptionInstagram').value = l.package.reel2CaptionInstagram || '';
   document.getElementById('p_reel2CaptionFacebook').value = l.package.reel2CaptionFacebook || '';
+  document.getElementById('p_reel2ThumbPrompt').value = l.package.reel2ThumbPrompt || '';
   document.getElementById('p_pollCaptionFacebook').value = l.package.pollCaptionFacebook || '';
   document.getElementById('p_storyKnowledgeText').value = l.package.storyKnowledgeText || '';
   document.getElementById('p_fbTags').value = l.package.fbTags;
@@ -4059,8 +4084,10 @@ document.getElementById('pkgSaveBtn').addEventListener('click', async ()=>{
     carouselCaptionFacebook: document.getElementById('p_carouselCaptionFacebook').value,
     reel1CaptionInstagram: document.getElementById('p_reel1CaptionInstagram').value,
     reel1CaptionFacebook: document.getElementById('p_reel1CaptionFacebook').value,
+    reel1ThumbPrompt: document.getElementById('p_reel1ThumbPrompt').value,
     reel2CaptionInstagram: document.getElementById('p_reel2CaptionInstagram').value,
     reel2CaptionFacebook: document.getElementById('p_reel2CaptionFacebook').value,
+    reel2ThumbPrompt: document.getElementById('p_reel2ThumbPrompt').value,
     pollCaptionFacebook: document.getElementById('p_pollCaptionFacebook').value,
     storyKnowledgeText: document.getElementById('p_storyKnowledgeText').value,
     fbTags: document.getElementById('p_fbTags').value,
