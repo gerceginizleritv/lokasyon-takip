@@ -1922,7 +1922,6 @@ function applyCorrections(){
 
   // ÖZEL GÜNLER (25 Ağustos 2026'dan itibaren) — belirli lokasyona bağlı
   // olmayan milli/özel gün içerikleri için sembolik bir "lokasyon" kaydı.
-  // 30 Ağustos Zafer Bayramı, o günün mevcut içeriklerine EK olarak eklenir.
   {
     let ozelGunler = locations.find(l => l.name === "Özel Günler / Kanal İçeriği");
     if(!ozelGunler){
@@ -1939,39 +1938,12 @@ function applyCorrections(){
       changed = true;
     }
     if(!ozelGunler.package) ozelGunler.package = defaultPackage();
-
-    const feedPrompt = "A dignified, cinematic photograph of a large Turkish flag waving gently against a warm golden-hour sky, photographed from a low angle so the flag fills much of the frame. In the soft-focus background, the silhouette of a historic Istanbul skyline — domes and a slender minaret — barely visible through warm amber haze. Rich, deep red flag color with the crescent and star crisp and clear, subtle fabric texture and natural wind movement. Warm cinematic lighting, shallow depth of field, documentary photography realism, no people, no text, no logos, respectful and solemn mood — not festive or crowded.";
-    const storyPrompt = "A slow, solemn, cinematic photograph: a Turkish flag mounted on an old stone fortress wall (reminiscent of a historic Bosphorus fortress), photographed at dusk with warm amber light fading into deep blue sky. The flag hangs still or gently moves in a light breeze, stone battlements visible in the foreground with soft shadow detail. Muted, dignified color grade — warm gold and deep charcoal tones matching a documentary aesthetic. No people, no text, no logos, quiet and reverent atmosphere.";
-
-    const igCaption = "30 Ağustos Zafer Bayramımız kutlu olsun. 🇹🇷\n\n--- GÖRSEL PROMPT'U (Feed 4:5) ---\n" + feedPrompt;
-    if(!ozelGunler.package.captionInstagram || !ozelGunler.package.captionInstagram.includes('Zafer Bayramımız')){
-      ozelGunler.package.captionInstagram = igCaption;
-      changed = true;
-    }
-
-    const fbCaption = "Bugün, bu topraklarda yazılan her satırın temelini oluşturan bir gün. 30 Ağustos Zafer Bayramımız kutlu olsun. Rivayet değil, kayıt — ve bu gün, kayıtların en onurlularından biri. 🇹🇷 #zaferbayramı #30ağustos #tarih\n\n--- GÖRSEL PROMPT'U (Feed 4:5) ---\n" + feedPrompt;
-    if(!ozelGunler.package.captionFacebook || !ozelGunler.package.captionFacebook.includes('Zafer Bayramımız')){
-      ozelGunler.package.captionFacebook = fbCaption;
-      changed = true;
-    }
-
-    const storyText = "EKRAN METNİ:\n30 Ağustos Zafer Bayramımız kutlu olsun. 🇹🇷\n\n--- VİDEO/GÖRSEL PROMPT'U (Story 9:16) ---\n" + storyPrompt;
-    if(!ozelGunler.package.storyKnowledgeText || !ozelGunler.package.storyKnowledgeText.includes('Zafer Bayramımız')){
-      ozelGunler.package.storyKnowledgeText = storyText;
-      changed = true;
-    }
-
-    const zaferEntries = [
-      {platform:'ig', time:'09:00', title:'30 Ağustos Zafer Bayramı — Instagram Kutlama Postu'},
-      {platform:'fb', time:'09:00', title:'30 Ağustos Zafer Bayramı — Facebook Kutlama Postu'},
-      {platform:'story', time:'09:30', title:'30 Ağustos Zafer Bayramı — Story'},
-    ];
-    zaferEntries.forEach(ze=>{
-      if(!calendarEvents.some(e => e.locationId === ozelGunler.id && e.date === '2026-08-30' && e.platform === ze.platform)){
-        calendarEvents.push({ id:'cal_'+Date.now()+'_zafer_'+ze.platform, locationId: ozelGunler.id, platform: ze.platform, title: ze.title, date:'2026-08-30', time: ze.time, uploaded:false });
-        changed = true;
-      }
-    });
+    // NOT (28 Ağustos 2026): 30 Ağustos içeriklerini otomatik (yeniden) oluşturan
+    // eski kod buradan bilerek kaldırıldı — içerik artık takvim kayıtlarının
+    // kendi 'content' alanında tutuluyor (yeni mimari) ve kayıtlar zaten elle
+    // doğru şekilde düzenlendi (Post'tan Story'ye çevrildi). Bu blok eskiden
+    // her sayfa yüklemesinde "platform==='story'" kontrolü yapıp bulamayınca
+    // silinmiş bir kopyayı sürekli yeniden yaratıyordu — o hataydı, düzeltildi.
 
     // Diğer milli günler — placeholder olarak takvime şimdiden eklenir.
     // Yaklaştıkça (gün öncesinden) tam caption + görsel prompt paketi
