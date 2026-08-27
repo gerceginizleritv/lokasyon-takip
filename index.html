@@ -670,6 +670,10 @@ select{
 .cal-mini-chip.cal-planned{border-left:3px solid var(--gold-dim);background:var(--ink-3);color:var(--parchment-dim);}
 .cal-mini-chip.cal-ready{border-left:3px solid var(--gold);background:var(--ink-3);color:var(--parchment);}
 .cal-mini-chip.cal-live{border-left:3px solid var(--gold);background:rgba(200,162,74,0.14);color:var(--gold);}
+.pending-row{cursor:pointer;transition:background .12s;border-bottom:1px solid #2a2a2a;}
+.pending-row:hover{background:rgba(200,162,74,0.08);}
+.pending-row td{padding:7px 8px;}
+.pending-row.pending-overdue td{color:#D64545;}
 .cal-pending-toggle{
   background:var(--ink);border:1px solid var(--line);color:var(--parchment-dim);
   padding:4px 10px;font-family:'JetBrains Mono',monospace;font-size:10.5px;
@@ -875,6 +879,7 @@ select{
       <button class="btn btn-ghost btn-small" id="dataSizeBtn">📊 Veri Alanı</button>
       <button class="btn btn-ghost btn-small" id="refreshBtn">🔄 Yenile</button>
       <button class="btn btn-ghost btn-small" id="githubTokenResetBtn">🔑 Token</button>
+      <button class="btn btn-ghost btn-small" id="pendingBtn">⏳ Bekleyenler</button>
       <input type="file" id="importFile" accept="application/json" style="display:none;">
       <div class="main-tabs">
         <button class="main-tab active" id="tabLocations">📋 Lokasyonlar</button>
@@ -1006,6 +1011,16 @@ select{
   </div>
   <div id="logList"></div>
   <div class="empty" id="logEmpty" style="display:none;">Henüz bir değişiklik kaydı yok.</div>
+</div>
+
+<div class="overlay" id="pendingOverlay">
+  <div class="modal" style="max-width:720px;">
+    <div class="modal-top" style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:10px;">
+      <h2 style="margin:0;font-size:17px;">⏳ Girilmemiş / Yüklenmemiş İçerikler</h2>
+      <button class="btn btn-ghost" id="pendingCloseBtn">Kapat</button>
+    </div>
+    <div id="pendingBody" style="font-size:13px;"></div>
+  </div>
 </div>
 
 <div class="overlay" id="dataSizeOverlay">
@@ -3477,7 +3492,7 @@ function showMainTab(tab){
   document.getElementById('tabLocations').classList.toggle('active', tab==='locations');
   document.getElementById('tabCalendar').classList.toggle('active', tab==='calendar');
   document.getElementById('tabLog').classList.toggle('active', tab==='log');
-  if(tab==='calendar') renderCal();
+  if(tab==='calendar'){ renderCal(); showPendingPopup(true); }
   if(tab==='log') renderLog();
 }
 document.getElementById('tabLocations').addEventListener('click', ()=> showMainTab('locations'));
@@ -4139,6 +4154,73 @@ document.getElementById('dataSizeBtn').addEventListener('click', ()=>{
 });
 document.getElementById('dataSizeCloseBtn').addEventListener('click', ()=>{
   document.getElementById('dataSizeOverlay').classList.remove('open');
+});
+
+// ===== Girilmemiş / Yüklenmemiş İçerikler (Bekleyenler) =====
+// autoMode=true: sadece Takvim sekmesine geçildiğinde otomatik açılır ve
+// bekleyen hiçbir şey yoksa sessizce hiçbir şey göstermez (rahatsız etmez).
+// autoMode=false (buton tıklaması): bekleyen yoksa bile "hepsi tamam" diye
+// açıkça bilgilendirir, çünkü kullanıcı bilerek kontrol etmek istemiştir.
+function showPendingPopup(autoMode){
+  const now = new Date();
+  const pending = calendarEvents.filter(e => !e.uploaded).map(e=>{
+    const loc = locations.find(l=>l.id===e.locationId);
+    const dt = new Date(e.date + 'T' + (e.time||'00:00') + ':00');
+    return { ev: e, loc, dt, overdue: dt <= now };
+  }).sort((a,b)=> a.dt - b.dt);
+
+  if(pending.length === 0){
+    if(autoMode) return; // otomatik moda rahatsız etmeden geç
+    document.getElementById('pendingBody').innerHTML = `<div style="padding:16px 0;color:#3FA34D;font-weight:600;">✓ Hepsi tamam — girilmemiş/yüklenmemiş içerik yok.</div>`;
+    document.getElementById('pendingOverlay').classList.add('open');
+    return;
+  }
+
+  const overdueCount = pending.filter(p=>p.overdue).length;
+  const rows = pending.map(p=>{
+    const type = getEventType(p.ev), platform = getEventPlatform(p.ev);
+    return `<tr class="pending-row ${p.overdue?'pending-overdue':''}" data-id="${p.ev.id}">
+      <td>${p.overdue ? '🔴' : '🕒'} ${p.ev.date} ${p.ev.time||''}</td>
+      <td>${escapeHtml(p.loc ? p.loc.name : '?')}</td>
+      <td><span class="cal-badge" style="background:${CAL_SM_COLORS[platform]};display:inline-block;">${CAL_TYPE_LABELS[type]}</span> ${CAL_SM_NAMES[platform]}</td>
+      <td>${escapeHtml(p.ev.title||'')}</td>
+    </tr>`;
+  }).join('');
+
+  document.getElementById('pendingBody').innerHTML = `
+    <div style="margin-bottom:12px;">
+      <b>${pending.length}</b> girilmemiş içerik var${overdueCount>0 ? ` — bunlardan <b style="color:#D64545;">${overdueCount} tanesinin saati çoktan geçmiş</b> 🔴` : ''}.
+    </div>
+    <table style="width:100%;border-collapse:collapse;font-size:12.5px;">
+      <thead>
+        <tr style="text-align:left;border-bottom:1px solid #333;color:var(--parchment-dim);">
+          <th style="padding:6px 8px;">Tarih/Saat</th>
+          <th style="padding:6px 8px;">Lokasyon</th>
+          <th style="padding:6px 8px;">İçerik</th>
+          <th style="padding:6px 8px;">Başlık</th>
+        </tr>
+      </thead>
+      <tbody>${rows}</tbody>
+    </table>
+    <div style="margin-top:10px;font-size:11.5px;opacity:.7;">Bir satıra tıklayarak doğrudan o girişi düzenleyebilirsin.</div>
+  `;
+  document.querySelectorAll('#pendingBody .pending-row').forEach(tr=>{
+    tr.addEventListener('click', ()=>{
+      const ev = calendarEvents.find(e=>e.id===tr.dataset.id);
+      if(!ev) return;
+      document.getElementById('pendingOverlay').classList.remove('open');
+      showMainTab('calendar');
+      openCalDetail(ev);
+    });
+  });
+  document.getElementById('pendingOverlay').classList.add('open');
+}
+document.getElementById('pendingBtn').addEventListener('click', ()=> showPendingPopup(false));
+document.getElementById('pendingCloseBtn').addEventListener('click', ()=>{
+  document.getElementById('pendingOverlay').classList.remove('open');
+});
+document.getElementById('pendingOverlay').addEventListener('click', (e)=>{
+  if(e.target.id === 'pendingOverlay') document.getElementById('pendingOverlay').classList.remove('open');
 });
 
 // ===== Backup: restore from a previously downloaded JSON file =====
