@@ -4338,7 +4338,12 @@ document.getElementById('dataSizeCloseBtn').addEventListener('click', ()=>{
 // bekleyen hiçbir şey yoksa sessizce hiçbir şey göstermez (rahatsız etmez).
 // autoMode=false (buton tıklaması): bekleyen yoksa bile "hepsi tamam" diye
 // açıkça bilgilendirir, çünkü kullanıcı bilerek kontrol etmek istemiştir.
+let calPendingAutoShown = false; // otomatik popup oturum başına sadece 1 kez açılır
 function showPendingPopup(autoMode){
+  if(autoMode){
+    if(calPendingAutoShown) return; // zaten bir kez gösterildi, bir daha kendiliğinden açılmaz
+    calPendingAutoShown = true;
+  }
   const now = new Date();
   const pending = calendarEvents.filter(e => !e.uploaded).map(e=>{
     const loc = locations.find(l=>l.id===e.locationId);
