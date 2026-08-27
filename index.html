@@ -1380,6 +1380,73 @@ select{
     </div>
 
     <div class="pkg-section">
+      <div class="pkg-section-title" style="color:#9C4FBF;">🖼️ Carousel Slayt Görsel Prompt'ları (9 slayt)</div>
+      <div class="field">
+        <div class="field-header">
+          <label>Slayt 1</label>
+          <button type="button" class="copy-btn" data-copy-target="p_carouselSlidePrompt1">📋 Kopyala</button>
+        </div>
+        <textarea id="p_carouselSlidePrompt1"></textarea>
+      </div>
+      <div class="field">
+        <div class="field-header">
+          <label>Slayt 2</label>
+          <button type="button" class="copy-btn" data-copy-target="p_carouselSlidePrompt2">📋 Kopyala</button>
+        </div>
+        <textarea id="p_carouselSlidePrompt2"></textarea>
+      </div>
+      <div class="field">
+        <div class="field-header">
+          <label>Slayt 3</label>
+          <button type="button" class="copy-btn" data-copy-target="p_carouselSlidePrompt3">📋 Kopyala</button>
+        </div>
+        <textarea id="p_carouselSlidePrompt3"></textarea>
+      </div>
+      <div class="field">
+        <div class="field-header">
+          <label>Slayt 4</label>
+          <button type="button" class="copy-btn" data-copy-target="p_carouselSlidePrompt4">📋 Kopyala</button>
+        </div>
+        <textarea id="p_carouselSlidePrompt4"></textarea>
+      </div>
+      <div class="field">
+        <div class="field-header">
+          <label>Slayt 5</label>
+          <button type="button" class="copy-btn" data-copy-target="p_carouselSlidePrompt5">📋 Kopyala</button>
+        </div>
+        <textarea id="p_carouselSlidePrompt5"></textarea>
+      </div>
+      <div class="field">
+        <div class="field-header">
+          <label>Slayt 6</label>
+          <button type="button" class="copy-btn" data-copy-target="p_carouselSlidePrompt6">📋 Kopyala</button>
+        </div>
+        <textarea id="p_carouselSlidePrompt6"></textarea>
+      </div>
+      <div class="field">
+        <div class="field-header">
+          <label>Slayt 7</label>
+          <button type="button" class="copy-btn" data-copy-target="p_carouselSlidePrompt7">📋 Kopyala</button>
+        </div>
+        <textarea id="p_carouselSlidePrompt7"></textarea>
+      </div>
+      <div class="field">
+        <div class="field-header">
+          <label>Slayt 8</label>
+          <button type="button" class="copy-btn" data-copy-target="p_carouselSlidePrompt8">📋 Kopyala</button>
+        </div>
+        <textarea id="p_carouselSlidePrompt8"></textarea>
+      </div>
+      <div class="field">
+        <div class="field-header">
+          <label>Slayt 9</label>
+          <button type="button" class="copy-btn" data-copy-target="p_carouselSlidePrompt9">📋 Kopyala</button>
+        </div>
+        <textarea id="p_carouselSlidePrompt9"></textarea>
+      </div>
+    </div>
+
+    <div class="pkg-section">
       <div class="pkg-section-title" style="color:#2FA36B;">📊 Facebook Anketi</div>
       <div class="field">
         <div class="field-header">
@@ -1773,6 +1840,8 @@ function defaultPackage(){
     carouselCaptionInstagram:"", carouselCaptionFacebook:"",
     reel1CaptionInstagram:"", reel1CaptionFacebook:"", reel2CaptionInstagram:"", reel2CaptionFacebook:"",
     reel1ThumbPrompt:"", reel2ThumbPrompt:"",
+    carouselSlidePrompt1:"", carouselSlidePrompt2:"", carouselSlidePrompt3:"", carouselSlidePrompt4:"", carouselSlidePrompt5:"",
+    carouselSlidePrompt6:"", carouselSlidePrompt7:"", carouselSlidePrompt8:"", carouselSlidePrompt9:"",
     pollCaptionFacebook:"",
     storyKnowledgeText:"",
     fbTags:"", fbCoverPrompt:"",
@@ -1912,7 +1981,7 @@ function applyCorrections(){
       if(!rh2.package) rh2.package = defaultPackage();
 
       if(!rh2.package.reel1CaptionInstagram){
-        rh2.package.reel1CaptionInstagram = "Bir sultan, bir imparatordan toprak istiyor. İmparator gülüyor: \"Sana sadece bir öküz derisi kadar yer veririm.\" Sultan kabul ediyor.\n\nSonra o deriyi... tek bir ipe dönüşecek kadar ince şeritler halinde kesiyor. Ve o ip, bugün hâlâ ayakta duran bir kalenin sınırlarını çiziyor. 🏰\n\nRumeli Hisarı'nın kuruluş hikayesi — gerçek bir diplomatik oyun mu, yoksa yüzyıllar içinde süslenmiş bir efsane mi? Tam belgesel kanalımda.\n\nRivayet değil, kayıt.\n\n#belgesel #tarih #rumelihisarı #fatihsultanmehmet #tarihidedektif #istanbul #osmanlıtarihi #boğazkesen #istanbultarihi #osmanlıimparatorluğu #rivayetdeğilkayıt #gerceginizleritv";
+        rh2.package.reel1CaptionInstagram = "Bir sultan, bir imparatordan toprak istiyor. İmparator gülüyor: \"Sana sadece bir öküz derisi kadar yer veririm.\" Sultan kabul ediyor.\n\nSonra o deriyi... tek bir ipe dönüşecek kadar ince şeritler halinde kesiyor. Ve o ip, bugün hâlâ ayakta duran bir kalenin sınırlarını çiziyor. 🏰\n\nRumeli Hisarı'nın kuruluş hikayesi — gerçek bir diplomatik oyun mu, yoksa yüzyıllar içinde süslenmiş bir efsane mi? Tam belgesel kanalımda.\n\nRivayet değil, kayıt.\n\n#belgesel #tarih #rumelihisarı #fatihsultanmehmet #tarihidedektif";
         changed = true;
       }
       if(!rh2.package.reel1CaptionFacebook){
@@ -1920,7 +1989,7 @@ function applyCorrections(){
         changed = true;
       }
       if(!rh2.package.reel2CaptionInstagram){
-        rh2.package.reel2CaptionInstagram = "Bu bir kale inşaatı değildi, bir savaş öncesi seferberlikti. ⚔️\n\nRumeli Hisarı sadece dört ayda tamamlandı — üç büyük kule, surlar, bir cami ve divanhaneden oluşan koca bir savunma kompleksi.\n\nKerestesi iki yıl önceden İznik ve Karadeniz Ereğli'sinden getirilip hazırlanmış. Kireç, Çubuklu civarındaki on iki ayrı ocaktan söndürülmüş. Demir cevheri Kavak ve Büyükada'dan, taş İstinye ocağından taşınmış.\n\nYaklaşık üç yüz usta, yedi-sekiz yüz işçi, iki yüz de arabacı, kayıkçı ve nakliyeci — hepsi aynı anda çalışmış.\n\nTam lojistik hikaye kanalımda. Rivayet değil, kayıt.\n\n#belgesel #tarih #rumelihisarı #fatihsultanmehmet #tarihidedektif #istanbul #osmanlıtarihi #boğazkesen #inşaatmühendisliği #osmanlıimparatorluğu #rivayetdeğilkayıt #gerceginizleritv";
+        rh2.package.reel2CaptionInstagram = "Bu bir kale inşaatı değildi, bir savaş öncesi seferberlikti. ⚔️\n\nRumeli Hisarı sadece dört ayda tamamlandı — üç büyük kule, surlar, bir cami ve divanhaneden oluşan koca bir savunma kompleksi.\n\nKerestesi iki yıl önceden İznik ve Karadeniz Ereğli'sinden getirilip hazırlanmış. Kireç, Çubuklu civarındaki on iki ayrı ocaktan söndürülmüş. Demir cevheri Kavak ve Büyükada'dan, taş İstinye ocağından taşınmış.\n\nYaklaşık üç yüz usta, yedi-sekiz yüz işçi, iki yüz de arabacı, kayıkçı ve nakliyeci — hepsi aynı anda çalışmış.\n\nTam lojistik hikaye kanalımda. Rivayet değil, kayıt.\n\n#belgesel #tarih #rumelihisarı #fatihsultanmehmet #boğazkesen";
         changed = true;
       }
       if(!rh2.package.reel2CaptionFacebook){
@@ -4016,6 +4085,7 @@ function openPkgModal(id){
   document.getElementById('p_reel2CaptionInstagram').value = l.package.reel2CaptionInstagram || '';
   document.getElementById('p_reel2CaptionFacebook').value = l.package.reel2CaptionFacebook || '';
   document.getElementById('p_reel2ThumbPrompt').value = l.package.reel2ThumbPrompt || '';
+  for(let i=1;i<=9;i++){ document.getElementById('p_carouselSlidePrompt'+i).value = l.package['carouselSlidePrompt'+i] || ''; }
   document.getElementById('p_pollCaptionFacebook').value = l.package.pollCaptionFacebook || '';
   document.getElementById('p_storyKnowledgeText').value = l.package.storyKnowledgeText || '';
   document.getElementById('p_fbTags').value = l.package.fbTags;
@@ -4088,6 +4158,15 @@ document.getElementById('pkgSaveBtn').addEventListener('click', async ()=>{
     reel2CaptionInstagram: document.getElementById('p_reel2CaptionInstagram').value,
     reel2CaptionFacebook: document.getElementById('p_reel2CaptionFacebook').value,
     reel2ThumbPrompt: document.getElementById('p_reel2ThumbPrompt').value,
+    carouselSlidePrompt1: document.getElementById('p_carouselSlidePrompt1').value,
+    carouselSlidePrompt2: document.getElementById('p_carouselSlidePrompt2').value,
+    carouselSlidePrompt3: document.getElementById('p_carouselSlidePrompt3').value,
+    carouselSlidePrompt4: document.getElementById('p_carouselSlidePrompt4').value,
+    carouselSlidePrompt5: document.getElementById('p_carouselSlidePrompt5').value,
+    carouselSlidePrompt6: document.getElementById('p_carouselSlidePrompt6').value,
+    carouselSlidePrompt7: document.getElementById('p_carouselSlidePrompt7').value,
+    carouselSlidePrompt8: document.getElementById('p_carouselSlidePrompt8').value,
+    carouselSlidePrompt9: document.getElementById('p_carouselSlidePrompt9').value,
     pollCaptionFacebook: document.getElementById('p_pollCaptionFacebook').value,
     storyKnowledgeText: document.getElementById('p_storyKnowledgeText').value,
     fbTags: document.getElementById('p_fbTags').value,
