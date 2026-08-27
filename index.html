@@ -721,6 +721,7 @@ select{
 .cal-cell-chip{display:flex;flex-direction:column;gap:2px;background:var(--ink-3);border-left:3px solid var(--gold-dim);padding:5px 7px;margin-bottom:4px;cursor:pointer;transition:background .12s;}
 .cal-cell-chip:hover{background:#282829;}
 .cal-cell-chip .cctime{font-family:'JetBrains Mono',monospace;font-size:9.5px;color:var(--parchment-dim);display:flex;justify-content:space-between;}
+.cal-cell-type-badge{display:inline-block;font-family:'JetBrains Mono',monospace;font-size:8.5px;font-weight:700;letter-spacing:0.5px;color:#0a0a0a;padding:1px 4px;border-radius:2px;margin:2px 0;}
 .cal-cell-chip .cctitle{font-size:10.5px;color:var(--parchment-dim);line-height:1.35;}
 .cal-cell-chip.ready{border-left-color:var(--gold);}
 .cal-cell-chip.ready .cctitle{color:var(--parchment);}
@@ -946,19 +947,24 @@ select{
     </div>
     <button class="btn" id="calAddBtn">+ Yeni Yayın Girişi</button>
   </div>
-  <div class="cal-legend" id="calLegend">
-    <span class="cal-legend-item" data-platform="yt"><span class="cal-dot" style="background:#D64545;"></span>YouTube</span>
-    <span class="cal-legend-item" data-platform="yts"><span class="cal-dot" style="background:#E8632B;"></span>YT Shorts</span>
-    <span class="cal-legend-item" data-platform="ig"><span class="cal-dot" style="background:#C1447E;"></span>Instagram</span>
-    <span class="cal-legend-item" data-platform="tt"><span class="cal-dot" style="background:#3FC9D1;"></span>TikTok</span>
-    <span class="cal-legend-item" data-platform="fb"><span class="cal-dot" style="background:#4B7BD1;"></span>Facebook</span>
-    <span class="cal-legend-item" data-platform="ig_car"><span class="cal-dot" style="background:#9C4FBF;"></span>IG Carousel</span>
-    <span class="cal-legend-item" data-platform="fb_car"><span class="cal-dot" style="background:#5D7BC7;"></span>FB Carousel</span>
-    <span class="cal-legend-item" data-platform="story"><span class="cal-dot" style="background:#D4A72C;"></span>Story</span>
-    <span class="cal-legend-item" data-platform="fb_text"><span class="cal-dot" style="background:#6B7280;"></span>Metin Postu</span>
-    <span class="cal-legend-item" data-platform="fb_poll"><span class="cal-dot" style="background:#2FA36B;"></span>Anket</span>
+  <div class="cal-legend" id="calTypeLegend">
+    <span class="cal-legend-item" data-type="video"><span class="cal-dot" style="background:#E8632B;"></span>Video</span>
+    <span class="cal-legend-item" data-type="shorts"><span class="cal-dot" style="background:#F2A93B;"></span>Shorts</span>
+    <span class="cal-legend-item" data-type="reels"><span class="cal-dot" style="background:#9C4FBF;"></span>Reels</span>
+    <span class="cal-legend-item" data-type="carousel"><span class="cal-dot" style="background:#5D7BC7;"></span>Carousel</span>
+    <span class="cal-legend-item" data-type="story"><span class="cal-dot" style="background:#D4A72C;"></span>Story</span>
+    <span class="cal-legend-item" data-type="text_post"><span class="cal-dot" style="background:#6B7280;"></span>Metin Postu</span>
+    <span class="cal-legend-item" data-type="poll"><span class="cal-dot" style="background:#2FA36B;"></span>Anket</span>
     <span class="cal-legend-sep"></span>
-    <span class="cal-legend-reset" id="calLegendReset">Tümünü Göster</span>
+    <span class="cal-legend-reset" id="calTypeLegendReset">Tümünü Göster</span>
+  </div>
+  <div class="cal-legend" id="calPlatformLegend">
+    <span class="cal-legend-item" data-smplatform="youtube"><span class="cal-dot" style="background:#D64545;"></span>YouTube</span>
+    <span class="cal-legend-item" data-smplatform="instagram"><span class="cal-dot" style="background:#C1447E;"></span>Instagram</span>
+    <span class="cal-legend-item" data-smplatform="tiktok"><span class="cal-dot" style="background:#3FC9D1;"></span>TikTok</span>
+    <span class="cal-legend-item" data-smplatform="facebook"><span class="cal-dot" style="background:#4B7BD1;"></span>Facebook</span>
+    <span class="cal-legend-sep"></span>
+    <span class="cal-legend-reset" id="calPlatformLegendReset">Tümünü Göster</span>
   </div>
   <div class="cal-legend cal-status-row">
     <span class="cal-mini-chip cal-planned">🕒 Planlandı</span>
@@ -967,7 +973,7 @@ select{
     <span class="cal-legend-sep"></span>
     <button class="cal-pending-toggle" id="calPendingToggle">☐ Sadece Yüklenmemişleri Göster</button>
   </div>
-  <div class="pkg-hint" style="margin-top:-6px;">💡 Yukarıdaki formatlardan birine (veya birkaçına) tıklayarak takvimi filtreleyebilirsin — tekrar tıklayınca kaldırılır, "Tümünü Göster" ile sıfırlanır.</div>
+  <div class="pkg-hint" style="margin-top:-6px;">💡 Üst satır <b>içerik tipi</b> (Video, Reels, Story...), alt satır <b>SM hesabı</b> (YouTube, Instagram...) — ikisinden de istediğin kadar seçip birlikte filtreleyebilirsin. Tekrar tıklayınca kaldırılır, "Tümünü Göster" ile o satır sıfırlanır.</div>
   <div id="calGridView">
     <div class="cal-grid" id="calGrid"></div>
   </div>
@@ -977,15 +983,9 @@ select{
         <tr>
           <th class="cal-date-col">Tarih</th>
           <th><div class="cal-platform-head"><span class="cal-p-badge" style="background:#D64545;">YT</span><span>YOUTUBE</span></div></th>
-          <th><div class="cal-platform-head"><span class="cal-p-badge" style="background:#E8632B;">YTS</span><span>SHORTS</span></div></th>
           <th><div class="cal-platform-head"><span class="cal-p-badge" style="background:#C1447E;">IG</span><span>INSTAGRAM</span></div></th>
-          <th><div class="cal-platform-head"><span class="cal-p-badge" style="background:#4B7BD1;">FB</span><span>FACEBOOK</span></div></th>
           <th><div class="cal-platform-head"><span class="cal-p-badge" style="background:#3FC9D1;color:#0a0a0a;">TT</span><span>TIKTOK</span></div></th>
-          <th><div class="cal-platform-head"><span class="cal-p-badge" style="background:#9C4FBF;">IGC</span><span>IG CAROUSEL</span></div></th>
-          <th><div class="cal-platform-head"><span class="cal-p-badge" style="background:#5D7BC7;">FBC</span><span>FB CAROUSEL</span></div></th>
-          <th><div class="cal-platform-head"><span class="cal-p-badge" style="background:#D4A72C;color:#0a0a0a;">STR</span><span>STORY</span></div></th>
-          <th><div class="cal-platform-head"><span class="cal-p-badge" style="background:#6B7280;">TXT</span><span>METİN</span></div></th>
-          <th><div class="cal-platform-head"><span class="cal-p-badge" style="background:#2FA36B;">ANK</span><span>ANKET</span></div></th>
+          <th><div class="cal-platform-head"><span class="cal-p-badge" style="background:#4B7BD1;">FB</span><span>FACEBOOK</span></div></th>
         </tr>
       </thead>
       <tbody id="calTbody"></tbody>
@@ -1031,37 +1031,34 @@ select{
       <label>Lokasyon</label>
       <select id="cal_locationId"></select>
     </div>
+    <div class="field">
+      <label>İçerik Tipi</label>
+      <select id="cal_type">
+        <option value="video">Video</option>
+        <option value="shorts">Shorts</option>
+        <option value="reels">Reels</option>
+        <option value="carousel">Carousel</option>
+        <option value="story">Story</option>
+        <option value="text_post">Metin Postu</option>
+        <option value="poll">Anket</option>
+      </select>
+    </div>
     <div class="field" id="calPlatformMultiWrap">
-      <label>Platform(lar) — aynı video birden fazla platforma birden yayınlanacaksa hepsini seç</label>
+      <label>SM Hesabı/ları — aynı içerik birden fazla hesaba birden yayınlanacaksa hepsini seç</label>
       <div class="cal-platform-checks">
-        <label class="cal-platform-check" data-platform="yt"><input type="checkbox" value="yt" checked><span class="cal-p-badge" style="background:#D64545;">YT</span>YouTube</label>
-        <label class="cal-platform-check" data-platform="yts"><input type="checkbox" value="yts"><span class="cal-p-badge" style="background:#E8632B;">YTS</span>Shorts</label>
-        <label class="cal-platform-check" data-platform="ig"><input type="checkbox" value="ig"><span class="cal-p-badge" style="background:#C1447E;">IG</span>Instagram</label>
-        <label class="cal-platform-check" data-platform="fb"><input type="checkbox" value="fb"><span class="cal-p-badge" style="background:#4B7BD1;">FB</span>Facebook</label>
-        <label class="cal-platform-check" data-platform="tt"><input type="checkbox" value="tt"><span class="cal-p-badge" style="background:#3FC9D1;color:#0a0a0a;">TT</span>TikTok</label>
-      </div>
-      <div class="cal-format-divider">Diğer format türleri</div>
-      <div class="cal-platform-checks">
-        <label class="cal-platform-check" data-platform="ig_car"><input type="checkbox" value="ig_car"><span class="cal-p-badge" style="background:#9C4FBF;">IGC</span>IG Carousel</label>
-        <label class="cal-platform-check" data-platform="fb_car"><input type="checkbox" value="fb_car"><span class="cal-p-badge" style="background:#5D7BC7;">FBC</span>FB Carousel</label>
-        <label class="cal-platform-check" data-platform="story"><input type="checkbox" value="story"><span class="cal-p-badge" style="background:#D4A72C;color:#0a0a0a;">STR</span>Story</label>
-        <label class="cal-platform-check" data-platform="fb_text"><input type="checkbox" value="fb_text"><span class="cal-p-badge" style="background:#6B7280;">TXT</span>Metin Postu</label>
-        <label class="cal-platform-check" data-platform="fb_poll"><input type="checkbox" value="fb_poll"><span class="cal-p-badge" style="background:#2FA36B;">ANK</span>Anket</label>
+        <label class="cal-platform-check" data-smplatform="youtube"><input type="checkbox" value="youtube" checked><span class="cal-p-badge" style="background:#D64545;">YT</span>YouTube</label>
+        <label class="cal-platform-check" data-smplatform="instagram"><input type="checkbox" value="instagram"><span class="cal-p-badge" style="background:#C1447E;">IG</span>Instagram</label>
+        <label class="cal-platform-check" data-smplatform="tiktok"><input type="checkbox" value="tiktok"><span class="cal-p-badge" style="background:#3FC9D1;color:#0a0a0a;">TT</span>TikTok</label>
+        <label class="cal-platform-check" data-smplatform="facebook"><input type="checkbox" value="facebook"><span class="cal-p-badge" style="background:#4B7BD1;">FB</span>Facebook</label>
       </div>
     </div>
     <div class="field" id="calPlatformSingleWrap" style="display:none;">
-      <label>Platform</label>
+      <label>SM Hesabı</label>
       <select id="cal_platform">
-        <option value="yt">YouTube (Uzun Video)</option>
-        <option value="yts">YouTube Shorts</option>
-        <option value="ig">Instagram (Video/Reel)</option>
-        <option value="fb">Facebook (Video)</option>
-        <option value="tt">TikTok</option>
-        <option value="ig_car">Instagram Carousel</option>
-        <option value="fb_car">Facebook Carousel</option>
-        <option value="story">Story (IG/FB)</option>
-        <option value="fb_text">Facebook Metin Postu</option>
-        <option value="fb_poll">Facebook Anketi</option>
+        <option value="youtube">YouTube</option>
+        <option value="instagram">Instagram</option>
+        <option value="tiktok">TikTok</option>
+        <option value="facebook">Facebook</option>
       </select>
     </div>
     <div class="field">
@@ -2806,6 +2803,59 @@ const CAL_LABELS = {yt:"YT", yts:"YTS", ig:"IG", tt:"TT", fb:"FB", ig_car:"IGC",
 const CAL_PLATFORM_NAMES = {yt:"YouTube (Uzun Video)", yts:"YouTube Shorts", ig:"Instagram (Video/Reel)", tt:"TikTok", fb:"Facebook (Video)", ig_car:"Instagram Carousel", fb_car:"Facebook Carousel", story:"Story (IG/FB)", fb_text:"Facebook Metin Postu", fb_poll:"Facebook Anketi"};
 const CAL_PLATFORM_COLORS = {yt:"#D64545", yts:"#E8632B", ig:"#C1447E", tt:"#3FC9D1", fb:"#4B7BD1", ig_car:"#9C4FBF", fb_car:"#5D7BC7", story:"#D4A72C", fb_text:"#6B7280", fb_poll:"#2FA36B"};
 const CAL_PLATFORM_FIELD = {yt:"captionYouTube", yts:"captionShorts", ig:"captionInstagram", fb:"captionFacebook", tt:"captionInstagram", ig_car:"carouselCaptionInstagram", fb_car:"carouselCaptionFacebook", story:"storyKnowledgeText", fb_text:"captionFacebook", fb_poll:"pollCaptionFacebook"};
+
+// ===== İçerik TİPİ (format) × SM Hesabı (platform) — iki bağımsız boyut =====
+// Eski sistemde bunlar tek bir kodda birleşikti (ig_car, fb_poll gibi), bu da
+// aynı lokasyonda birden fazla Reels/Story olduğunda ayırt edilemez hale
+// geliyordu. Yeni girişler type+platform'u doğrudan bu şekilde saklar; eski
+// girişler ise LEGACY_TYPE_PLATFORM_MAP ile bu iki boyuma türetilir — ham
+// ev.platform değeri hiç değiştirilmez (idempotency guard'lar bu yüzden
+// bozulmaz), sadece görüntüleme/filtreleme bu türetilmiş değerleri kullanır.
+const CAL_TYPES = ['video','shorts','reels','carousel','story','text_post','poll'];
+const CAL_SM_PLATFORMS = ['youtube','instagram','tiktok','facebook'];
+const CAL_TYPE_NAMES = {video:'Video', shorts:'Shorts', reels:'Reels', carousel:'Carousel', story:'Story', text_post:'Metin Postu', poll:'Anket'};
+const CAL_TYPE_LABELS = {video:'VID', shorts:'SHRT', reels:'REEL', carousel:'CAR', story:'STR', text_post:'TXT', poll:'ANK'};
+const CAL_SM_NAMES = {youtube:'YouTube', instagram:'Instagram', tiktok:'TikTok', facebook:'Facebook'};
+const CAL_SM_LABELS = {youtube:'YT', instagram:'IG', tiktok:'TT', facebook:'FB'};
+const CAL_SM_COLORS = {youtube:'#D64545', instagram:'#C1447E', tiktok:'#3FC9D1', facebook:'#4B7BD1'};
+const CAL_TYPE_PLATFORM_FIELD = {
+  video:      {youtube:'captionYouTube', instagram:'captionInstagram', facebook:'captionFacebook', tiktok:'captionInstagram'},
+  shorts:     {youtube:'captionShorts',  instagram:'captionShorts',    facebook:'captionShorts',    tiktok:'captionShorts'},
+  reels:      {instagram:'captionInstagram', facebook:'captionFacebook', tiktok:'captionInstagram', youtube:'captionShorts'},
+  carousel:   {instagram:'carouselCaptionInstagram', facebook:'carouselCaptionFacebook'},
+  story:      {instagram:'storyKnowledgeText', facebook:'storyKnowledgeText', tiktok:'storyKnowledgeText', youtube:'storyKnowledgeText'},
+  text_post:  {facebook:'captionFacebook', instagram:'captionInstagram', tiktok:'captionInstagram', youtube:'captionYouTube'},
+  poll:       {facebook:'pollCaptionFacebook', instagram:'pollCaptionFacebook', tiktok:'pollCaptionFacebook', youtube:'pollCaptionFacebook'},
+};
+const LEGACY_TYPE_PLATFORM_MAP = {
+  yt:      {type:'video',    platform:'youtube'},
+  yts:     {type:'shorts',   platform:'youtube'},
+  ig:      {type:'video',    platform:'instagram'}, // title'da "reel" geçiyorsa aşağıda 'reels'e çevrilir
+  tt:      {type:'video',    platform:'tiktok'},
+  fb:      {type:'video',    platform:'facebook'},  // title'da "reel" geçiyorsa aşağıda 'reels'e çevrilir
+  ig_car:  {type:'carousel', platform:'instagram'},
+  fb_car:  {type:'carousel', platform:'facebook'},
+  story:   {type:'story',    platform:'instagram'}, // eskiden platform ayrımı yoktu, IG varsayılıyor
+  fb_text: {type:'text_post',platform:'facebook'},
+  fb_poll: {type:'poll',     platform:'facebook'},
+};
+function getEventType(ev){
+  if(ev.typeOverride) return ev.typeOverride;
+  if(CAL_TYPES.includes(ev.type)) return ev.type;
+  const m = LEGACY_TYPE_PLATFORM_MAP[ev.platform];
+  if(!m) return 'video';
+  if((ev.platform==='ig' || ev.platform==='fb') && /reels?/i.test(ev.title||'')) return 'reels';
+  return m.type;
+}
+function getEventPlatform(ev){
+  if(ev.platformOverride) return ev.platformOverride;
+  if(CAL_SM_PLATFORMS.includes(ev.platform)) return ev.platform;
+  const m = LEGACY_TYPE_PLATFORM_MAP[ev.platform];
+  return m ? m.platform : 'instagram';
+}
+function calDisplayName(ev){
+  return CAL_TYPE_NAMES[getEventType(ev)] + ' · ' + CAL_SM_NAMES[getEventPlatform(ev)];
+}
 const CAL_DOW = ["PZT","SAL","ÇAR","PER","CUM","CMT","PAZ"];
 const CAL_DOW_SHORT = ["Pzt","Sal","Çar","Per","Cum","Cmt","Paz"];
 
@@ -2813,7 +2863,8 @@ let calCurrentEvent = null; // event object being viewed/edited in the modal (nu
 let calViewMode = 'grid'; // 'grid' | 'table'
 let calNewUploadedState = false; // "Yükledim" toggle state while creating a brand-new entry (not yet saved)
 let calExpandedDays = new Set(); // day keys (YYYY-MM-DD) the user has expanded to see all entries
-let calActiveFilters = new Set(); // empty = show all platforms (default); non-empty = show only these
+let calActiveTypeFilters = new Set(); // empty = show all types (default); non-empty = show only these
+let calActivePlatformFilters = new Set(); // empty = show all SM platforms (default); non-empty = show only these
 let calShowOnlyPending = false; // true = hide entries already marked "Yükledim"
 
 function calPad(n){ return n<10 ? '0'+n : ''+n; }
@@ -2876,15 +2927,19 @@ function renderCalGrid(){
     num.textContent = `${d.getDate()} ${d.toLocaleString('tr-TR',{month:'short'})} · ${dowLabel}`;
     cell.appendChild(num);
 
-    let dayEvents = calendarEvents.filter(e=>e.date===key && (calActiveFilters.size===0 || calActiveFilters.has(e.platform)) && (!calShowOnlyPending || !e.uploaded)).sort((a,b)=>(a.time||'').localeCompare(b.time||''));
+    let dayEvents = calendarEvents.filter(e=>e.date===key
+      && (calActiveTypeFilters.size===0 || calActiveTypeFilters.has(getEventType(e)))
+      && (calActivePlatformFilters.size===0 || calActivePlatformFilters.has(getEventPlatform(e)))
+      && (!calShowOnlyPending || !e.uploaded)).sort((a,b)=>(a.time||'').localeCompare(b.time||''));
 
-    // Pair up IG+FB entries sharing the same time (same native Meta upload)
+    // Pair up Instagram+Facebook entries sharing the same time AND same
+    // content type (same native Meta upload posted to both accounts).
     const rows = [];
     const used = new Set();
     dayEvents.forEach((ev,i2)=>{
       if(used.has(i2)) return;
-      if(ev.platform === 'ig'){
-        const pairIdx = dayEvents.findIndex((e2,j)=> j!==i2 && !used.has(j) && e2.platform==='fb' && e2.time===ev.time);
+      if(getEventPlatform(ev) === 'instagram'){
+        const pairIdx = dayEvents.findIndex((e2,j)=> j!==i2 && !used.has(j) && getEventPlatform(e2)==='facebook' && getEventType(e2)===getEventType(ev) && e2.time===ev.time);
         if(pairIdx !== -1){
           rows.push([ev, dayEvents[pairIdx]]);
           used.add(i2); used.add(pairIdx);
@@ -2907,7 +2962,9 @@ function renderCalGrid(){
         const chip = document.createElement('div');
         chip.className = 'cal-chip ' + status;
         const icon = status==='live' ? '●' : (status==='ready' ? '✓' : '🕒');
-        chip.innerHTML = `<span class="cal-badge" style="background:${CAL_PLATFORM_COLORS[ev.platform]};">${CAL_LABELS[ev.platform]}</span>
+        const evType = getEventType(ev), evPlatform = getEventPlatform(ev);
+        chip.title = calDisplayName(ev);
+        chip.innerHTML = `<span class="cal-badge" style="background:${CAL_SM_COLORS[evPlatform]};" title="${CAL_SM_NAMES[evPlatform]}">${CAL_TYPE_LABELS[evType]}</span>
           <span class="cal-chip-mid"><span class="cal-chip-time">${ev.time||''}</span><span class="cal-chip-title">${escapeHtml(ev.title||'')}</span></span>
           <span class="cal-status-icon">${icon}</span>`;
         chip.addEventListener('click', ()=> openCalDetail(ev));
@@ -2947,7 +3004,7 @@ function renderCalTable(){
   const start = calWindowStart();
   const today = new Date(); today.setHours(0,0,0,0);
   const totalDays = 14;
-  const platformOrder = ['yt','yts','ig','fb','tt','ig_car','fb_car','story','fb_text','fb_poll'];
+  const platformOrder = ['youtube','instagram','tiktok','facebook'];
 
   for(let i=0;i<totalDays;i++){
     const d = new Date(start);
@@ -2964,16 +3021,22 @@ function renderCalTable(){
 
     platformOrder.forEach(p=>{
       const td = document.createElement('td');
-      const dayPlatformEvents = calendarEvents.filter(e=>e.date===key && e.platform===p && (calActiveFilters.size===0 || calActiveFilters.has(e.platform)) && (!calShowOnlyPending || !e.uploaded)).sort((a,b)=>(a.time||'').localeCompare(b.time||''));
+      const dayPlatformEvents = calendarEvents.filter(e=>e.date===key
+        && getEventPlatform(e)===p
+        && (calActiveTypeFilters.size===0 || calActiveTypeFilters.has(getEventType(e)))
+        && (calActivePlatformFilters.size===0 || calActivePlatformFilters.has(getEventPlatform(e)))
+        && (!calShowOnlyPending || !e.uploaded)).sort((a,b)=>(a.time||'').localeCompare(b.time||''));
       if(dayPlatformEvents.length === 0){
         td.innerHTML = '<div class="cal-empty-dash">—</div>';
       } else {
         dayPlatformEvents.forEach(ev=>{
           const status = calEventStatus(ev);
           const icon = status==='live' ? '●' : (status==='ready' ? '✓' : '🕒');
+          const evType = getEventType(ev);
           const chip = document.createElement('div');
           chip.className = 'cal-cell-chip ' + status;
-          chip.innerHTML = `<span class="cctime">${ev.time||''}<span>${icon}</span></span><span class="cctitle">${escapeHtml(ev.title||'')}</span>`;
+          chip.title = calDisplayName(ev);
+          chip.innerHTML = `<span class="cctime">${ev.time||''}<span>${icon}</span></span><span class="cal-cell-type-badge" style="background:${CAL_SM_COLORS[p]};">${CAL_TYPE_LABELS[evType]}</span><span class="cctitle">${escapeHtml(ev.title||'')}</span>`;
           chip.addEventListener('click', ()=> openCalDetail(ev));
           td.appendChild(chip);
         });
@@ -3003,10 +3066,13 @@ function getSelectedNewPlatforms(){
   return Array.from(document.querySelectorAll('#calPlatformMultiWrap input[type="checkbox"]:checked')).map(el=>el.value);
 }
 
+function currentPreviewType(){
+  return document.getElementById('cal_type').value;
+}
 function currentPreviewPlatform(){
   if(calCurrentEvent) return document.getElementById('cal_platform').value;
   const checked = getSelectedNewPlatforms();
-  return checked[0] || 'yt';
+  return checked[0] || 'youtube';
 }
 
 function openCalDetail(ev){
@@ -3015,21 +3081,26 @@ function openCalDetail(ev){
 
   const isNew = !ev;
   document.getElementById('calDTitle').textContent = isNew ? 'Yeni Yayın Girişi' : 'Yayın Girişini Düzenle';
-  document.getElementById('calDBadge').style.background = ev ? CAL_PLATFORM_COLORS[ev.platform] : '#8C7538';
-  document.getElementById('calDBadge').textContent = ev ? CAL_LABELS[ev.platform] : '+';
+  const evType = ev ? getEventType(ev) : null;
+  const evPlatform = ev ? getEventPlatform(ev) : null;
+  document.getElementById('calDBadge').style.background = ev ? CAL_SM_COLORS[evPlatform] : '#8C7538';
+  document.getElementById('calDBadge').textContent = ev ? CAL_TYPE_LABELS[evType] : '+';
+  document.getElementById('calDBadge').title = ev ? calDisplayName(ev) : '';
   document.getElementById('calDeleteBtn').style.display = isNew ? 'none' : '';
   document.getElementById('calPlatformMultiWrap').style.display = isNew ? '' : 'none';
   document.getElementById('calPlatformSingleWrap').style.display = isNew ? 'none' : '';
 
   if(ev){
     document.getElementById('cal_locationId').value = ev.locationId;
-    document.getElementById('cal_platform').value = ev.platform;
+    document.getElementById('cal_type').value = evType;
+    document.getElementById('cal_platform').value = evPlatform;
     document.getElementById('cal_title').value = ev.title || '';
     document.getElementById('cal_date').value = ev.date;
     document.getElementById('cal_time').value = ev.time || '';
   } else {
     const today = new Date();
-    document.querySelectorAll('#calPlatformMultiWrap input[type="checkbox"]').forEach(el=>{ el.checked = el.value === 'yt'; });
+    document.getElementById('cal_type').value = 'video';
+    document.querySelectorAll('#calPlatformMultiWrap input[type="checkbox"]').forEach(el=>{ el.checked = el.value === 'youtube'; });
     document.getElementById('cal_title').value = '';
     document.getElementById('cal_date').value = `${today.getFullYear()}-${calPad(today.getMonth()+1)}-${calPad(today.getDate())}`;
     document.getElementById('cal_time').value = '20:00';
@@ -3040,6 +3111,8 @@ function openCalDetail(ev){
   refreshCalPkgFields();
   document.getElementById('calOverlay').classList.add('open');
 }
+
+
 
 function refreshCalModalStatus(){
   const ev = calCurrentEvent;
@@ -3073,21 +3146,24 @@ function refreshCalModalStatus(){
 function refreshCalPkgFields(){
   const fields = document.getElementById('calPkgFields');
   const locId = document.getElementById('cal_locationId').value;
+  const type = currentPreviewType();
   const platform = currentPreviewPlatform();
   const loc = locations.find(l=>l.id===locId);
   if(!loc || !loc.package){ fields.innerHTML = ''; return; }
   const pkg = loc.package;
   // Per-event override: lets a calendar entry point at a specific package
-  // field (e.g. reel1CaptionInstagram) instead of the platform's shared
-  // default field, so a location can have multiple Reels/posts on the
-  // same platform without them overwriting each other's caption.
-  const fieldKey = (calCurrentEvent && calCurrentEvent.captionFieldOverride) || CAL_PLATFORM_FIELD[platform];
-  const caption = pkg[fieldKey] || '(bu lokasyon için henüz bu platforma ait caption girilmemiş — Yayın Paketi'+"'"+'nden doldurabilirsin)';
-  const hashtagVal = platform === 'fb' ? (pkg.fbTags || '') : (platform === 'yt' ? (pkg.tags||'') : (platform === 'yts' ? (pkg.shortsTags||'') : (pkg.hashtags||'')));
+  // field (e.g. reel1CaptionInstagram) instead of the type+platform's
+  // shared default field, so a location can have multiple Reels/posts of
+  // the same type+platform without them overwriting each other's caption.
+  const fieldKey = (calCurrentEvent && calCurrentEvent.captionFieldOverride)
+    || (CAL_TYPE_PLATFORM_FIELD[type] && CAL_TYPE_PLATFORM_FIELD[type][platform])
+    || 'captionInstagram';
+  const caption = pkg[fieldKey] || '(bu lokasyon için henüz bu içerik tipine ait caption girilmemiş — Yayın Paketi'+"'"+'nden doldurabilirsin)';
+  const hashtagVal = platform === 'facebook' ? (pkg.fbTags || '') : (type === 'video' && platform === 'youtube' ? (pkg.tags||'') : (type === 'shorts' ? (pkg.shortsTags||'') : (pkg.hashtags||'')));
   fields.innerHTML = `
     <div class="pkg-field">
       <div class="field-header">
-        <div class="pkg-label">İlgili Caption (${CAL_PLATFORM_NAMES[platform]})</div>
+        <div class="pkg-label">İlgili Caption (${CAL_TYPE_NAMES[type]} · ${CAL_SM_NAMES[platform]})</div>
         <button type="button" class="copy-btn" data-copy-target="calPreviewCaptionText">📋 Kopyala</button>
       </div>
       <div class="pkg-value">${escapeHtml(caption)}</div>
@@ -3130,9 +3206,18 @@ document.getElementById('calOverlay').addEventListener('click', (e)=>{
 });
 
 document.getElementById('cal_locationId').addEventListener('change', refreshCalPkgFields);
+function updateCalDBadgeLive(){
+  if(!calCurrentEvent) return;
+  document.getElementById('calDBadge').style.background = CAL_SM_COLORS[document.getElementById('cal_platform').value];
+  document.getElementById('calDBadge').textContent = CAL_TYPE_LABELS[document.getElementById('cal_type').value];
+}
 document.getElementById('cal_platform').addEventListener('change', ()=>{
   refreshCalPkgFields();
-  if(calCurrentEvent) document.getElementById('calDBadge').style.background = CAL_PLATFORM_COLORS[document.getElementById('cal_platform').value];
+  updateCalDBadgeLive();
+});
+document.getElementById('cal_type').addEventListener('change', ()=>{
+  refreshCalPkgFields();
+  updateCalDBadgeLive();
 });
 document.querySelectorAll('#calPlatformMultiWrap input[type="checkbox"]').forEach(el=>{
   el.addEventListener('change', refreshCalPkgFields);
@@ -3143,7 +3228,7 @@ document.getElementById('calUploadToggle').addEventListener('click', ()=>{
     if(calEventStatus(calCurrentEvent) === 'live') return;
     calCurrentEvent.uploaded = !calCurrentEvent.uploaded;
     const loc = locations.find(l=>l.id===calCurrentEvent.locationId);
-    logActivity(`Takvim — "${loc?loc.name:'?'}" (${CAL_PLATFORM_NAMES[calCurrentEvent.platform]}, ${calCurrentEvent.date} ${calCurrentEvent.time}): ${calCurrentEvent.uploaded ? 'yüklendi olarak işaretlendi' : 'işaret kaldırıldı'}.`);
+    logActivity(`Takvim — "${loc?loc.name:'?'}" (${calDisplayName(calCurrentEvent)}, ${calCurrentEvent.date} ${calCurrentEvent.time}): ${calCurrentEvent.uploaded ? 'yüklendi olarak işaretlendi' : 'işaret kaldırıldı'}.`);
   } else {
     calNewUploadedState = !calNewUploadedState;
   }
@@ -3160,25 +3245,37 @@ document.getElementById('calSaveBtn').addEventListener('click', async ()=>{
   if(!title){ alert('Başlık/not gerekli.'); return; }
 
   if(calCurrentEvent){
+    const type = document.getElementById('cal_type').value;
     const platform = document.getElementById('cal_platform').value;
     calCurrentEvent.locationId = locationId;
-    calCurrentEvent.platform = platform;
+    // New-style entries (platform already one of the 4 pure SM values) can
+    // be overwritten directly. Legacy entries keep their original raw
+    // `platform` code untouched (migration-block idempotency checks key off
+    // it) — the edit is layered on top via typeOverride/platformOverride.
+    if(CAL_SM_PLATFORMS.includes(calCurrentEvent.platform)){
+      calCurrentEvent.type = type;
+      calCurrentEvent.platform = platform;
+    } else {
+      calCurrentEvent.typeOverride = type;
+      calCurrentEvent.platformOverride = platform;
+    }
     calCurrentEvent.title = title;
     calCurrentEvent.date = date;
     calCurrentEvent.time = time;
-    logActivity(`Takvim girişi güncellendi: "${title}" (${CAL_PLATFORM_NAMES[platform]}, ${date} ${time}).`);
+    logActivity(`Takvim girişi güncellendi: "${title}" (${CAL_TYPE_NAMES[type]} · ${CAL_SM_NAMES[platform]}, ${date} ${time}).`);
   } else {
+    const type = document.getElementById('cal_type').value;
     const platforms = getSelectedNewPlatforms();
-    if(platforms.length === 0){ alert('En az bir platform seç.'); return; }
+    if(platforms.length === 0){ alert('En az bir SM hesabı seç.'); return; }
     platforms.forEach((platform, i)=>{
       calendarEvents.push({
         id: 'cal_'+Date.now()+'_'+i,
-        locationId, platform, title, date, time,
+        locationId, type, platform, title, date, time,
         uploaded: calNewUploadedState
       });
     });
-    const platformNames = platforms.map(p=>CAL_PLATFORM_NAMES[p]).join(', ');
-    logActivity(`Yeni takvim girişi: "${title}" (${platformNames} — ${date} ${time}, ${platforms.length} platform${platforms.length>1?'a birden':''}).`);
+    const platformNames = platforms.map(p=>CAL_SM_NAMES[p]).join(', ');
+    logActivity(`Yeni takvim girişi: "${title}" (${CAL_TYPE_NAMES[type]} — ${platformNames} — ${date} ${time}, ${platforms.length} hesaba${platforms.length>1?' birden':''}).`);
   }
   await persist();
   closeCalModal();
@@ -3188,12 +3285,13 @@ document.getElementById('calSaveBtn').addEventListener('click', async ()=>{
 document.getElementById('calDeleteBtn').addEventListener('click', async ()=>{
   if(!calCurrentEvent) return;
   if(!confirm('Bu takvim girişini silmek istediğine emin misin?')) return;
-  logActivity(`Takvim girişi silindi: "${calCurrentEvent.title}" (${CAL_PLATFORM_NAMES[calCurrentEvent.platform]}, ${calCurrentEvent.date}).`);
+  logActivity(`Takvim girişi silindi: "${calCurrentEvent.title}" (${calDisplayName(calCurrentEvent)}, ${calCurrentEvent.date}).`);
   calendarEvents = calendarEvents.filter(e=>e.id !== calCurrentEvent.id);
   await persist();
   closeCalModal();
   renderCal();
 });
+
 
 function closeCalModal(){
   document.getElementById('calOverlay').classList.remove('open');
@@ -3250,30 +3348,54 @@ document.getElementById('calBtnTable').addEventListener('click', ()=>{
 });
 
 // ===== Yayın Takvimi format filtresi =====
-// Clicking a legend item toggles that platform in/out of the active filter
-// set. Empty set = show everything (default). Re-renders whichever view
-// (grid/table) is currently visible.
+// İki bağımsız satır: içerik tipi (calActiveTypeFilters) ve SM platformu
+// (calActivePlatformFilters). Her ikisi de boşsa = hepsi gösterilir; biri
+// veya ikisi doluysa AND mantığıyla birleştirilir. Tıklamalar toggle,
+// "Tümünü Göster" o satırı sıfırlar.
 function updateLegendVisualState(){
-  const filtering = calActiveFilters.size > 0;
-  document.querySelectorAll('#calLegend .cal-legend-item').forEach(el=>{
-    const p = el.dataset.platform;
-    el.classList.toggle('cal-filter-active-only', filtering && calActiveFilters.has(p));
-    el.classList.toggle('cal-filter-inactive', filtering && !calActiveFilters.has(p));
+  const typeFiltering = calActiveTypeFilters.size > 0;
+  document.querySelectorAll('#calTypeLegend .cal-legend-item').forEach(el=>{
+    const t = el.dataset.type;
+    el.classList.toggle('cal-filter-active-only', typeFiltering && calActiveTypeFilters.has(t));
+    el.classList.toggle('cal-filter-inactive', typeFiltering && !calActiveTypeFilters.has(t));
   });
-  document.getElementById('calLegendReset').classList.toggle('cal-filter-on', filtering);
+  document.getElementById('calTypeLegendReset').classList.toggle('cal-filter-on', typeFiltering);
+
+  const platformFiltering = calActivePlatformFilters.size > 0;
+  document.querySelectorAll('#calPlatformLegend .cal-legend-item').forEach(el=>{
+    const p = el.dataset.smplatform;
+    el.classList.toggle('cal-filter-active-only', platformFiltering && calActivePlatformFilters.has(p));
+    el.classList.toggle('cal-filter-inactive', platformFiltering && !calActivePlatformFilters.has(p));
+  });
+  document.getElementById('calPlatformLegendReset').classList.toggle('cal-filter-on', platformFiltering);
 }
-document.querySelectorAll('#calLegend .cal-legend-item').forEach(el=>{
+document.querySelectorAll('#calTypeLegend .cal-legend-item').forEach(el=>{
   el.addEventListener('click', ()=>{
-    const p = el.dataset.platform;
-    if(calActiveFilters.has(p)) calActiveFilters.delete(p);
-    else calActiveFilters.add(p);
+    const t = el.dataset.type;
+    if(calActiveTypeFilters.has(t)) calActiveTypeFilters.delete(t);
+    else calActiveTypeFilters.add(t);
     updateLegendVisualState();
     renderCal();
   });
 });
-document.getElementById('calLegendReset').addEventListener('click', ()=>{
-  if(calActiveFilters.size === 0) return; // nothing to reset
-  calActiveFilters.clear();
+document.querySelectorAll('#calPlatformLegend .cal-legend-item').forEach(el=>{
+  el.addEventListener('click', ()=>{
+    const p = el.dataset.smplatform;
+    if(calActivePlatformFilters.has(p)) calActivePlatformFilters.delete(p);
+    else calActivePlatformFilters.add(p);
+    updateLegendVisualState();
+    renderCal();
+  });
+});
+document.getElementById('calTypeLegendReset').addEventListener('click', ()=>{
+  if(calActiveTypeFilters.size === 0) return;
+  calActiveTypeFilters.clear();
+  updateLegendVisualState();
+  renderCal();
+});
+document.getElementById('calPlatformLegendReset').addEventListener('click', ()=>{
+  if(calActivePlatformFilters.size === 0) return;
+  calActivePlatformFilters.clear();
   updateLegendVisualState();
   renderCal();
 });
