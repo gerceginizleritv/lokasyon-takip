@@ -3056,12 +3056,16 @@ function calEventStatus(ev){
 let calWindowOffset = 0; // days offset from today, moved by nav buttons
 
 function calWindowStart(){
-  // Rolling window starting from today + offset — lets the user page
-  // forward/backward through the calendar instead of being stuck on a
-  // fixed today-relative range.
+  // Rolling window starting from the Monday of the current week + offset —
+  // lets the user page forward/backward through the calendar instead of
+  // being stuck on a fixed today-relative range. Must snap to Monday because
+  // the header row (CAL_DOW) is fixed as PZT/SAL/ÇAR/.../PAZ — without this,
+  // the grid started on whatever weekday "today" happened to be, so the
+  // dates underneath silently drifted out of alignment with the day labels.
   const d = new Date();
   d.setHours(0,0,0,0);
-  d.setDate(d.getDate() + calWindowOffset);
+  const mondayOffset = (d.getDay() + 6) % 7; // Pazar(0)->6, Pzt(1)->0, ... Cmt(6)->5
+  d.setDate(d.getDate() - mondayOffset + calWindowOffset);
   return d;
 }
 
