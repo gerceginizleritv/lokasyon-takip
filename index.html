@@ -3336,7 +3336,7 @@ function refreshCalPkgFields(){
     if(type === 'carousel'){
       for(let i=1;i<=9;i++) slidePrompts.push(pkg['carouselSlidePrompt'+i] || '');
     }
-    content = { caption: pkg[fieldKey] || '', hashtags: hashtagVal || '', thumbPrompt, shortTitle: pkg.youtubeThumbShort || '', slidePrompts };
+    content = { caption: pkg[fieldKey] || '', hashtags: hashtagVal || '', thumbPrompt, shortTitle: pkg.youtubeThumbShort || '', videoTitle: '', slidePrompts };
   }
 
   let html = `
@@ -3354,6 +3354,17 @@ function refreshCalPkgFields(){
       </div>
       <textarea id="calEditHashtags">${escapeHtml(content.hashtags||'')}</textarea>
     </div>`;
+
+  if(type === 'video' || type === 'shorts'){
+    html += `
+    <div class="pkg-field">
+      <div class="field-header">
+        <label>Video Başlığı (YouTube arama/öneri ekranında görünen gerçek başlık — dikkat çekici)</label>
+        <button type="button" class="copy-btn" data-copy-target="calEditVideoTitle">📋 Kopyala</button>
+      </div>
+      <textarea id="calEditVideoTitle" style="min-height:34px;">${escapeHtml(content.videoTitle||'')}</textarea>
+    </div>`;
+  }
 
   if(type === 'video' || type === 'shorts' || type === 'reels'){
     html += `
@@ -3453,6 +3464,7 @@ function collectCalContentFromForm(type){
     hashtags: document.getElementById('calEditHashtags') ? document.getElementById('calEditHashtags').value : '',
     thumbPrompt: document.getElementById('calEditThumbPrompt') ? document.getElementById('calEditThumbPrompt').value : '',
     shortTitle: document.getElementById('calEditShortTitle') ? document.getElementById('calEditShortTitle').value : '',
+    videoTitle: document.getElementById('calEditVideoTitle') ? document.getElementById('calEditVideoTitle').value : '',
     slidePrompts: []
   };
   if(type === 'carousel'){
