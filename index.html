@@ -3336,7 +3336,7 @@ function refreshCalPkgFields(){
     if(type === 'carousel'){
       for(let i=1;i<=9;i++) slidePrompts.push(pkg['carouselSlidePrompt'+i] || '');
     }
-    content = { caption: pkg[fieldKey] || '', hashtags: hashtagVal || '', thumbPrompt, slidePrompts };
+    content = { caption: pkg[fieldKey] || '', hashtags: hashtagVal || '', thumbPrompt, shortTitle: pkg.youtubeThumbShort || '', slidePrompts };
   }
 
   let html = `
@@ -3357,6 +3357,13 @@ function refreshCalPkgFields(){
 
   if(type === 'video' || type === 'shorts' || type === 'reels'){
     html += `
+    <div class="pkg-field">
+      <div class="field-header">
+        <label>Kapak Kısa Başlığı (thumbnail üzerine yazılacak, 3-5 kelime, dikkat çekici)</label>
+        <button type="button" class="copy-btn" data-copy-target="calEditShortTitle">📋 Kopyala</button>
+      </div>
+      <textarea id="calEditShortTitle" style="min-height:34px;">${escapeHtml(content.shortTitle||'')}</textarea>
+    </div>
     <div class="pkg-field">
       <div class="field-header">
         <label>Kapak / Thumbnail Görsel Prompt'u</label>
@@ -3445,6 +3452,7 @@ function collectCalContentFromForm(type){
     caption: document.getElementById('calEditCaption') ? document.getElementById('calEditCaption').value : '',
     hashtags: document.getElementById('calEditHashtags') ? document.getElementById('calEditHashtags').value : '',
     thumbPrompt: document.getElementById('calEditThumbPrompt') ? document.getElementById('calEditThumbPrompt').value : '',
+    shortTitle: document.getElementById('calEditShortTitle') ? document.getElementById('calEditShortTitle').value : '',
     slidePrompts: []
   };
   if(type === 'carousel'){
