@@ -874,6 +874,7 @@ select{
       <button class="btn btn-ghost btn-small" id="importBtn">📤 Yedekten Geri Yükle</button>
       <button class="btn btn-ghost btn-small" id="dataSizeBtn">📊 Veri Alanı</button>
       <button class="btn btn-ghost btn-small" id="refreshBtn">🔄 Yenile</button>
+      <button class="btn btn-ghost btn-small" id="githubTokenResetBtn">🔑 Token</button>
       <input type="file" id="importFile" accept="application/json" style="display:none;">
       <div class="main-tabs">
         <button class="main-tab active" id="tabLocations">📋 Lokasyonlar</button>
@@ -1425,9 +1426,25 @@ select{
 <script>
 const STORAGE_KEY = 'gerceginizleri_lokasyon_listesi';
 const LANG_KEY = 'gerceginizleri_ui_language';
-const JSONBIN_ID = '6a8c1f81f5f4af5e293ba6d2';
-const JSONBIN_MASTER_KEY = '$2a$10$MwguwN/EVgDHxDX127kyG.AUp6pEP7G29jbtl0/qWOeeoWNda9PDK';
-const JSONBIN_BASE = 'https://api.jsonbin.io/v3/b/' + JSONBIN_ID;
+const GITHUB_REPO = 'gerceginizleritv/lokasyon-takip';
+const GITHUB_FILE_PATH = 'data.json';
+const GITHUB_API_BASE = 'https://api.github.com/repos/' + GITHUB_REPO + '/contents/' + GITHUB_FILE_PATH;
+let githubFileSha = null; // her PUT için gereken güncel dosya SHA'sı — her başarılı okuma/yazmadan sonra güncellenir
+
+// GitHub token'ı BİLEREK kaynak koda yazılmıyor — GitHub'ın secret scanning
+// koruması commit'e giren token'ları tespit edip push'u engelliyor (doğru
+// davranış). Bunun yerine token, bu cihazın tarayıcısında localStorage'da
+// tutuluyor — her yeni cihazda (telefon/bilgisayar) bir kereliğine elle
+// girilmesi gerekiyor, ama repoya hiçbir zaman yazılmıyor.
+function getGithubToken(){
+  let token = localStorage.getItem('gerceginizleri_github_token');
+  if(!token){
+    token = window.prompt('Bu cihazda ilk kurulum:\nGitHub erişim anahtarını (token) yapıştır — sadece bu tarayıcıda saklanır, koda hiç yazılmaz.');
+    if(token) { token = token.trim(); localStorage.setItem('gerceginizleri_github_token', token); }
+  }
+  return token || '';
+}
+let GITHUB_TOKEN = getGithubToken();
 let currentLang = 'tr';
 
 const LANG = {
@@ -2720,18 +2737,45 @@ function applyCorrections(){
   return changed;
 }
 
+// UTF-8 güvenli base64 kodlama/çözme — GitHub Contents API içeriği base64
+// olarak alıp gönderiyor, düz atob()/btoa() Türkçe karakterlerde bozulur.
+function b64ToUtf8(b64){
+  const binary = atob(b64.replace(/\n/g, ''));
+  const bytes = new Uint8Array(binary.length);
+  for(let i=0;i<binary.length;i++) bytes[i] = binary.charCodeAt(i);
+  return new TextDecoder('utf-8').decode(bytes);
+}
+function utf8ToB64(str){
+  const bytes = new TextEncoder().encode(str);
+  let binary = '';
+  bytes.forEach(b => { binary += String.fromCharCode(b); });
+  return btoa(binary);
+}
+
 async function loadData(){
   try{
-    const res = await fetch(JSONBIN_BASE + '/latest', {
+    if(!GITHUB_TOKEN){ throw new Error('NO_TOKEN'); }
+    let res = await fetch(GITHUB_API_BASE, {
       method: 'GET',
-      headers: { 'X-Master-Key': JSONBIN_MASTER_KEY }
+      headers: { 'Authorization': 'Bearer ' + GITHUB_TOKEN, 'Accept': 'application/vnd.github+json' }
     });
+    if(res.status === 401){
+      // Kayıtlı token geçersiz/süresi dolmuş — sil, yeniden sor, bir kez daha dene.
+      localStorage.removeItem('gerceginizleri_github_token');
+      alert('GitHub erişim anahtarı geçersiz görünüyor. Lütfen tekrar gir.');
+      GITHUB_TOKEN = getGithubToken();
+      res = await fetch(GITHUB_API_BASE, {
+        method: 'GET',
+        headers: { 'Authorization': 'Bearer ' + GITHUB_TOKEN, 'Accept': 'application/vnd.github+json' }
+      });
+    }
     if(!res.ok) throw new Error('HTTP ' + res.status);
     const json = await res.json();
-    const record = json && json.record ? json.record : {};
+    githubFileSha = json.sha;
+    const record = JSON.parse(b64ToUtf8(json.content));
     locations = Array.isArray(record.locations) ? record.locations : [];
     calendarEvents = Array.isArray(record.calendarEvents) ? record.calendarEvents : [];
-    // activityLog artık JSONBin'e gönderilmiyor (100KB sınırını zorluyordu) —
+    // activityLog GitHub'a da gönderilmiyor (gereksiz gürültü) —
     // sadece bu tarayıcıda, localStorage'da tutuluyor.
     try{
       const localLog = localStorage.getItem('gerceginizleri_activity_log');
@@ -2744,7 +2788,7 @@ async function loadData(){
       await persistNow();
     }
   }catch(e){
-    console.error('Veri okuma hatası (JSONBin)', e);
+    console.error('Veri okuma hatası (GitHub)', e);
     locations = seedData.map((l,i)=>({...l, id: 'loc_'+Date.now()+'_'+i}));
     calendarEvents = [];
     await persistNow();
@@ -2767,18 +2811,33 @@ async function persistNow(retriesLeft){
   if(saveInFlight){ pendingResave = true; return; }
   saveInFlight = true;
   try{
-    const res = await fetch(JSONBIN_BASE, {
+    const body = {
+      message: 'Otomatik kayıt — ' + new Date().toISOString(),
+      content: utf8ToB64(JSON.stringify({ locations: locations, calendarEvents: calendarEvents }))
+    };
+    if(githubFileSha) body.sha = githubFileSha;
+    const res = await fetch(GITHUB_API_BASE, {
       method: 'PUT',
       headers: {
-        'Content-Type': 'application/json',
-        'X-Master-Key': JSONBIN_MASTER_KEY
+        'Authorization': 'Bearer ' + GITHUB_TOKEN,
+        'Accept': 'application/vnd.github+json',
+        'Content-Type': 'application/json'
       },
-      body: JSON.stringify({ locations: locations, calendarEvents: calendarEvents })
+      body: JSON.stringify(body)
     });
+    if(res.status === 409){
+      // SHA çakışması (dosya arada değişmiş) — güncel SHA'yı çekip bir kez
+      // daha dene, retry mekanizması bu hatayı normal hata gibi ele alır.
+      const fresh = await fetch(GITHUB_API_BASE, { headers: { 'Authorization': 'Bearer ' + GITHUB_TOKEN, 'Accept': 'application/vnd.github+json' } });
+      if(fresh.ok){ const freshJson = await fresh.json(); githubFileSha = freshJson.sha; }
+      throw new Error('SHA çakışması, güncel SHA ile tekrar denenecek');
+    }
     if(!res.ok) throw new Error('HTTP ' + res.status);
+    const result = await res.json();
+    githubFileSha = result.content.sha;
     hideToast();
   }catch(e){
-    console.error('Kayıt hatası (JSONBin)', e);
+    console.error('Kayıt hatası (GitHub)', e);
     if(retriesLeft > 0){
       await new Promise(r=>setTimeout(r, 700));
       saveInFlight = false;
@@ -3999,6 +4058,13 @@ document.getElementById('pkgSaveBtn').addEventListener('click', async ()=>{
 });
 
 // ===== Backup: export current data as a downloadable JSON file =====
+document.getElementById('githubTokenResetBtn').addEventListener('click', ()=>{
+  if(!confirm('Bu cihazda kayıtlı GitHub token\'ı silinip yeniden girilecek. Devam edilsin mi?')) return;
+  localStorage.removeItem('gerceginizleri_github_token');
+  const t = getGithubToken();
+  if(t){ GITHUB_TOKEN = t; showToast('Token güncellendi ✓'); location.reload(); }
+});
+
 document.getElementById('refreshBtn').addEventListener('click', ()=>{
   // Standalone/home-screen mode has no browser reload button, so this is
   // the only way to force a fresh reload — cache-bust with a query param
@@ -4024,18 +4090,18 @@ document.getElementById('exportBtn').addEventListener('click', ()=>{
   showToast('Yedek indirildi ✓');
 });
 
-// ===== Data size indicator: shows how close we are to JSONBin's ~100KB per-bin limit =====
+// ===== Data size indicator: GitHub'daki data.json dosyasının boyutu =====
 function updateDataSizeDisplay(){
-  // This mirrors exactly what persist() sends to JSONBin — locations + calendarEvents only
+  // This mirrors exactly what persist() sends to GitHub — locations + calendarEvents only
   // (activityLog is intentionally excluded, it lives in localStorage only).
   const payload = JSON.stringify({ locations: locations, calendarEvents: calendarEvents });
   const bytes = new Blob([payload]).size;
   const kb = bytes / 1024;
-  const LIMIT_KB = 100; // JSONBin free-tier per-bin size limit
+  const LIMIT_KB = 100 * 1024; // GitHub dosya boyutu sınırı ~100MB — pratikte hiç sorun olmaz
   const pct = Math.min(100, (kb / LIMIT_KB) * 100);
 
   let barColor = '#3FA34D'; // green
-  let statusText = 'Rahat — henüz hiç sorun yok.';
+  let statusText = 'Rahat — GitHub\'ın 100MB sınırının çok altındayız, uzun süre sorun olmaz.';
   if(pct >= 85){ barColor = '#D64545'; statusText = 'Kritik — yakında sınıra çarpabiliriz, büyük metin bloklarını gözden geçirmeliyiz.'; }
   else if(pct >= 60){ barColor = '#E8A23A'; statusText = 'Orta — takip etmeye devam edelim, henüz acil değil.'; }
 
@@ -4048,11 +4114,11 @@ function updateDataSizeDisplay(){
   body.innerHTML = `
     <div style="margin-bottom:12px;">
       <div style="display:flex;justify-content:space-between;font-weight:600;margin-bottom:4px;">
-        <span>${kb.toFixed(1)} KB / ~${LIMIT_KB} KB</span>
-        <span>%${pct.toFixed(0)}</span>
+        <span>${kb.toFixed(1)} KB / ~${(LIMIT_KB/1024).toFixed(0)} MB</span>
+        <span>%${pct.toFixed(1)}</span>
       </div>
       <div style="background:#2a2a2a;border-radius:6px;height:10px;overflow:hidden;">
-        <div style="background:${barColor};height:100%;width:${pct}%;transition:width .3s;"></div>
+        <div style="background:${barColor};height:100%;width:${Math.max(pct,0.5)}%;transition:width .3s;"></div>
       </div>
       <div style="margin-top:6px;color:${barColor};font-weight:600;">${statusText}</div>
     </div>
@@ -4062,7 +4128,7 @@ function updateDataSizeDisplay(){
       ${byLocSizes.map(x => `<div style="display:flex;justify-content:space-between;padding:2px 0;"><span>${x.name}</span><span style="opacity:.7;">${(x.size/1024).toFixed(1)} KB</span></div>`).join('')}
     </div>
     <div style="margin-top:12px;font-size:12px;opacity:.75;border-top:1px solid #333;padding-top:10px;">
-      Not: Görseller dosya olarak değil sadece link olarak tutulduğu için yer kaplamıyor. Asıl büyüyen şey caption/prompt/not metinleri. Sınıra yaklaşırsak, activityLog'da yaptığımız gibi (localStorage'a taşıma) bir çözüm uygularız.
+      Not: Veri artık GitHub reposundaki data.json dosyasında tutuluyor (JSONBin'den geçildi — 28 Ağustos 2026). Görseller dosya olarak değil sadece link olarak tutulduğu için yer kaplamıyor.
     </div>
   `;
 }
