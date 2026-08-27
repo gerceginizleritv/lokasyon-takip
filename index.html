@@ -1321,6 +1321,38 @@ select{
     </div>
 
     <div class="pkg-section">
+      <div class="pkg-section-title" style="color:#D68A3A;">🎬 Ek Reels (aynı lokasyonda birden fazla Reels için — ana video caption'ının üzerine yazmaz)</div>
+      <div class="field">
+        <div class="field-header">
+          <label>Reels #1 — Instagram</label>
+          <button type="button" class="copy-btn" data-copy-target="p_reel1CaptionInstagram">📋 Kopyala</button>
+        </div>
+        <textarea id="p_reel1CaptionInstagram"></textarea>
+      </div>
+      <div class="field">
+        <div class="field-header">
+          <label>Reels #1 — Facebook</label>
+          <button type="button" class="copy-btn" data-copy-target="p_reel1CaptionFacebook">📋 Kopyala</button>
+        </div>
+        <textarea id="p_reel1CaptionFacebook"></textarea>
+      </div>
+      <div class="field">
+        <div class="field-header">
+          <label>Reels #2 — Instagram</label>
+          <button type="button" class="copy-btn" data-copy-target="p_reel2CaptionInstagram">📋 Kopyala</button>
+        </div>
+        <textarea id="p_reel2CaptionInstagram"></textarea>
+      </div>
+      <div class="field">
+        <div class="field-header">
+          <label>Reels #2 — Facebook</label>
+          <button type="button" class="copy-btn" data-copy-target="p_reel2CaptionFacebook">📋 Kopyala</button>
+        </div>
+        <textarea id="p_reel2CaptionFacebook"></textarea>
+      </div>
+    </div>
+
+    <div class="pkg-section">
       <div class="pkg-section-title" style="color:#2FA36B;">📊 Facebook Anketi</div>
       <div class="field">
         <div class="field-header">
@@ -1696,6 +1728,7 @@ function defaultPackage(){
     hashtags:"", tags:"", shortsTags:"", keywordNotes:"",
     captionShorts:"", captionYouTube:"", captionInstagram:"", captionFacebook:"",
     carouselCaptionInstagram:"", carouselCaptionFacebook:"",
+    reel1CaptionInstagram:"", reel1CaptionFacebook:"", reel2CaptionInstagram:"", reel2CaptionFacebook:"",
     pollCaptionFacebook:"",
     storyKnowledgeText:"",
     fbTags:"", fbCoverPrompt:"",
@@ -1823,6 +1856,47 @@ function applyCorrections(){
         changed = true;
       }
     });
+  }
+
+  // Rumeli Hisarı — 2 ek Reels videosu (27 Ağustos'ta işlenen ana video/
+  // carousel/anket'ten AYRI, kendi caption alanlarına yazılır — reel1/reel2
+  // önekli alanlar bu yüzden var, aksi halde paylaşılan captionInstagram/
+  // captionFacebook alanlarının üzerine yazılırdı).
+  {
+    const rh2 = locations.find(l => l.name === "Rumeli Hisarı");
+    if(rh2){
+      if(!rh2.package) rh2.package = defaultPackage();
+
+      if(!rh2.package.reel1CaptionInstagram){
+        rh2.package.reel1CaptionInstagram = "Bir sultan, bir imparatordan toprak istiyor. İmparator gülüyor: \"Sana sadece bir öküz derisi kadar yer veririm.\" Sultan kabul ediyor.\n\nSonra o deriyi... tek bir ipe dönüşecek kadar ince şeritler halinde kesiyor. Ve o ip, bugün hâlâ ayakta duran bir kalenin sınırlarını çiziyor. 🏰\n\nRumeli Hisarı'nın kuruluş hikayesi — gerçek bir diplomatik oyun mu, yoksa yüzyıllar içinde süslenmiş bir efsane mi? Tam belgesel kanalımda.\n\nRivayet değil, kayıt.\n\n#belgesel #tarih #rumelihisarı #fatihsultanmehmet #tarihidedektif #istanbul #osmanlıtarihi #boğazkesen #istanbultarihi #osmanlıimparatorluğu #rivayetdeğilkayıt #gerceginizleritv";
+        changed = true;
+      }
+      if(!rh2.package.reel1CaptionFacebook){
+        rh2.package.reel1CaptionFacebook = "Bir sultan, bir imparatordan toprak istiyor. İmparator gülüyor: \"Sana sadece bir öküz derisi kadar yer veririm.\" Sultan kabul ediyor.\n\nSonra o deriyi... tek bir ipe dönüşecek kadar ince şeritler halinde kesiyor. Ve o ip, bugün hâlâ ayakta duran bir kalenin sınırlarını çiziyor. 🏰\n\nRivayet değil, kayıt.\n\n#belgesel #tarih";
+        changed = true;
+      }
+      if(!rh2.package.reel2CaptionInstagram){
+        rh2.package.reel2CaptionInstagram = "Bu bir kale inşaatı değildi, bir savaş öncesi seferberlikti. ⚔️\n\nRumeli Hisarı sadece dört ayda tamamlandı — üç büyük kule, surlar, bir cami ve divanhaneden oluşan koca bir savunma kompleksi.\n\nKerestesi iki yıl önceden İznik ve Karadeniz Ereğli'sinden getirilip hazırlanmış. Kireç, Çubuklu civarındaki on iki ayrı ocaktan söndürülmüş. Demir cevheri Kavak ve Büyükada'dan, taş İstinye ocağından taşınmış.\n\nYaklaşık üç yüz usta, yedi-sekiz yüz işçi, iki yüz de arabacı, kayıkçı ve nakliyeci — hepsi aynı anda çalışmış.\n\nTam lojistik hikaye kanalımda. Rivayet değil, kayıt.\n\n#belgesel #tarih #rumelihisarı #fatihsultanmehmet #tarihidedektif #istanbul #osmanlıtarihi #boğazkesen #inşaatmühendisliği #osmanlıimparatorluğu #rivayetdeğilkayıt #gerceginizleritv";
+        changed = true;
+      }
+      if(!rh2.package.reel2CaptionFacebook){
+        rh2.package.reel2CaptionFacebook = "Bu bir kale inşaatı değildi, bir savaş öncesi seferberlikti. ⚔️\n\nRumeli Hisarı sadece dört ayda tamamlandı. Üç yüz usta, yedi-sekiz yüz işçi, iki yüz arabacı ve kayıkçı — hepsi aynı anda çalışmış. Kereste İznik'ten, kireç Çubuklu'dan, demir Kavak ve Büyükada'dan, taş İstinye'den taşınmış.\n\nRivayet değil, kayıt.\n\n#belgesel #tarih";
+        changed = true;
+      }
+
+      const rhReelEntries = [
+        {platform:'ig', time:'20:00', date:'2026-09-01', title:'Rumeli Hisarı — Reels #1 (Öküz Derisi Rivayeti)', overrideKey:'reel1CaptionInstagram', tag:'rh_reel1_ig'},
+        {platform:'fb', time:'21:00', date:'2026-09-01', title:'Rumeli Hisarı — Reels #1 (Öküz Derisi Rivayeti)', overrideKey:'reel1CaptionFacebook', tag:'rh_reel1_fb'},
+        {platform:'ig', time:'20:00', date:'2026-09-05', title:'Rumeli Hisarı — Reels #2 (İnşaat Seferberliği)', overrideKey:'reel2CaptionInstagram', tag:'rh_reel2_ig'},
+        {platform:'fb', time:'21:00', date:'2026-09-05', title:'Rumeli Hisarı — Reels #2 (İnşaat Seferberliği)', overrideKey:'reel2CaptionFacebook', tag:'rh_reel2_fb'},
+      ];
+      rhReelEntries.forEach(re=>{
+        if(!calendarEvents.some(e => e.locationId === rh2.id && e.date === re.date && e.platform === re.platform && e.captionFieldOverride === re.overrideKey)){
+          calendarEvents.push({ id:'cal_'+Date.now()+'_'+re.tag, locationId: rh2.id, platform: re.platform, title: re.title, date: re.date, time: re.time, uploaded:false, captionFieldOverride: re.overrideKey });
+          changed = true;
+        }
+      });
+    }
   }
 
   // "Bunu Biliyor Muydunuz?" Story serisi (25 Ağustos 2026'dan itibaren,
@@ -3003,7 +3077,11 @@ function refreshCalPkgFields(){
   const loc = locations.find(l=>l.id===locId);
   if(!loc || !loc.package){ fields.innerHTML = ''; return; }
   const pkg = loc.package;
-  const fieldKey = CAL_PLATFORM_FIELD[platform];
+  // Per-event override: lets a calendar entry point at a specific package
+  // field (e.g. reel1CaptionInstagram) instead of the platform's shared
+  // default field, so a location can have multiple Reels/posts on the
+  // same platform without them overwriting each other's caption.
+  const fieldKey = (calCurrentEvent && calCurrentEvent.captionFieldOverride) || CAL_PLATFORM_FIELD[platform];
   const caption = pkg[fieldKey] || '(bu lokasyon için henüz bu platforma ait caption girilmemiş — Yayın Paketi'+"'"+'nden doldurabilirsin)';
   const hashtagVal = platform === 'fb' ? (pkg.fbTags || '') : (platform === 'yt' ? (pkg.tags||'') : (platform === 'yts' ? (pkg.shortsTags||'') : (pkg.hashtags||'')));
   fields.innerHTML = `
@@ -3713,6 +3791,10 @@ function openPkgModal(id){
   document.getElementById('p_captionFacebook').value = l.package.captionFacebook;
   document.getElementById('p_carouselCaptionInstagram').value = l.package.carouselCaptionInstagram || '';
   document.getElementById('p_carouselCaptionFacebook').value = l.package.carouselCaptionFacebook || '';
+  document.getElementById('p_reel1CaptionInstagram').value = l.package.reel1CaptionInstagram || '';
+  document.getElementById('p_reel1CaptionFacebook').value = l.package.reel1CaptionFacebook || '';
+  document.getElementById('p_reel2CaptionInstagram').value = l.package.reel2CaptionInstagram || '';
+  document.getElementById('p_reel2CaptionFacebook').value = l.package.reel2CaptionFacebook || '';
   document.getElementById('p_pollCaptionFacebook').value = l.package.pollCaptionFacebook || '';
   document.getElementById('p_storyKnowledgeText').value = l.package.storyKnowledgeText || '';
   document.getElementById('p_fbTags').value = l.package.fbTags;
@@ -3779,6 +3861,10 @@ document.getElementById('pkgSaveBtn').addEventListener('click', async ()=>{
     captionFacebook: document.getElementById('p_captionFacebook').value,
     carouselCaptionInstagram: document.getElementById('p_carouselCaptionInstagram').value,
     carouselCaptionFacebook: document.getElementById('p_carouselCaptionFacebook').value,
+    reel1CaptionInstagram: document.getElementById('p_reel1CaptionInstagram').value,
+    reel1CaptionFacebook: document.getElementById('p_reel1CaptionFacebook').value,
+    reel2CaptionInstagram: document.getElementById('p_reel2CaptionInstagram').value,
+    reel2CaptionFacebook: document.getElementById('p_reel2CaptionFacebook').value,
     pollCaptionFacebook: document.getElementById('p_pollCaptionFacebook').value,
     storyKnowledgeText: document.getElementById('p_storyKnowledgeText').value,
     fbTags: document.getElementById('p_fbTags').value,
