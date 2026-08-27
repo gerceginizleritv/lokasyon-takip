@@ -547,6 +547,18 @@ select{
   margin-bottom:12px;
 }
 .pkg-field .field-header{margin-bottom:8px;}
+.pkg-field input, .pkg-field select, .pkg-field textarea{
+  width:100%;
+  background:var(--ink-3);
+  border:1px solid var(--line);
+  color:var(--parchment);
+  padding:9px 10px;
+  font-family:'Poppins',sans-serif;
+  font-size:13px;
+  box-sizing:border-box;
+}
+.pkg-field textarea{resize:vertical;min-height:70px;}
+.pkg-field input:focus, .pkg-field textarea:focus{outline:none;border-color:var(--gold-dim);}
 .pkg-label{
   font-family:'JetBrains Mono',monospace;
   font-size:9.5px;
