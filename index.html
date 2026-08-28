@@ -1544,7 +1544,11 @@ select{
 <script>
 const STORAGE_KEY = 'gerceginizleri_lokasyon_listesi';
 const LANG_KEY = 'gerceginizleri_ui_language';
-const GITHUB_REPO = 'gerceginizleritv/lokasyon-takip';
+// Icerik plani (yayinlanmamis video basliklari, caption'lar, cekim takvimi)
+// artik private bir repoda duruyor. Uygulama zaten API + token ile okuyup
+// yazdigi icin private repo sorunsuz calisiyor; bu repo public kalmak
+// zorunda cunku GitHub Pages ucretsiz planda private repodan yayin yapmiyor.
+const GITHUB_REPO = 'gerceginizleritv/lokasyon-verisi';
 const GITHUB_FILE_PATH = 'data.json';
 const GITHUB_API_BASE = 'https://api.github.com/repos/' + GITHUB_REPO + '/contents/' + GITHUB_FILE_PATH;
 let githubFileSha = null; // her PUT için gereken güncel dosya SHA'sı — her başarılı okuma/yazmadan sonra güncellenir
