@@ -1903,6 +1903,82 @@ function normalizeAll(){
   return changed;
 }
 
+// ===== Gelen verinin temizlenmesi =====
+// Hem "Yedekten Geri Yükle" hem GitHub'dan okunan data.json buradan geciyor.
+// Sebep: yedek dosyasi hicbir dogrulamadan gecmiyordu ve bazi alanlar
+// (ev.time, ev.date, l.mapsLink gibi) sablona ham giriyordu. Ozenle
+// hazirlanmis bir yedek dosyasi sayfada script calistirabilir, oradan da
+// localStorage'daki GitHub token'ini calabilirdi.
+const MAX_LOCATIONS = 5000, MAX_EVENTS = 20000;
+const LOC_TEXT_FIELDS = ['name','district','city','address','topic','notes',
+  'shootingCautions','fieldNotes'];
+// Bu alanlar acik uclu degil: kartlarda kacis karakteri olmadan yazildiklari
+// icin degerlerini kisitlamak escape etmekten daha kesin bir savunma.
+const LOC_FLAG_FIELDS = ['permission','filmed','audio','edited','published','script','cancelled','prepRequested'];
+const LOC_FORMATS = ['Saha','Masabaşı','Hibrit','Stüdyo/Grafik'];
+const LOC_URL_FIELDS = ['mapsLink','scriptLink','driveFolderLink','imageUrl'];
+
+function safeStr(v, max){ return typeof v === 'string' ? v.slice(0, max) : ''; }
+// Yalnizca http(s). "javascript:" ile baslayan bir baglanti href'e girerse
+// tiklandiginda script calisir — bu yuzden protokol beyaz listede.
+function safeUrl(v){
+  const u = safeStr(v, 2000).trim();
+  return /^https?:\/\//i.test(u) ? u : '';
+}
+function safeId(v, onek){
+  return /^[A-Za-z0-9_-]{1,64}$/.test(v) ? v : onek + Date.now() + '_' + Math.random().toString(36).slice(2,8);
+}
+function safeDate(v){ return /^\d{4}-\d{2}-\d{2}$/.test(v) ? v : ''; }
+function safeTime(v){ return /^\d{2}:\d{2}$/.test(v) ? v : ''; }
+
+function sanitizeLocation(raw){
+  if(!raw || typeof raw !== 'object') return null;
+  const out = { id: safeId(raw.id, 'loc_') };
+  LOC_TEXT_FIELDS.forEach(k => { out[k] = safeStr(raw[k], 4000); });
+  LOC_FLAG_FIELDS.forEach(k => { out[k] = (raw[k] === 'E' || raw[k] === 'H') ? raw[k] : 'H'; });
+  out.format = LOC_FORMATS.includes(raw.format) ? raw.format : 'Saha';
+  LOC_URL_FIELDS.forEach(k => { out[k] = safeUrl(raw[k]); });
+  out.plannedDate = safeDate(raw.plannedDate);
+  const src = (raw.package && typeof raw.package === 'object') ? raw.package : {};
+  const pkg = defaultPackage();
+  Object.keys(pkg).forEach(k => { pkg[k] = safeStr(src[k], 20000); });
+  out.package = pkg;
+  return out;
+}
+
+function sanitizeCalEvent(raw){
+  if(!raw || typeof raw !== 'object') return null;
+  const c = (raw.content && typeof raw.content === 'object') ? raw.content : {};
+  return {
+    id: safeId(raw.id, 'cal_'),
+    locationId: safeStr(raw.locationId, 64),
+    platform: safeStr(raw.platform, 32),
+    type: CAL_TYPES.includes(raw.type) ? raw.type : '',
+    typeOverride: CAL_TYPES.includes(raw.typeOverride) ? raw.typeOverride : '',
+    platformOverride: CAL_SM_PLATFORMS.includes(raw.platformOverride) ? raw.platformOverride : '',
+    captionFieldOverride: safeStr(raw.captionFieldOverride, 64),
+    title: safeStr(raw.title, 500),
+    date: safeDate(raw.date),
+    time: safeTime(raw.time),
+    uploaded: raw.uploaded === true,
+    content: {
+      caption:      safeStr(c.caption, 20000),
+      hashtags:     safeStr(c.hashtags, 4000),
+      videoTitle:   safeStr(c.videoTitle, 500),
+      shortTitle:   safeStr(c.shortTitle, 500),
+      thumbPrompt:  safeStr(c.thumbPrompt, 20000),
+      slidePrompts: Array.isArray(c.slidePrompts) ? c.slidePrompts.slice(0,9).map(x=>safeStr(x,20000)) : []
+    }
+  };
+}
+
+function sanitizeAll(locs, evs){
+  return {
+    locations: (Array.isArray(locs) ? locs : []).slice(0, MAX_LOCATIONS).map(sanitizeLocation).filter(Boolean),
+    calendarEvents: (Array.isArray(evs) ? evs : []).slice(0, MAX_EVENTS).map(sanitizeCalEvent).filter(Boolean)
+  };
+}
+
 // UTF-8 güvenli base64 kodlama/çözme — GitHub Contents API içeriği base64
 // olarak alıp gönderiyor, düz atob()/btoa() Türkçe karakterlerde bozulur.
 function b64ToUtf8(b64){
@@ -1939,8 +2015,9 @@ async function loadData(){
     const json = await res.json();
     githubFileSha = json.sha;
     const record = JSON.parse(b64ToUtf8(json.content));
-    locations = Array.isArray(record.locations) ? record.locations : [];
-    calendarEvents = Array.isArray(record.calendarEvents) ? record.calendarEvents : [];
+    const temiz = sanitizeAll(record.locations, record.calendarEvents);
+    locations = temiz.locations;
+    calendarEvents = temiz.calendarEvents;
     // activityLog GitHub'a da gönderilmiyor (gereksiz gürültü) —
     // sadece bu tarayıcıda, localStorage'da tutuluyor.
     try{
@@ -2194,7 +2271,7 @@ function renderCalGrid(){
         const evType = getEventType(ev), evPlatform = getEventPlatform(ev);
         chip.title = calDisplayName(ev);
         chip.innerHTML = `<span class="cal-badge" style="background:${CAL_SM_COLORS[evPlatform]};" title="${CAL_SM_NAMES[evPlatform]}">${CAL_TYPE_LABELS[evType]}</span>
-          <span class="cal-chip-mid"><span class="cal-chip-time">${ev.time||''}</span><span class="cal-chip-title">${escapeHtml(ev.title||'')}</span></span>
+          <span class="cal-chip-mid"><span class="cal-chip-time">${escapeHtml(ev.time||'')}</span><span class="cal-chip-title">${escapeHtml(ev.title||'')}</span></span>
           <span class="cal-status-icon">${icon}</span>`;
         chip.addEventListener('click', ()=> openCalDetail(ev));
         rowDiv.appendChild(chip);
@@ -2265,7 +2342,7 @@ function renderCalTable(){
           const chip = document.createElement('div');
           chip.className = 'cal-cell-chip ' + status;
           chip.title = calDisplayName(ev);
-          chip.innerHTML = `<span class="cctime">${ev.time||''}<span>${icon}</span></span><span class="cal-cell-type-badge" style="background:${CAL_SM_COLORS[p]};">${CAL_TYPE_LABELS[evType]}</span><span class="cctitle">${escapeHtml(ev.title||'')}</span>`;
+          chip.innerHTML = `<span class="cctime">${escapeHtml(ev.time||'')}<span>${icon}</span></span><span class="cal-cell-type-badge" style="background:${CAL_SM_COLORS[p]};">${CAL_TYPE_LABELS[evType]}</span><span class="cctitle">${escapeHtml(ev.title||'')}</span>`;
           chip.addEventListener('click', ()=> openCalDetail(ev));
           td.appendChild(chip);
         });
@@ -3435,7 +3512,7 @@ function showPendingPopup(autoMode){
   const rows = pending.map(p=>{
     const type = getEventType(p.ev), platform = getEventPlatform(p.ev);
     return `<tr class="pending-row ${p.overdue?'pending-overdue':''}" data-id="${p.ev.id}">
-      <td>${p.overdue ? '🔴' : '🕒'} ${p.ev.date} ${p.ev.time||''}</td>
+      <td>${p.overdue ? '🔴' : '🕒'} ${escapeHtml(p.ev.date||'')} ${escapeHtml(p.ev.time||'')}</td>
       <td>${escapeHtml(p.loc ? p.loc.name : '?')}</td>
       <td><span class="cal-badge" style="background:${CAL_SM_COLORS[platform]};display:inline-block;">${CAL_TYPE_LABELS[type]}</span> ${CAL_SM_NAMES[platform]}</td>
       <td>${escapeHtml(p.ev.title||'')}</td>
@@ -3496,8 +3573,9 @@ document.getElementById('importFile').addEventListener('change', (e)=>{
       if(!Array.isArray(newLocations)) throw new Error('Geçersiz format');
       const confirmMsg = `Bu dosyada ${newLocations.length} lokasyon ve ${newCalEvents.length} takvim girişi var. Mevcut verinin ÜZERİNE yazılacak. Devam edilsin mi?`;
       if(!confirm(confirmMsg)) return;
-      locations = newLocations;
-      calendarEvents = newCalEvents;
+      const temiz = sanitizeAll(newLocations, newCalEvents);
+      locations = temiz.locations;
+      calendarEvents = temiz.calendarEvents;
       locations.forEach(l => normalizeLocation(l));
       await persistNow();
       render();
