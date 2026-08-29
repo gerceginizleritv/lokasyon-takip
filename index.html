@@ -1506,6 +1506,32 @@ select{
       </div>
     </div>
 
+    <div class="pkg-section">
+      <div class="pkg-section-title" style="color:#C8A24A;">📌 Sabitlenmiş Yorumlar</div>
+      <div class="pkg-hint">Her gönderi türü kendi sabitlenmiş yorumunu alabilir — yayından hemen sonra ilk yorum olarak eklenmeli.</div>
+      <div class="field">
+        <div class="field-header">
+          <label>Duyuru Carousel'i — Instagram</label>
+          <button type="button" class="copy-btn" data-copy-target="p_pinnedCommentCarouselInstagram">📋 Kopyala</button>
+        </div>
+        <textarea id="p_pinnedCommentCarouselInstagram" placeholder="Duyuru carousel'i yayınlandıktan hemen sonra sabitlenecek yorum (IG)"></textarea>
+      </div>
+      <div class="field">
+        <div class="field-header">
+          <label>Duyuru Carousel'i — Facebook</label>
+          <button type="button" class="copy-btn" data-copy-target="p_pinnedCommentCarouselFacebook">📋 Kopyala</button>
+        </div>
+        <textarea id="p_pinnedCommentCarouselFacebook" placeholder="Duyuru carousel'i yayınlandıktan hemen sonra sabitlenecek yorum (FB)"></textarea>
+      </div>
+      <div class="field">
+        <div class="field-header">
+          <label>Asıl Video (YouTube / Facebook Native)</label>
+          <button type="button" class="copy-btn" data-copy-target="p_pinnedCommentVideo">📋 Kopyala</button>
+        </div>
+        <textarea id="p_pinnedCommentVideo" placeholder="Video yayınlandıktan hemen sonra sabitlenecek yorum"></textarea>
+      </div>
+    </div>
+
       </div>
     </details>
 
@@ -1871,6 +1897,7 @@ function defaultPackage(){
     pollCaptionFacebook:"",
     storyKnowledgeText:"",
     fbTags:"", fbCoverPrompt:"",
+    pinnedCommentCarouselInstagram:"", pinnedCommentCarouselFacebook:"", pinnedCommentVideo:"",
     shotList:""
   };
 }
@@ -3315,6 +3342,9 @@ function openPkgModal(id){
   document.getElementById('p_storyKnowledgeText').value = l.package.storyKnowledgeText || '';
   document.getElementById('p_fbTags').value = l.package.fbTags;
   document.getElementById('p_fbCoverPrompt').value = l.package.fbCoverPrompt;
+  document.getElementById('p_pinnedCommentCarouselInstagram').value = l.package.pinnedCommentCarouselInstagram || '';
+  document.getElementById('p_pinnedCommentCarouselFacebook').value = l.package.pinnedCommentCarouselFacebook || '';
+  document.getElementById('p_pinnedCommentVideo').value = l.package.pinnedCommentVideo || '';
   document.getElementById('pkgOverlay').classList.add('open');
 }
 function closePkgModal(){
@@ -3395,7 +3425,10 @@ document.getElementById('pkgSaveBtn').addEventListener('click', async ()=>{
     pollCaptionFacebook: document.getElementById('p_pollCaptionFacebook').value,
     storyKnowledgeText: document.getElementById('p_storyKnowledgeText').value,
     fbTags: document.getElementById('p_fbTags').value,
-    fbCoverPrompt: document.getElementById('p_fbCoverPrompt').value
+    fbCoverPrompt: document.getElementById('p_fbCoverPrompt').value,
+    pinnedCommentCarouselInstagram: document.getElementById('p_pinnedCommentCarouselInstagram').value,
+    pinnedCommentCarouselFacebook: document.getElementById('p_pinnedCommentCarouselFacebook').value,
+    pinnedCommentVideo: document.getElementById('p_pinnedCommentVideo').value
   };
   logActivity(`"${l.name}" — Yayın Paketi güncellendi.`);
   await persist();
