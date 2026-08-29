@@ -1231,310 +1231,6 @@ select{
       </div>
     </div>
 
-    <details style="margin-top:18px;border-top:1px solid var(--line);padding-top:12px;">
-      <summary style="cursor:pointer;color:var(--parchment-dim);font-size:12.5px;user-select:none;">🗄️ Eski içerik alanları (artık kullanılmıyor — sadece geçmiş referans için, göstermek için tıkla)</summary>
-      <div style="margin-top:12px;">
-
-    <div class="pkg-section" style="border-top:none;margin-top:0;padding-top:0;">
-      <div class="pkg-section-title" style="color:var(--gold);">📥 Claude'dan Yapıştır (tek seferde tüm alanları doldurur)</div>
-      <div class="pkg-hint">Claude'un sohbette verdiği JSON bloğunu kopyala, aşağıya yapıştır, "Alanları Doldur"a bas. Hiçbir alana tek tek yapıştırma yapmana gerek kalmaz — sonra normal "Kaydet"e basman yeterli.</div>
-      <div class="field">
-        <textarea id="p_jsonPaste" placeholder='{"captionYouTube": "...", "captionInstagram": "...", ...}' style="min-height:80px;font-family:'JetBrains Mono',monospace;font-size:11px;"></textarea>
-      </div>
-      <button type="button" class="btn btn-ghost btn-small" id="pkgFillFromJsonBtn">⬇ Alanları Doldur</button>
-    </div>
-
-    <div class="pkg-section">
-      <div class="pkg-section-title" data-i18n="pkg_section_youtube">YouTube (Uzun Video)</div>
-      <div class="field">
-        <label data-i18n="p_ytitles_label">Başlık Seçenekleri (satır satır)</label>
-        <textarea id="p_youtubeTitles" placeholder="2-3 SEO uyumlu başlık önerisi"></textarea>
-      </div>
-      <div class="field">
-        <label data-i18n="p_ytthumb_label">Thumbnail Görsel Prompt'u</label>
-        <textarea id="p_youtubeThumbPrompt" placeholder="Nano Banana / Google Flow'da kullanılacak prompt metni"></textarea>
-        <div class="pkg-hint" data-i18n="p_thumb_hint">Görseli ben üretemiyorum (Gemini'ye doğrudan bağlantım yok) — bu metni Flow'a yapıştırman yeterli.</div>
-      </div>
-    </div>
-
-    <div class="pkg-section">
-      <div class="pkg-section-title" data-i18n="pkg_section_reels">Reels / Shorts</div>
-      <div class="field">
-        <label data-i18n="p_reelscount_label">Kaç Adet Reels Hazırlanacak</label>
-        <input type="number" id="p_reelsCount" min="0" placeholder="4">
-      </div>
-      <div class="field">
-        <label data-i18n="p_reelstitles_label">Reels Kısa Başlıkları (satır satır)</label>
-        <textarea id="p_reelsTitles" placeholder="Reel1 — ...&#10;Reel2 — ..."></textarea>
-      </div>
-      <div class="field">
-        <label data-i18n="p_reelsprompts_label">Reels Thumbnail Prompt'ları (satır satır)</label>
-        <textarea id="p_reelsThumbPrompts" placeholder="Her reel için ayrı görsel prompt'u"></textarea>
-      </div>
-    </div>
-
-    <div class="pkg-section">
-      <div class="pkg-section-title" data-i18n="pkg_section_seo">SEO — Hashtag / Tag / Arama Hacmi</div>
-      <div class="field">
-        <div class="field-header">
-          <label data-i18n="p_hashtags_label">5 Yüksek Arama Hacimli Hashtag</label>
-          <button type="button" class="copy-btn" data-copy-target="p_hashtags">📋 Kopyala</button>
-        </div>
-        <textarea id="p_hashtags" placeholder="#tarihidedektif #bizanstarihi ..."></textarea>
-      </div>
-      <div class="field">
-        <div class="field-header">
-          <label data-i18n="p_tags_label">Tag Listesi (YouTube — Uzun Video)</label>
-          <button type="button" class="copy-btn" data-copy-target="p_tags">📋 Kopyala</button>
-        </div>
-        <textarea id="p_tags" placeholder="zeyrek camii, bizans tarihi, ..."></textarea>
-      </div>
-      <div class="field">
-        <div class="field-header">
-          <label data-i18n="p_shortstags_label">Tag Listesi (YouTube Shorts — ayrı)</label>
-          <button type="button" class="copy-btn" data-copy-target="p_shortsTags">📋 Kopyala</button>
-        </div>
-        <textarea id="p_shortsTags" placeholder="Shorts'a özel etiketler, uzun videodan farklı olabilir"></textarea>
-      </div>
-      <div class="field">
-        <label data-i18n="p_keywordnotes_label">vidIQ Arama Hacmi Notu</label>
-        <textarea id="p_keywordNotes" placeholder="'terim' (fırsat skoru/100), hacim..."></textarea>
-      </div>
-    </div>
-
-    <div class="pkg-section">
-      <div class="pkg-section-title" data-i18n="pkg_section_captions">Platform Bazlı Caption'lar</div>
-      <div class="field">
-        <div class="field-header">
-          <label data-i18n="p_shorts_label">YouTube Shorts</label>
-          <button type="button" class="copy-btn" data-copy-target="p_captionShorts">📋 Kopyala</button>
-        </div>
-        <textarea id="p_captionShorts"></textarea>
-      </div>
-      <div class="field">
-        <div class="field-header">
-          <label data-i18n="p_ytdesc_label">YouTube (Uzun Video Açıklaması)</label>
-          <button type="button" class="copy-btn" data-copy-target="p_captionYouTube">📋 Kopyala</button>
-        </div>
-        <textarea id="p_captionYouTube"></textarea>
-      </div>
-      <div class="field">
-        <div class="field-header">
-          <label>Instagram</label>
-          <button type="button" class="copy-btn" data-copy-target="p_captionInstagram">📋 Kopyala</button>
-        </div>
-        <textarea id="p_captionInstagram"></textarea>
-      </div>
-      <div class="field">
-        <div class="field-header">
-          <label>Facebook</label>
-          <button type="button" class="copy-btn" data-copy-target="p_captionFacebook">📋 Kopyala</button>
-        </div>
-        <textarea id="p_captionFacebook"></textarea>
-      </div>
-    </div>
-
-    <div class="pkg-section">
-      <div class="pkg-section-title" style="color:#9C4FBF;">🖼️ Carousel Caption'ları (video değil, görsel post içindir)</div>
-      <div class="field">
-        <div class="field-header">
-          <label>Instagram Carousel</label>
-          <button type="button" class="copy-btn" data-copy-target="p_carouselCaptionInstagram">📋 Kopyala</button>
-        </div>
-        <textarea id="p_carouselCaptionInstagram"></textarea>
-      </div>
-      <div class="field">
-        <div class="field-header">
-          <label>Facebook Carousel</label>
-          <button type="button" class="copy-btn" data-copy-target="p_carouselCaptionFacebook">📋 Kopyala</button>
-        </div>
-        <textarea id="p_carouselCaptionFacebook"></textarea>
-      </div>
-    </div>
-
-    <div class="pkg-section">
-      <div class="pkg-section-title" style="color:#D68A3A;">🎬 Ek Reels (aynı lokasyonda birden fazla Reels için — ana video caption'ının üzerine yazmaz)</div>
-      <div class="field">
-        <div class="field-header">
-          <label>Reels #1 — Instagram</label>
-          <button type="button" class="copy-btn" data-copy-target="p_reel1CaptionInstagram">📋 Kopyala</button>
-        </div>
-        <textarea id="p_reel1CaptionInstagram"></textarea>
-      </div>
-      <div class="field">
-        <div class="field-header">
-          <label>Reels #1 — Facebook</label>
-          <button type="button" class="copy-btn" data-copy-target="p_reel1CaptionFacebook">📋 Kopyala</button>
-        </div>
-        <textarea id="p_reel1CaptionFacebook"></textarea>
-      </div>
-      <div class="field">
-        <div class="field-header">
-          <label>Reels #1 — Dikey Kapak Prompt'u (9:16)</label>
-          <button type="button" class="copy-btn" data-copy-target="p_reel1ThumbPrompt">📋 Kopyala</button>
-        </div>
-        <textarea id="p_reel1ThumbPrompt"></textarea>
-      </div>
-      <div class="field">
-        <div class="field-header">
-          <label>Reels #2 — Instagram</label>
-          <button type="button" class="copy-btn" data-copy-target="p_reel2CaptionInstagram">📋 Kopyala</button>
-        </div>
-        <textarea id="p_reel2CaptionInstagram"></textarea>
-      </div>
-      <div class="field">
-        <div class="field-header">
-          <label>Reels #2 — Facebook</label>
-          <button type="button" class="copy-btn" data-copy-target="p_reel2CaptionFacebook">📋 Kopyala</button>
-        </div>
-        <textarea id="p_reel2CaptionFacebook"></textarea>
-      </div>
-      <div class="field">
-        <div class="field-header">
-          <label>Reels #2 — Dikey Kapak Prompt'u (9:16)</label>
-          <button type="button" class="copy-btn" data-copy-target="p_reel2ThumbPrompt">📋 Kopyala</button>
-        </div>
-        <textarea id="p_reel2ThumbPrompt"></textarea>
-      </div>
-    </div>
-
-    <div class="pkg-section">
-      <div class="pkg-section-title" style="color:#9C4FBF;">🖼️ Carousel Slayt Görsel Prompt'ları (9 slayt)</div>
-      <div class="field">
-        <div class="field-header">
-          <label>Slayt 1</label>
-          <button type="button" class="copy-btn" data-copy-target="p_carouselSlidePrompt1">📋 Kopyala</button>
-        </div>
-        <textarea id="p_carouselSlidePrompt1"></textarea>
-      </div>
-      <div class="field">
-        <div class="field-header">
-          <label>Slayt 2</label>
-          <button type="button" class="copy-btn" data-copy-target="p_carouselSlidePrompt2">📋 Kopyala</button>
-        </div>
-        <textarea id="p_carouselSlidePrompt2"></textarea>
-      </div>
-      <div class="field">
-        <div class="field-header">
-          <label>Slayt 3</label>
-          <button type="button" class="copy-btn" data-copy-target="p_carouselSlidePrompt3">📋 Kopyala</button>
-        </div>
-        <textarea id="p_carouselSlidePrompt3"></textarea>
-      </div>
-      <div class="field">
-        <div class="field-header">
-          <label>Slayt 4</label>
-          <button type="button" class="copy-btn" data-copy-target="p_carouselSlidePrompt4">📋 Kopyala</button>
-        </div>
-        <textarea id="p_carouselSlidePrompt4"></textarea>
-      </div>
-      <div class="field">
-        <div class="field-header">
-          <label>Slayt 5</label>
-          <button type="button" class="copy-btn" data-copy-target="p_carouselSlidePrompt5">📋 Kopyala</button>
-        </div>
-        <textarea id="p_carouselSlidePrompt5"></textarea>
-      </div>
-      <div class="field">
-        <div class="field-header">
-          <label>Slayt 6</label>
-          <button type="button" class="copy-btn" data-copy-target="p_carouselSlidePrompt6">📋 Kopyala</button>
-        </div>
-        <textarea id="p_carouselSlidePrompt6"></textarea>
-      </div>
-      <div class="field">
-        <div class="field-header">
-          <label>Slayt 7</label>
-          <button type="button" class="copy-btn" data-copy-target="p_carouselSlidePrompt7">📋 Kopyala</button>
-        </div>
-        <textarea id="p_carouselSlidePrompt7"></textarea>
-      </div>
-      <div class="field">
-        <div class="field-header">
-          <label>Slayt 8</label>
-          <button type="button" class="copy-btn" data-copy-target="p_carouselSlidePrompt8">📋 Kopyala</button>
-        </div>
-        <textarea id="p_carouselSlidePrompt8"></textarea>
-      </div>
-      <div class="field">
-        <div class="field-header">
-          <label>Slayt 9</label>
-          <button type="button" class="copy-btn" data-copy-target="p_carouselSlidePrompt9">📋 Kopyala</button>
-        </div>
-        <textarea id="p_carouselSlidePrompt9"></textarea>
-      </div>
-    </div>
-
-    <div class="pkg-section">
-      <div class="pkg-section-title" style="color:#2FA36B;">📊 Facebook Anketi</div>
-      <div class="field">
-        <div class="field-header">
-          <label>Anket Metni + Seçenekler</label>
-          <button type="button" class="copy-btn" data-copy-target="p_pollCaptionFacebook">📋 Kopyala</button>
-        </div>
-        <textarea id="p_pollCaptionFacebook" placeholder="Soru metni + A/B seçenekleri"></textarea>
-      </div>
-    </div>
-
-    <div class="pkg-section">
-      <div class="pkg-section-title" style="color:#D4A72C;">🎬 "Bunu Biliyor Muydunuz?" Story</div>
-      <div class="pkg-hint">Story'lerde caption yok — bu alan ekran metni + sinematik video üretim prompt'unu birlikte içerir.</div>
-      <div class="field">
-        <div class="field-header">
-          <label>Ekran Metni + Video Prompt</label>
-          <button type="button" class="copy-btn" data-copy-target="p_storyKnowledgeText">📋 Kopyala</button>
-        </div>
-        <textarea id="p_storyKnowledgeText" placeholder="BUNU BİLİYOR MUYDUNUZ? ... + VİDEO PROMPT'U"></textarea>
-      </div>
-    </div>
-
-    <div class="pkg-section">
-      <div class="pkg-section-title">📘 Facebook Native Yükleme</div>
-      <div class="field">
-        <div class="field-header">
-          <label>Etiketler (Facebook yükleme ekranı için, 10-15 terim)</label>
-          <button type="button" class="copy-btn" data-copy-target="p_fbTags">📋 Kopyala</button>
-        </div>
-        <textarea id="p_fbTags" placeholder="konum, kişi, dönem, tema odaklı terimler"></textarea>
-      </div>
-      <div class="field">
-        <div class="field-header">
-          <label>Kapak Fotoğrafı Prompt'u (YT thumbnail'inden farklı — sakin/onurlu ton)</label>
-          <button type="button" class="copy-btn" data-copy-target="p_fbCoverPrompt">📋 Kopyala</button>
-        </div>
-        <textarea id="p_fbCoverPrompt" placeholder="16:9, sinematik, miras/büyüklük vurgusu"></textarea>
-      </div>
-    </div>
-
-    <div class="pkg-section">
-      <div class="pkg-section-title" style="color:#C8A24A;">📌 Sabitlenmiş Yorumlar</div>
-      <div class="pkg-hint">Her gönderi türü kendi sabitlenmiş yorumunu alabilir — yayından hemen sonra ilk yorum olarak eklenmeli.</div>
-      <div class="field">
-        <div class="field-header">
-          <label>Duyuru Carousel'i — Instagram</label>
-          <button type="button" class="copy-btn" data-copy-target="p_pinnedCommentCarouselInstagram">📋 Kopyala</button>
-        </div>
-        <textarea id="p_pinnedCommentCarouselInstagram" placeholder="Duyuru carousel'i yayınlandıktan hemen sonra sabitlenecek yorum (IG)"></textarea>
-      </div>
-      <div class="field">
-        <div class="field-header">
-          <label>Duyuru Carousel'i — Facebook</label>
-          <button type="button" class="copy-btn" data-copy-target="p_pinnedCommentCarouselFacebook">📋 Kopyala</button>
-        </div>
-        <textarea id="p_pinnedCommentCarouselFacebook" placeholder="Duyuru carousel'i yayınlandıktan hemen sonra sabitlenecek yorum (FB)"></textarea>
-      </div>
-      <div class="field">
-        <div class="field-header">
-          <label>Asıl Video (YouTube / Facebook Native)</label>
-          <button type="button" class="copy-btn" data-copy-target="p_pinnedCommentVideo">📋 Kopyala</button>
-        </div>
-        <textarea id="p_pinnedCommentVideo" placeholder="Video yayınlandıktan hemen sonra sabitlenecek yorum"></textarea>
-      </div>
-    </div>
-
-      </div>
-    </details>
-
     <div class="modal-actions">
       <button class="btn btn-ghost" id="pkgCancelBtn" data-i18n="btn_cancel">Vazgeç</button>
       <button class="btn" id="pkgSaveBtn" data-i18n="btn_save">Kaydet</button>
@@ -1885,19 +1581,6 @@ let pendingResave = false;
 
 function defaultPackage(){
   return {
-    youtubeTitles:"", youtubeThumbPrompt:"",
-    reelsCount:"", reelsTitles:"", reelsThumbPrompts:"",
-    hashtags:"", tags:"", shortsTags:"", keywordNotes:"",
-    captionShorts:"", captionYouTube:"", captionInstagram:"", captionFacebook:"",
-    carouselCaptionInstagram:"", carouselCaptionFacebook:"",
-    reel1CaptionInstagram:"", reel1CaptionFacebook:"", reel2CaptionInstagram:"", reel2CaptionFacebook:"",
-    reel1ThumbPrompt:"", reel2ThumbPrompt:"",
-    carouselSlidePrompt1:"", carouselSlidePrompt2:"", carouselSlidePrompt3:"", carouselSlidePrompt4:"", carouselSlidePrompt5:"",
-    carouselSlidePrompt6:"", carouselSlidePrompt7:"", carouselSlidePrompt8:"", carouselSlidePrompt9:"",
-    pollCaptionFacebook:"",
-    storyKnowledgeText:"",
-    fbTags:"", fbCoverPrompt:"",
-    pinnedCommentCarouselInstagram:"", pinnedCommentCarouselFacebook:"", pinnedCommentVideo:"",
     shotList:""
   };
 }
@@ -1998,6 +1681,7 @@ function sanitizeCalEvent(raw){
       videoTitle:   safeStr(c.videoTitle, 500),
       shortTitle:   safeStr(c.shortTitle, 500),
       thumbPrompt:  safeStr(c.thumbPrompt, 20000),
+      pinnedComment: safeStr(c.pinnedComment, 5000),
       slidePrompts: Array.isArray(c.slidePrompts) ? c.slidePrompts.slice(0,9).map(x=>safeStr(x,20000)) : []
     }
   };
@@ -2509,7 +2193,7 @@ function refreshCalPkgFields(){
     if(type === 'carousel'){
       for(let i=1;i<=9;i++) slidePrompts.push(pkg['carouselSlidePrompt'+i] || '');
     }
-    content = { caption: pkg[fieldKey] || '', hashtags: hashtagVal || '', thumbPrompt, shortTitle: pkg.youtubeThumbShort || '', videoTitle: '', slidePrompts };
+    content = { caption: pkg[fieldKey] || '', hashtags: hashtagVal || '', thumbPrompt, shortTitle: pkg.youtubeThumbShort || '', videoTitle: '', pinnedComment: '', slidePrompts };
   }
 
   let html = `
@@ -2571,6 +2255,15 @@ function refreshCalPkgFields(){
       </div>`;
     }
   }
+
+  html += `
+    <div class="pkg-field">
+      <div class="field-header">
+        <label>📌 Sabitlenecek Yorum (yayından hemen sonra ilk yorum olarak eklenecek)</label>
+        <button type="button" class="copy-btn" data-copy-target="calEditPinnedComment">📋 Kopyala</button>
+      </div>
+      <textarea id="calEditPinnedComment" style="min-height:44px;">${escapeHtml(content.pinnedComment||'')}</textarea>
+    </div>`;
 
   fields.innerHTML = html;
 }
@@ -2638,6 +2331,7 @@ function collectCalContentFromForm(type){
     thumbPrompt: document.getElementById('calEditThumbPrompt') ? document.getElementById('calEditThumbPrompt').value : '',
     shortTitle: document.getElementById('calEditShortTitle') ? document.getElementById('calEditShortTitle').value : '',
     videoTitle: document.getElementById('calEditVideoTitle') ? document.getElementById('calEditVideoTitle').value : '',
+    pinnedComment: document.getElementById('calEditPinnedComment') ? document.getElementById('calEditPinnedComment').value : '',
     slidePrompts: []
   };
   if(type === 'carousel'){
@@ -3316,35 +3010,6 @@ function openPkgModal(id){
   document.getElementById('pkgId').value = id;
   document.getElementById('pkgTitle').textContent = t('pkg_title') + ' — ' + l.name;
   document.getElementById('p_shotList').value = l.package.shotList;
-  document.getElementById('p_youtubeTitles').value = l.package.youtubeTitles;
-  document.getElementById('p_youtubeThumbPrompt').value = l.package.youtubeThumbPrompt;
-  document.getElementById('p_reelsCount').value = l.package.reelsCount;
-  document.getElementById('p_reelsTitles').value = l.package.reelsTitles;
-  document.getElementById('p_reelsThumbPrompts').value = l.package.reelsThumbPrompts;
-  document.getElementById('p_hashtags').value = l.package.hashtags;
-  document.getElementById('p_tags').value = l.package.tags;
-  document.getElementById('p_shortsTags').value = l.package.shortsTags;
-  document.getElementById('p_keywordNotes').value = l.package.keywordNotes;
-  document.getElementById('p_captionShorts').value = l.package.captionShorts;
-  document.getElementById('p_captionYouTube').value = l.package.captionYouTube;
-  document.getElementById('p_captionInstagram').value = l.package.captionInstagram;
-  document.getElementById('p_captionFacebook').value = l.package.captionFacebook;
-  document.getElementById('p_carouselCaptionInstagram').value = l.package.carouselCaptionInstagram || '';
-  document.getElementById('p_carouselCaptionFacebook').value = l.package.carouselCaptionFacebook || '';
-  document.getElementById('p_reel1CaptionInstagram').value = l.package.reel1CaptionInstagram || '';
-  document.getElementById('p_reel1CaptionFacebook').value = l.package.reel1CaptionFacebook || '';
-  document.getElementById('p_reel1ThumbPrompt').value = l.package.reel1ThumbPrompt || '';
-  document.getElementById('p_reel2CaptionInstagram').value = l.package.reel2CaptionInstagram || '';
-  document.getElementById('p_reel2CaptionFacebook').value = l.package.reel2CaptionFacebook || '';
-  document.getElementById('p_reel2ThumbPrompt').value = l.package.reel2ThumbPrompt || '';
-  for(let i=1;i<=9;i++){ document.getElementById('p_carouselSlidePrompt'+i).value = l.package['carouselSlidePrompt'+i] || ''; }
-  document.getElementById('p_pollCaptionFacebook').value = l.package.pollCaptionFacebook || '';
-  document.getElementById('p_storyKnowledgeText').value = l.package.storyKnowledgeText || '';
-  document.getElementById('p_fbTags').value = l.package.fbTags;
-  document.getElementById('p_fbCoverPrompt').value = l.package.fbCoverPrompt;
-  document.getElementById('p_pinnedCommentCarouselInstagram').value = l.package.pinnedCommentCarouselInstagram || '';
-  document.getElementById('p_pinnedCommentCarouselFacebook').value = l.package.pinnedCommentCarouselFacebook || '';
-  document.getElementById('p_pinnedCommentVideo').value = l.package.pinnedCommentVideo || '';
   document.getElementById('pkgOverlay').classList.add('open');
 }
 function closePkgModal(){
@@ -3354,81 +3019,13 @@ document.getElementById('pkgCancelBtn').addEventListener('click', closePkgModal)
 document.getElementById('pkgOverlay').addEventListener('click', (e)=>{
   if(e.target.id==='pkgOverlay') closePkgModal();
 });
-document.getElementById('pkgFillFromJsonBtn').addEventListener('click', ()=>{
-  const raw = document.getElementById('p_jsonPaste').value.trim();
-  if(!raw){ alert('Önce JSON metnini yapıştır.'); return; }
-  let obj;
-  try{
-    obj = JSON.parse(raw);
-  }catch(e){
-    alert('JSON okunamadı — Claude\'un verdiği bloğu eksiksiz kopyaladığından emin ol.\n\n' + e.message);
-    return;
-  }
-  const fieldMap = {
-    shotList:'p_shotList', youtubeTitles:'p_youtubeTitles', youtubeThumbPrompt:'p_youtubeThumbPrompt',
-    reelsCount:'p_reelsCount', reelsTitles:'p_reelsTitles', reelsThumbPrompts:'p_reelsThumbPrompts',
-    hashtags:'p_hashtags', tags:'p_tags', shortsTags:'p_shortsTags', keywordNotes:'p_keywordNotes',
-    captionShorts:'p_captionShorts', captionYouTube:'p_captionYouTube',
-    captionInstagram:'p_captionInstagram', captionFacebook:'p_captionFacebook',
-    carouselCaptionInstagram:'p_carouselCaptionInstagram', carouselCaptionFacebook:'p_carouselCaptionFacebook',
-    pollCaptionFacebook:'p_pollCaptionFacebook',
-    storyKnowledgeText:'p_storyKnowledgeText',
-    fbTags:'p_fbTags', fbCoverPrompt:'p_fbCoverPrompt'
-  };
-  let filled = 0;
-  Object.keys(fieldMap).forEach(key=>{
-    if(obj[key] !== undefined){
-      const el = document.getElementById(fieldMap[key]);
-      if(el){ el.value = obj[key]; filled++; }
-    }
-  });
-  document.getElementById('p_jsonPaste').value = '';
-  showToast(`${filled} alan dolduruldu ✓ — kontrol edip "Kaydet"e bas`);
-});
 
 document.getElementById('pkgSaveBtn').addEventListener('click', async ()=>{
   const id = document.getElementById('pkgId').value;
   const l = locations.find(x=>x.id===id);
   if(!l) return;
   l.package = {
-    shotList: document.getElementById('p_shotList').value,
-    youtubeTitles: document.getElementById('p_youtubeTitles').value,
-    youtubeThumbPrompt: document.getElementById('p_youtubeThumbPrompt').value,
-    reelsCount: document.getElementById('p_reelsCount').value,
-    reelsTitles: document.getElementById('p_reelsTitles').value,
-    reelsThumbPrompts: document.getElementById('p_reelsThumbPrompts').value,
-    hashtags: document.getElementById('p_hashtags').value,
-    tags: document.getElementById('p_tags').value,
-    shortsTags: document.getElementById('p_shortsTags').value,
-    keywordNotes: document.getElementById('p_keywordNotes').value,
-    captionShorts: document.getElementById('p_captionShorts').value,
-    captionYouTube: document.getElementById('p_captionYouTube').value,
-    captionInstagram: document.getElementById('p_captionInstagram').value,
-    captionFacebook: document.getElementById('p_captionFacebook').value,
-    carouselCaptionInstagram: document.getElementById('p_carouselCaptionInstagram').value,
-    carouselCaptionFacebook: document.getElementById('p_carouselCaptionFacebook').value,
-    reel1CaptionInstagram: document.getElementById('p_reel1CaptionInstagram').value,
-    reel1CaptionFacebook: document.getElementById('p_reel1CaptionFacebook').value,
-    reel1ThumbPrompt: document.getElementById('p_reel1ThumbPrompt').value,
-    reel2CaptionInstagram: document.getElementById('p_reel2CaptionInstagram').value,
-    reel2CaptionFacebook: document.getElementById('p_reel2CaptionFacebook').value,
-    reel2ThumbPrompt: document.getElementById('p_reel2ThumbPrompt').value,
-    carouselSlidePrompt1: document.getElementById('p_carouselSlidePrompt1').value,
-    carouselSlidePrompt2: document.getElementById('p_carouselSlidePrompt2').value,
-    carouselSlidePrompt3: document.getElementById('p_carouselSlidePrompt3').value,
-    carouselSlidePrompt4: document.getElementById('p_carouselSlidePrompt4').value,
-    carouselSlidePrompt5: document.getElementById('p_carouselSlidePrompt5').value,
-    carouselSlidePrompt6: document.getElementById('p_carouselSlidePrompt6').value,
-    carouselSlidePrompt7: document.getElementById('p_carouselSlidePrompt7').value,
-    carouselSlidePrompt8: document.getElementById('p_carouselSlidePrompt8').value,
-    carouselSlidePrompt9: document.getElementById('p_carouselSlidePrompt9').value,
-    pollCaptionFacebook: document.getElementById('p_pollCaptionFacebook').value,
-    storyKnowledgeText: document.getElementById('p_storyKnowledgeText').value,
-    fbTags: document.getElementById('p_fbTags').value,
-    fbCoverPrompt: document.getElementById('p_fbCoverPrompt').value,
-    pinnedCommentCarouselInstagram: document.getElementById('p_pinnedCommentCarouselInstagram').value,
-    pinnedCommentCarouselFacebook: document.getElementById('p_pinnedCommentCarouselFacebook').value,
-    pinnedCommentVideo: document.getElementById('p_pinnedCommentVideo').value
+    shotList: document.getElementById('p_shotList').value
   };
   logActivity(`"${l.name}" — Yayın Paketi güncellendi.`);
   await persist();
