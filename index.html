@@ -890,7 +890,7 @@ select{
       <button class="btn btn-ghost btn-small" id="importBtn">📤 Yedekten Geri Yükle</button>
       <button class="btn btn-ghost btn-small" id="dataSizeBtn">📊 Veri Alanı</button>
       <button class="btn btn-ghost btn-small" id="refreshBtn">🔄 Yenile</button>
-      <button class="btn btn-ghost btn-small" id="githubTokenResetBtn">🔑 Token</button>
+      <button class="btn btn-ghost btn-small" id="githubTokenResetBtn">🚪 Çıkış</button>
       <button class="btn btn-ghost btn-small" id="pendingBtn">⏳ Bekleyenler</button>
       <input type="file" id="importFile" accept="application/json" style="display:none;">
       <div class="main-tabs">
@@ -1263,32 +1263,145 @@ select{
   </div>
 </div>
 
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js"></script>
 <script>
 const STORAGE_KEY = 'gerceginizleri_lokasyon_listesi';
 const LANG_KEY = 'gerceginizleri_ui_language';
-// Icerik plani (yayinlanmamis video basliklari, caption'lar, cekim takvimi)
-// artik private bir repoda duruyor. Uygulama zaten API + token ile okuyup
-// yazdigi icin private repo sorunsuz calisiyor; bu repo public kalmak
-// zorunda cunku GitHub Pages ucretsiz planda private repodan yayin yapmiyor.
-const GITHUB_REPO = 'gerceginizleritv/lokasyon-verisi';
-const GITHUB_FILE_PATH = 'data.json';
-const GITHUB_API_BASE = 'https://api.github.com/repos/' + GITHUB_REPO + '/contents/' + GITHUB_FILE_PATH;
-let githubFileSha = null; // her PUT için gereken güncel dosya SHA'sı — her başarılı okuma/yazmadan sonra güncellenir
+// ============================================================
+// VERI KATMANI — Supabase
+// ============================================================
+// Veri artik GitHub'daki data.json dosyasinda degil, Supabase'de.
+// Degisen yalnizca burasi: ekranlar, filtreler, takvim, yedek alma —
+// hepsi eskisi gibi locations / calendarEvents dizileriyle calisiyor.
+//
+// Neden degisti:
+//   * data.json tek dosyaydi, her kayitta bastan yaziliyordu. Iki cihazdan
+//     ayni anda calisildiginda biri otekinin yazdigini eziyordu.
+//   * Her yeni cihazda elle GitHub anahtari girmek gerekiyordu. Artik
+//     Google ile giris yetiyor.
+//   * Simdi yalnizca gercekten degisen satirlar yaziliyor.
+const SUPABASE_URL = 'https://dyemvzmpnlpnzwebuciu.supabase.co';
+const SUPABASE_KEY = 'sb_publishable_QpzqwOn4BX43GtX9ecaowQ_qIlaHJA-';
 
-// GitHub token'ı BİLEREK kaynak koda yazılmıyor — GitHub'ın secret scanning
-// koruması commit'e giren token'ları tespit edip push'u engelliyor (doğru
-// davranış). Bunun yerine token, bu cihazın tarayıcısında localStorage'da
-// tutuluyor — her yeni cihazda (telefon/bilgisayar) bir kereliğine elle
-// girilmesi gerekiyor, ama repoya hiçbir zaman yazılmıyor.
-function getGithubToken(){
-  let token = localStorage.getItem('gerceginizleri_github_token');
-  if(!token){
-    token = window.prompt('Bu cihazda ilk kurulum:\nGitHub erişim anahtarını (token) yapıştır — sadece bu tarayıcıda saklanır, koda hiç yazılmaz.');
-    if(token) { token = token.trim(); localStorage.setItem('gerceginizleri_github_token', token); }
-  }
-  return token || '';
+let sb = null;
+let oturum = null;
+let calismaAlaniId = null;
+
+// Son bilinen hal: hangi satirin gercekten degistigini buradan anliyoruz.
+// Olmasaydi her kayitta 142 satirin tamami tekrar yazilirdi.
+let sonHal = { lok: new Map(), kyt: new Map() };
+
+// --- Bicim cevirileri --------------------------------------------------
+// Uygulama bayraklari 'E'/'H' metni olarak tutuyor (butun ekranlar buna
+// gore yazilmis). Veritabaninda ise boolean; bir bayrak "evet/hayir"
+// disinda deger alamasin diye. Cevirim tek yerde, burada.
+const _eh = v => (v ? 'E' : 'H');
+const _bool = v => v === 'E';
+
+function satirdanLokasyon(r){
+  return {
+    id: r.id, name: r.name || '', district: r.district || '', city: r.city || '',
+    address: r.address || '', topic: r.topic || '', notes: r.notes || '',
+    shootingCautions: r.cautions || '', fieldNotes: r.field_notes || '',
+    permission: _eh(r.permission), filmed: _eh(r.filmed), audio: _eh(r.audio),
+    edited: _eh(r.edited), published: _eh(r.published), script: _eh(r.script),
+    cancelled: _eh(r.cancelled),
+    // Bu alan hic kullanilmamisti, veritabanina tasinmadi; ekranlar yine de
+    // bekledigi icin sabit deger veriliyor.
+    prepRequested: 'H',
+    format: r.format || 'Saha',
+    mapsLink: r.maps_url || '', scriptLink: r.script_url || '',
+    driveFolderLink: r.drive_url || '', imageUrl: r.image_url || '',
+    plannedDate: r.planned_date || '',
+    package: { shotList: r.shot_list || '' }
+  };
 }
-let GITHUB_TOKEN = getGithubToken();
+
+function lokasyonSatiri(l){
+  const bicimler = ['Saha','Masabaşı','Hibrit','Stüdyo/Grafik'];
+  const p = (l.package && typeof l.package === 'object') ? l.package : {};
+  return {
+    id: l.id, workspace_id: calismaAlaniId,
+    name: l.name || '', district: l.district || '', city: l.city || '',
+    address: l.address || '', topic: l.topic || '', notes: l.notes || '',
+    cautions: l.shootingCautions || '', field_notes: l.fieldNotes || '',
+    format: bicimler.indexOf(l.format) >= 0 ? l.format : 'Saha',
+    // Bos metin tarih sutununa yazilamaz; yoklugu null ile anlatiyoruz.
+    planned_date: l.plannedDate ? l.plannedDate : null,
+    permission: _bool(l.permission), filmed: _bool(l.filmed), audio: _bool(l.audio),
+    edited: _bool(l.edited), published: _bool(l.published), script: _bool(l.script),
+    cancelled: _bool(l.cancelled),
+    maps_url: l.mapsLink || '', drive_url: l.driveFolderLink || '',
+    script_url: l.scriptLink || '', image_url: l.imageUrl || '',
+    shot_list: p.shotList || ''
+  };
+}
+
+function satirdanKayit(r){
+  const c = (r.content && typeof r.content === 'object') ? r.content : {};
+  return {
+    id: r.id, locationId: r.location_id || '',
+    platform: r.platform || '', type: r.type || '',
+    typeOverride: r.type_override || '', platformOverride: r.platform_override || '',
+    captionFieldOverride: r.caption_field_override || '',
+    title: r.title || '', date: r.post_date || '',
+    time: (r.post_time || '').slice(0,5), uploaded: !!r.uploaded,
+    // Sabitlenen yorum kendi sutununda duruyor; ekranlar onu content
+    // icinde bekledigi icin burada geri birlestiriliyor.
+    content: Object.assign({}, c, { pinnedComment: r.pinned_comment || '' })
+  };
+}
+
+function kayitSatiri(e){
+  const c = (e.content && typeof e.content === 'object') ? e.content : {};
+  const kalan = Object.assign({}, c);
+  delete kalan.pinnedComment;
+  return {
+    id: e.id, user_id: oturum.user.id, workspace_id: calismaAlaniId,
+    location_id: e.locationId || null,
+    type: e.type || '', platform: e.platform || '', title: e.title || '',
+    post_date: e.date || null, post_time: e.time || null,
+    uploaded: !!e.uploaded,
+    type_override: e.typeOverride || null,
+    platform_override: e.platformOverride || null,
+    caption_field_override: e.captionFieldOverride || null,
+    pinned_comment: c.pinnedComment || '',
+    content: kalan
+  };
+}
+
+// --- Giris -------------------------------------------------------------
+function girisEkrani(mesaj, hataMi){
+  let k = document.getElementById('girisPerde');
+  if(!k){
+    k = document.createElement('div');
+    k.id = 'girisPerde';
+    k.style.cssText = 'position:fixed;inset:0;z-index:9999;display:flex;'+
+      'align-items:center;justify-content:center;padding:24px;'+
+      'background:rgba(12,14,18,.92);backdrop-filter:blur(4px);';
+    document.body.appendChild(k);
+  }
+  k.innerHTML =
+    '<div style="max-width:420px;width:100%;background:#fff;color:#15181d;'+
+    'border-radius:14px;padding:28px;font:16px/1.6 system-ui,sans-serif;text-align:center">'+
+    '<div style="font-size:19px;font-weight:700;margin-bottom:8px">Lokasyon Takip Sistemi</div>'+
+    '<div style="color:'+(hataMi ? '#a52a2a' : '#5b6472')+';margin-bottom:20px">'+mesaj+'</div>'+
+    '<button id="girisBtn" style="font:inherit;font-weight:600;padding:12px 22px;'+
+    'border-radius:9px;border:0;background:#1f5f4f;color:#fff;cursor:pointer">'+
+    'Google ile giriş yap</button></div>';
+  document.getElementById('girisBtn').addEventListener('click', async ()=>{
+    const { error } = await sb.auth.signInWithOAuth({
+      provider: 'google',
+      options: { redirectTo: window.location.href.split('#')[0].split('?')[0] }
+    });
+    if(error) girisEkrani('Giriş başlatılamadı: ' + error.message, true);
+  });
+}
+
+function girisEkraniniKapat(){
+  const k = document.getElementById('girisPerde');
+  if(k) k.remove();
+}
 let currentLang = 'tr';
 
 const LANG = {
@@ -1694,67 +1807,72 @@ function sanitizeAll(locs, evs){
   };
 }
 
-// UTF-8 güvenli base64 kodlama/çözme — GitHub Contents API içeriği base64
-// olarak alıp gönderiyor, düz atob()/btoa() Türkçe karakterlerde bozulur.
-function b64ToUtf8(b64){
-  const binary = atob(b64.replace(/\n/g, ''));
-  const bytes = new Uint8Array(binary.length);
-  for(let i=0;i<binary.length;i++) bytes[i] = binary.charCodeAt(i);
-  return new TextDecoder('utf-8').decode(bytes);
-}
-function utf8ToB64(str){
-  const bytes = new TextEncoder().encode(str);
-  let binary = '';
-  bytes.forEach(b => { binary += String.fromCharCode(b); });
-  return btoa(binary);
-}
 
 async function loadData(){
   try{
-    if(!GITHUB_TOKEN){ throw new Error('NO_TOKEN'); }
-    let res = await fetch(GITHUB_API_BASE, {
-      method: 'GET',
-      headers: { 'Authorization': 'Bearer ' + GITHUB_TOKEN, 'Accept': 'application/vnd.github+json' }
-    });
-    if(res.status === 401){
-      // Kayıtlı token geçersiz/süresi dolmuş — sil, yeniden sor, bir kez daha dene.
-      localStorage.removeItem('gerceginizleri_github_token');
-      alert('GitHub erişim anahtarı geçersiz görünüyor. Lütfen tekrar gir.');
-      GITHUB_TOKEN = getGithubToken();
-      res = await fetch(GITHUB_API_BASE, {
-        method: 'GET',
-        headers: { 'Authorization': 'Bearer ' + GITHUB_TOKEN, 'Accept': 'application/vnd.github+json' }
-      });
+    if(!window.supabase) throw new Error('Supabase kütüphanesi yüklenemedi.');
+    if(!sb) sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+    const { data:{ session } } = await sb.auth.getSession();
+    if(!session){
+      girisEkrani('Kayıtlarına ulaşmak için giriş yap.');
+      return;
     }
-    if(!res.ok) throw new Error('HTTP ' + res.status);
-    const json = await res.json();
-    githubFileSha = json.sha;
-    const record = JSON.parse(b64ToUtf8(json.content));
-    const temiz = sanitizeAll(record.locations, record.calendarEvents);
+    oturum = session;
+
+    const { data:alanlar, error:alanHata } = await sb.from('workspaces').select('id,name');
+    if(alanHata) throw alanHata;
+    if(!alanlar || !alanlar.length){
+      girisEkrani('Bu hesaba (' + session.user.email + ') bağlı çalışma alanı yok.', true);
+      return;
+    }
+    calismaAlaniId = alanlar[0].id;
+    girisEkraniniKapat();
+
+    // Silinen satirlar tabloda kaliyor ama listelere girmiyor. Sebebi
+    // gecmiste yasanan "zombi kayit" olayi: elle silinen kayitlar her
+    // acilista geri geliyordu.
+    const { data:lokSatir, error:e1 } = await sb.from('locations')
+      .select('*').eq('workspace_id', calismaAlaniId).is('deleted_at', null);
+    if(e1) throw e1;
+    const { data:kytSatir, error:e2 } = await sb.from('calendar_events')
+      .select('*').eq('workspace_id', calismaAlaniId).is('deleted_at', null);
+    if(e2) throw e2;
+
+    const temiz = sanitizeAll(
+      (lokSatir || []).map(satirdanLokasyon),
+      (kytSatir || []).map(satirdanKayit)
+    );
     locations = temiz.locations;
     calendarEvents = temiz.calendarEvents;
-    // activityLog GitHub'a da gönderilmiyor (gereksiz gürültü) —
-    // sadece bu tarayıcıda, localStorage'da tutuluyor.
+    halIsaretle();
+
     try{
       const localLog = localStorage.getItem('gerceginizleri_activity_log');
       activityLog = localLog ? JSON.parse(localLog) : [];
     }catch(e){
       activityLog = [];
     }
-    if(locations.length === 0){
-      locations = seedData.map((l,i)=>({...l, id: 'loc_'+Date.now()+'_'+i}));
-      await persistNow();
-    }
   }catch(e){
-    console.error('Veri okuma hatası (GitHub)', e);
-    locations = seedData.map((l,i)=>({...l, id: 'loc_'+Date.now()+'_'+i}));
-    calendarEvents = [];
-    await persistNow();
+    console.error('Veri okuma hatası', e);
+    // Okuma basarisizken BOS liste gostermek tehlikeli: kullanici veriyi
+    // kaybettigini sanip yeniden girmeye baslar, sonraki kayit da gercek
+    // veriyi ezer. Onun yerine durup haber veriyoruz.
+    girisEkrani('Kayıtlar okunamadı: ' + (e.message || e) +
+                '<br><br>Sayfayı yenilemeyi dene.', true);
+    return;
   }
   if(normalizeAll()) await persistNow();
   render();
   renderCal();
   renderLog();
+}
+
+// Su anki halin fotografini al: bundan sonraki kayitta neyin degistigini
+// bununla karsilastirarak buluyoruz.
+function halIsaretle(){
+  sonHal.lok = new Map(locations.map(l => [l.id, JSON.stringify(lokasyonSatiri(l))]));
+  sonHal.kyt = new Map(calendarEvents.map(e => [e.id, JSON.stringify(kayitSatiri(e))]));
 }
 
 // Debounced entry point: rapid clicks (e.g. toggling several stamps fast)
@@ -1767,42 +1885,65 @@ function persist(){
 async function persistNow(retriesLeft){
   if(retriesLeft === undefined) retriesLeft = 2;
   if(saveInFlight){ pendingResave = true; return; }
+  if(!sb || !calismaAlaniId || !oturum) return;
   saveInFlight = true;
   try{
-    const body = {
-      message: 'Otomatik kayıt — ' + new Date().toISOString(),
-      content: utf8ToB64(JSON.stringify({ locations: locations, calendarEvents: calendarEvents }))
+    const simdiLok = new Map(locations.map(l => [l.id, JSON.stringify(lokasyonSatiri(l))]));
+    const simdiKyt = new Map(calendarEvents.map(e => [e.id, JSON.stringify(kayitSatiri(e))]));
+
+    const degisen = (simdi, once) => {
+      const liste = [];
+      simdi.forEach((metin, id) => { if(once.get(id) !== metin) liste.push(JSON.parse(metin)); });
+      return liste;
     };
-    if(githubFileSha) body.sha = githubFileSha;
-    const res = await fetch(GITHUB_API_BASE, {
-      method: 'PUT',
-      headers: {
-        'Authorization': 'Bearer ' + GITHUB_TOKEN,
-        'Accept': 'application/vnd.github+json',
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify(body)
-    });
-    if(res.status === 409){
-      // SHA çakışması (dosya arada değişmiş) — güncel SHA'yı çekip bir kez
-      // daha dene, retry mekanizması bu hatayı normal hata gibi ele alır.
-      const fresh = await fetch(GITHUB_API_BASE, { headers: { 'Authorization': 'Bearer ' + GITHUB_TOKEN, 'Accept': 'application/vnd.github+json' } });
-      if(fresh.ok){ const freshJson = await fresh.json(); githubFileSha = freshJson.sha; }
-      throw new Error('SHA çakışması, güncel SHA ile tekrar denenecek');
+    const silinen = (simdi, once) => {
+      const liste = [];
+      once.forEach((_, id) => { if(!simdi.has(id)) liste.push(id); });
+      return liste;
+    };
+
+    const yeniLok = degisen(simdiLok, sonHal.lok);
+    const yeniKyt = degisen(simdiKyt, sonHal.kyt);
+    const gitLok = silinen(simdiLok, sonHal.lok);
+    const gitKyt = silinen(simdiKyt, sonHal.kyt);
+
+    // Sira onemli: once lokasyonlar yazilsin ki yeni bir kayit henuz
+    // olmayan bir lokasyona bagli kalmasin.
+    if(yeniLok.length){
+      const { error } = await sb.from('locations').upsert(yeniLok, { onConflict: 'id' });
+      if(error) throw error;
     }
-    if(!res.ok) throw new Error('HTTP ' + res.status);
-    const result = await res.json();
-    githubFileSha = result.content.sha;
+    if(yeniKyt.length){
+      const { error } = await sb.from('calendar_events').upsert(yeniKyt, { onConflict: 'id' });
+      if(error) throw error;
+    }
+    // Silmede once kayitlar dusuyor: lokasyonu once silmek, ona bagli
+    // kayitlari sahipsiz birakirdi.
+    if(gitKyt.length){
+      const { error } = await sb.from('calendar_events')
+        .update({ deleted_at: new Date().toISOString() }).in('id', gitKyt);
+      if(error) throw error;
+    }
+    if(gitLok.length){
+      const { error } = await sb.from('locations')
+        .update({ deleted_at: new Date().toISOString() }).in('id', gitLok);
+      if(error) throw error;
+    }
+
+    // Fotograf ancak yazma bittikten sonra guncelleniyor. Once guncellenseydi
+    // yazma hata verdiginde degisiklik "yazilmis" sayilir ve bir daha hic
+    // denenmezdi.
+    sonHal.lok = simdiLok;
+    sonHal.kyt = simdiKyt;
     hideToast();
   }catch(e){
-    console.error('Kayıt hatası (GitHub)', e);
+    console.error('Kayıt hatası', e);
     if(retriesLeft > 0){
       await new Promise(r=>setTimeout(r, 700));
       saveInFlight = false;
       return persistNow(retriesLeft - 1);
     }
     showToast(t('save_error'));
-    // keep retrying quietly in the background every 5s until it succeeds
     setTimeout(()=>persistNow(2), 5000);
   }finally{
     saveInFlight = false;
@@ -3034,11 +3175,12 @@ document.getElementById('pkgSaveBtn').addEventListener('click', async ()=>{
 });
 
 // ===== Backup: export current data as a downloadable JSON file =====
-document.getElementById('githubTokenResetBtn').addEventListener('click', ()=>{
-  if(!confirm('Bu cihazda kayıtlı GitHub token\'ı silinip yeniden girilecek. Devam edilsin mi?')) return;
-  localStorage.removeItem('gerceginizleri_github_token');
-  const t = getGithubToken();
-  if(t){ GITHUB_TOKEN = t; showToast('Token güncellendi ✓'); location.reload(); }
+// Token dugmesi yerini cikisa birakti: artik cihaza anahtar girilmiyor,
+// Google ile giriliyor.
+document.getElementById('githubTokenResetBtn').addEventListener('click', async ()=>{
+  if(!confirm('Oturumu kapatmak istiyor musun?')) return;
+  if(sb) await sb.auth.signOut();
+  location.reload();
 });
 
 document.getElementById('refreshBtn').addEventListener('click', ()=>{
@@ -3066,18 +3208,20 @@ document.getElementById('exportBtn').addEventListener('click', ()=>{
   showToast('Yedek indirildi ✓');
 });
 
-// ===== Data size indicator: GitHub'daki data.json dosyasının boyutu =====
+// ===== Veri boyutu gostergesi: Supabase'de kaplanan yer =====
 function updateDataSizeDisplay(){
-  // This mirrors exactly what persist() sends to GitHub — locations + calendarEvents only
-  // (activityLog is intentionally excluded, it lives in localStorage only).
+  // Kayitlarin metin hacmi. Etkinlik gunlugu haric: o yalnizca bu
+  // tarayicida, localStorage'da duruyor.
   const payload = JSON.stringify({ locations: locations, calendarEvents: calendarEvents });
   const bytes = new Blob([payload]).size;
   const kb = bytes / 1024;
-  const LIMIT_KB = 100 * 1024; // GitHub dosya boyutu sınırı ~100MB — pratikte hiç sorun olmaz
+  // Supabase ucretsiz plan veritabani siniri 500 MB. Bu kayitlar metin
+  // oldugu icin pratikte bu sinira yaklasmak cok zor.
+  const LIMIT_KB = 500 * 1024;
   const pct = Math.min(100, (kb / LIMIT_KB) * 100);
 
   let barColor = '#3FA34D'; // green
-  let statusText = 'Rahat — GitHub\'ın 100MB sınırının çok altındayız, uzun süre sorun olmaz.';
+  let statusText = 'Rahat — 500 MB sınırının çok altındayız, uzun süre sorun olmaz.';
   if(pct >= 85){ barColor = '#D64545'; statusText = 'Kritik — yakında sınıra çarpabiliriz, büyük metin bloklarını gözden geçirmeliyiz.'; }
   else if(pct >= 60){ barColor = '#E8A23A'; statusText = 'Orta — takip etmeye devam edelim, henüz acil değil.'; }
 
@@ -3104,7 +3248,7 @@ function updateDataSizeDisplay(){
       ${byLocSizes.map(x => `<div style="display:flex;justify-content:space-between;padding:2px 0;"><span>${x.name}</span><span style="opacity:.7;">${(x.size/1024).toFixed(1)} KB</span></div>`).join('')}
     </div>
     <div style="margin-top:12px;font-size:12px;opacity:.75;border-top:1px solid #333;padding-top:10px;">
-      Not: Veri artık GitHub reposundaki data.json dosyasında tutuluyor (JSONBin'den geçildi — 28 Ağustos 2026). Görseller dosya olarak değil sadece link olarak tutulduğu için yer kaplamıyor.
+      Not: Veri Supabase'de tutuluyor (GitHub'daki data.json dosyasından geçildi — 31 Ağustos 2026). Görseller dosya olarak değil sadece link olarak tutulduğu için yer kaplamıyor.
     </div>
   `;
 }
